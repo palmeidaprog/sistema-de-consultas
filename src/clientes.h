@@ -19,12 +19,10 @@
 
 // mensagens para pegaString()
 
-enum CL_MSG {
-    
-}
-#define CPF_MSG "Insira CPF (Sem pontos e hifen): "
+#define CPF_MSG "Insira o CPF (Sem pontos e hifen): "
 #define CLIENTE_NOME_MSG "Insira o nome do cliente: "
-#define CLIENTE_TEL_MSG ""
+#define CLIENTE_TEL_MSG "Insira o telefone do cliente: "
+#define CLIENTE_EMAIL_MSG "Insira o e-mail do cliente: "
 
 #include "io.h"
 #include <stdio.h>
@@ -40,23 +38,36 @@ typedef struct Cliente {
     char email[EMAIL_TAM];
     int status;
 } Cliente;
- 
-typedef struct CPFIndice {
+
+// No da arvore
+typedef struct NoCliente {
     long long unsigned indice;
     char cpf[CPF_TAM];
-} CPFIndice;
+    struct NoCliente *dir, *esq;
+} NoCliente;
 
 //----------------------------------------------------------------------------
 
-void cadastraCliente();
+void cadastrarCliente(char *cpf);
+
+
+//--Arvore--------------------------------------------------------------------
+
+void inserirIndiceCliente(Cliente *c);
+
+//--Arquivo-------------------------------------------------------------------
+
+NoCliente *inserirCliente(Cliente *c);
 
 //--Validações----------------------------------------------------------------
 
-void cadastrarCliente(char *cpf);
 int validaCPF(char *cpf);
 int restoCPF(int x); 
 int validaNome(char *nome);
 int validaTelefone(char *telefone);
+
+//--Menu----------------------------------------------------------------------
+
 int menuClientes();
 void loopClientes();
 

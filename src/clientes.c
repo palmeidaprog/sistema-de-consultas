@@ -10,6 +10,7 @@
 #include "clientes.h"
 
 void cadastrarCliente(char *cpf) {
+    NoCliente *no;
     Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
 
     strcpy(cl->cpf, cpf);
@@ -17,6 +18,47 @@ void cadastrarCliente(char *cpf) {
     pegaString(cl->telefone, TELEFONE_TAM, CLIENTE_TEL_MSG);
     pegaString(cl->email, EMAIL_TAM, CLIENTE_EMAIL_MSG);
     cl->status = 1;
+    
+    no = inserirCliente(cl);
+    if(!no) {
+        printf("ERRO: Nao foi possivel gravar no arquivo \"%s\"", 
+            CLIENTE_ARQ);
+        return ;
+    }
+    //inserirIndiceCliente(no);
+
+}
+
+//--Arvore--------------------------------------------------------------------
+
+//--Arquivo-------------------------------------------------------------------
+
+// retorna 1 se conseguiu incluir no arquivo
+NoCliente *inserirCliente(Cliente *c) {
+    FILE *arq;
+    NoCliente *retorno = NULL;
+
+    // criaar funcao para testar e criar arquivo
+
+    arq = fopen(CLIENTE_ARQ, "ab");
+    if(arq == NULL) {
+        return NULL;    
+    }
+
+    if(fwrite(c, sizeof(Cliente), 1, arq) && ftell(arq) != -1){
+        retorno = (NoCliente *) malloc(sizeof(NoCliente));
+        retorno->dir = NULL;
+        retorno->esq = NULL;
+        strcpy(retorno->cpf, c->cpf);
+        retorno->indice = ftell(arq) - sizeof(NoCliente);
+        fflush(arq);
+    }
+    
+    if(fclose(arq) != 0) {
+        retorno = NULL;
+    }
+
+    return retorno;
 }
 
 //--Validações----------------------------------------------------------------
