@@ -11,8 +11,12 @@
 
 void cadastrarCliente(char *cpf) {
     Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
-    
-    
+
+    strcpy(cl->cpf, cpf);
+    pegaString(cl->nome, NOME_TAM, CLIENTE_NOME_MSG);
+    pegaString(cl->telefone, TELEFONE_TAM, CLIENTE_TEL_MSG);
+    pegaString(cl->email, EMAIL_TAM, CLIENTE_EMAIL_MSG);
+    cl->status = 1;
 }
 
 //--Validações----------------------------------------------------------------

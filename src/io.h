@@ -14,8 +14,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define CPF_MSG "Insira CPF (Sem pontos e hifen): "
-
 void limpaBuffer();
 void limpaTela();
 void pegaString(char *str, size_t n, char *msg);

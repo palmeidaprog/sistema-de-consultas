@@ -17,6 +17,15 @@
 #define EMAIL_TAM 64
 #define CLIENTE_ARQ "data/clientes.dat"
 
+// mensagens para pegaString()
+
+enum CL_MSG {
+    
+}
+#define CPF_MSG "Insira CPF (Sem pontos e hifen): "
+#define CLIENTE_NOME_MSG "Insira o nome do cliente: "
+#define CLIENTE_TEL_MSG ""
+
 #include "io.h"
 #include <stdio.h>
 #include <string.h>
