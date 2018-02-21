@@ -2,23 +2,17 @@ TARGET = sistema
 CFLAGS = -g -Wall
 LIBS = -lm
 CC = gcc
+EXEC = bin/sistema
 
-.PHONY: default all clean
+SRC = src/main.c src/io.c src/clientes.c src/medicos.c src/consultas.c
 
-default: $(TARGET)
-all: default
-
-OBJECTS = $(patsubst src/%.c, bin/%.o, $(wildcard *.c))
-HEADERS = $(wildcard *.h)
-
-%.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o bin/$@
-
-.PRECIOUS: $(TARGET) $(OBJECTS)
+all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-    $(CC) $(OBJECTS) -Wall $(LIBS) -o bin/$@
+	$(CC) $(SRC) $(CFLAGS) $(LIBS) -o $(EXEC)
 
-clean:
-    -rm -f bin/*.o
-    -rm -f $(TARGET)
+clean: 
+	-rm -f *.o
+	-rm -f $(TARGET)
+
+
