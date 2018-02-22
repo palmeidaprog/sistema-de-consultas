@@ -11,11 +11,11 @@
 #define CLIENTES_H
 
 // Constantes
-#define CPF_TAM 11 
+#define CPF_TAM 12 
 #define NOME_TAM 128
-#define TELEFONE_TAM 15
+#define TELEFONE_TAM 16
 #define EMAIL_TAM 64
-#define CLIENTE_ARQ "data/clientes.dat"
+#define CLIENTE_ARQ "clientes.dat"
 
 // mensagens para pegaString()
 
@@ -49,7 +49,6 @@ typedef struct NoCliente {
 //----------------------------------------------------------------------------
 
 void cadastrarCliente(NoCliente **raizCliente, char *cpf);
-
 
 //--Arvore--------------------------------------------------------------------
 

@@ -114,6 +114,7 @@ NoCliente *inserirCliente(Cliente *c) {
 int validaCPF(char *cpf) {
     size_t n = strlen(cpf);
     int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11;
+    printf("cpf: %s\n", cpf); // @db
 
     for(size_t i = 0; i < n; ++i) {
         if(i <= 8) {
@@ -129,8 +130,11 @@ int validaCPF(char *cpf) {
         }
         --multiplicador;
     }
+    printf("%d %d\n%c %c\n", primeiroDigito, segundoDigito, cpf[9], cpf[10]); // @db
     primeiroDigito = restoCPF(primeiroDigito);
     segundoDigito = restoCPF(segundoDigito);
+
+    printf("%d %d\n%c %c\n", primeiroDigito, segundoDigito, cpf[9], cpf[10]); // @db
 
     if(primeiroDigito != (cpf[9] - '0') || segundoDigito != (cpf[10] - '0')) {
         return 0;
@@ -142,6 +146,7 @@ int validaCPF(char *cpf) {
 // função suporte de validaCPF()
 int restoCPF(int x) {
     x = x * 10 / 11;
+    printf("x: %d\n", x); // @db
     return (x == 10) ? 0 : x;
 } 
 
