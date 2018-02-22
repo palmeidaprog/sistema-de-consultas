@@ -17,5 +17,6 @@
 void limpaBuffer();
 void limpaTela();
 void pegaString(char *str, size_t n, char *msg);
+int existeArquivo(char *nomeDoArquivo);
 
 #endif // IO_H

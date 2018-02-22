@@ -36,3 +36,14 @@ void limpaBuffer() {
         scanf("%c", &c);
     } while(c != '\n');
 }
+
+// verifica a existencia do arquivo
+int existeArquivo(char *nomeDoArquivo) {
+    FILE *f;
+    f = fopen(*nomeDoArquivo, "rb");
+    if(f == NULL) {
+        return 0;
+    }
+    fclose(f);
+    return 1;
+}

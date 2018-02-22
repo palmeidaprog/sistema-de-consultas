@@ -23,6 +23,7 @@ void loopConsultas();
 //--main()--------------------------------------------------------------------
 
 int main() {
+    NoCliente *raizCliente = NULL;
     int m;
     limpaTela();
     sobre();
@@ -32,7 +33,7 @@ int main() {
         switch(m) {
             case 1:
                 limpaTela();
-                loopClientes();
+                loopClientes(&raizCliente);
                 break;
             case 2:
                 limpaTela(); 

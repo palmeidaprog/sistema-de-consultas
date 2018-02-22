@@ -9,7 +9,7 @@
 
 #include "clientes.h"
 
-void cadastrarCliente(char *cpf) {
+void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
     NoCliente *no;
     Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
 
@@ -25,11 +25,64 @@ void cadastrarCliente(char *cpf) {
             CLIENTE_ARQ);
         return ;
     }
-    //inserirIndiceCliente(no);
+    //inserirIndiceCliente(raizCliente, no);
 
 }
 
 //--Arvore--------------------------------------------------------------------
+
+void criaArvoreCliente(NoCliente **raizCliente) {
+    FILE *arq;
+    int const TAM = 25;
+    Cliente v[TAM], *c;
+    NoCliente *no;
+    long long pos = 0;
+    
+    arq = fopen(CLIENTE_ARQ, "rb");
+    if(arq == NULL) {
+        printf("Arquivo %s nao pode ser aberto.\n\n", CLIENTE_ARQ);
+        return ;
+    }
+
+    while(fread(v, sizeof(Cliente), TAM, arq) == TAM) {
+        for(int i = 0; i < TAM; i++) {
+            no = criaNoCliente(&v[i], pos);
+            inserirIndiceCliente(raizCliente, no);
+            pos += sizeof(Cliente);
+        }
+    }
+
+    while(fread(c, ))
+}
+
+void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
+    if(*raizCliente == NULL) { // arvore vazia
+        raizCliente = no;
+        return;
+    }
+
+    if(strcmp((*raizCliente)->cpf, no->cpf) > 0) {
+        inserirIndiceCliente(&((*raizCliente)->esq), no);
+    }
+    else {
+        inserirIndiceCliente(&((*raizCliente)->dir), no);
+    }
+}
+
+NoCliente *criaNoCliente(Cliente *c, long long int pos) {
+    NoCliente *no = NULL;
+    
+    if(pos < 0) {
+        return NULL;
+    }
+
+    no = (NoCliente *) malloc(sizeof(NoCliente));
+    no->dir = NULL;
+    no->esq = NULL;
+    strcpy(no->cpf, c->cpf);
+    no->indice = pos; 
+    return no;
+}
 
 //--Arquivo-------------------------------------------------------------------
 
@@ -38,23 +91,18 @@ NoCliente *inserirCliente(Cliente *c) {
     FILE *arq;
     NoCliente *retorno = NULL;
 
-    // criaar funcao para testar e criar arquivo
-
     arq = fopen(CLIENTE_ARQ, "ab");
     if(arq == NULL) {
         return NULL;    
     }
-
+    
     if(fwrite(c, sizeof(Cliente), 1, arq) && ftell(arq) != -1){
-        retorno = (NoCliente *) malloc(sizeof(NoCliente));
-        retorno->dir = NULL;
-        retorno->esq = NULL;
-        strcpy(retorno->cpf, c->cpf);
-        retorno->indice = ftell(arq) - sizeof(NoCliente);
-        fflush(arq);
+        retorno = criaNoCliente(c, ftell(arq) - sizeof(NoCliente));
+        fflush(arq); // força os dados a serem escritos
     }
     
-    if(fclose(arq) != 0) {
+    if(fclose(arq) != 0) { // nao conseguiu fechar arquivo
+        free(retorno);
         retorno = NULL;
     }
 
@@ -139,7 +187,7 @@ int menuClientes() {
     return resp;
 }
 
-void loopClientes() {
+void loopClientes(NoCliente **raizCliente) {
     int m;
     int const VOLTAR = 2;
     char cpf[CPF_TAM];
@@ -150,7 +198,7 @@ void loopClientes() {
             case 1:
                 pegaString(cpf, CPF_TAM, CPF_MSG);
                 if(validaCPF(cpf)) {
-                    cadastrarCliente(cpf);
+                    cadastrarCliente(raizCliente, cpf);
                 }
                 else {
                     printf("CPF Invalido\n\n");

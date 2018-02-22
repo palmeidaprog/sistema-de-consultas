@@ -48,12 +48,14 @@ typedef struct NoCliente {
 
 //----------------------------------------------------------------------------
 
-void cadastrarCliente(char *cpf);
+void cadastrarCliente(NoCliente **raizCliente, char *cpf);
 
 
 //--Arvore--------------------------------------------------------------------
 
-void inserirIndiceCliente(Cliente *c);
+void criaArvoreCliente(NoCliente **raizCliente);
+void inserirIndiceCliente(NoCliente **raizCliente, Cliente *c);
+NoCliente *criaNoCliente(Cliente *c, long long int pos);
 
 //--Arquivo-------------------------------------------------------------------
 
@@ -69,6 +71,6 @@ int validaTelefone(char *telefone);
 //--Menu----------------------------------------------------------------------
 
 int menuClientes();
-void loopClientes();
+void loopClientes(NoCliente **raizCliente);
 
 #endif
