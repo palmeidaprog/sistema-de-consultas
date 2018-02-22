@@ -25,6 +25,8 @@ void loopConsultas();
 int main() {
     NoCliente *raizCliente = NULL;
     int m;
+
+    criaArvoreCliente(&raizCliente);
     limpaTela();
     sobre();
 
@@ -57,7 +59,6 @@ int main() {
 }
 
 //--Implementaçòes------------------------------------------------------------
-
 
 void sobre() {
     printf("SISTEMA DE MARCACAO DE CONSULTAS\n");

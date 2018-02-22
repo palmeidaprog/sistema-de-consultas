@@ -25,7 +25,7 @@ void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
             CLIENTE_ARQ);
         return ;
     }
-    //inserirIndiceCliente(raizCliente, no);
+    inserirIndiceCliente(raizCliente, no);
 
 }
 
@@ -34,9 +34,9 @@ void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
 void criaArvoreCliente(NoCliente **raizCliente) {
     FILE *arq;
     int const TAM = 25;
-    Cliente v[TAM], *c;
+    Cliente v[TAM];
     NoCliente *no;
-    long long pos = 0;
+    long long pos = 0, n;
     
     arq = fopen(CLIENTE_ARQ, "rb");
     if(arq == NULL) {
@@ -44,20 +44,20 @@ void criaArvoreCliente(NoCliente **raizCliente) {
         return ;
     }
 
-    while(fread(v, sizeof(Cliente), TAM, arq) == TAM) {
-        for(int i = 0; i < TAM; i++) {
+    n = fread(v, sizeof(Cliente), TAM, arq);
+    while(n > 0) {
+        for(int i = 0; i < n; i++) {
             no = criaNoCliente(&v[i], pos);
             inserirIndiceCliente(raizCliente, no);
             pos += sizeof(Cliente);
         }
+        n = fread(v, sizeof(Cliente), TAM, arq);
     }
-
-    while(fread(c, ))
 }
 
 void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
     if(*raizCliente == NULL) { // arvore vazia
-        raizCliente = no;
+        *raizCliente = no;
         return;
     }
 

@@ -40,7 +40,7 @@ void limpaBuffer() {
 // verifica a existencia do arquivo
 int existeArquivo(char *nomeDoArquivo) {
     FILE *f;
-    f = fopen(*nomeDoArquivo, "rb");
+    f = fopen(nomeDoArquivo, "rb");
     if(f == NULL) {
         return 0;
     }

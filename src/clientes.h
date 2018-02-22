@@ -54,7 +54,7 @@ void cadastrarCliente(NoCliente **raizCliente, char *cpf);
 //--Arvore--------------------------------------------------------------------
 
 void criaArvoreCliente(NoCliente **raizCliente);
-void inserirIndiceCliente(NoCliente **raizCliente, Cliente *c);
+void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no);
 NoCliente *criaNoCliente(Cliente *c, long long int pos);
 
 //--Arquivo-------------------------------------------------------------------
