@@ -31,7 +31,7 @@ void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
 
 //--Arvore--------------------------------------------------------------------
 
-void criaArvoreCliente(NoCliente **raizCliente) {
+static void criaArvoreCliente(FILE *f, NoCliente **raizCliente) {
     FILE *arq;
     int const TAM = 25;
     Cliente v[TAM];
@@ -55,7 +55,7 @@ void criaArvoreCliente(NoCliente **raizCliente) {
     }
 }
 
-void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
+static void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
     if(*raizCliente == NULL) { // arvore vazia
         *raizCliente = no;
         return;
@@ -69,7 +69,7 @@ void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
     }
 }
 
-NoCliente *criaNoCliente(Cliente *c, long long int pos) {
+static NoCliente *criaNoCliente(Cliente *c, long long int pos) {
     NoCliente *no = NULL;
     
     if(pos < 0) {
@@ -87,25 +87,15 @@ NoCliente *criaNoCliente(Cliente *c, long long int pos) {
 //--Arquivo-------------------------------------------------------------------
 
 // retorna 1 se conseguiu incluir no arquivo
-NoCliente *inserirCliente(Cliente *c) {
+static NoCliente *inserirCliente(Cliente *c) {
     FILE *arq;
     NoCliente *retorno = NULL;
 
-    arq = fopen(CLIENTE_ARQ, "ab");
-    if(arq == NULL) {
-        return NULL;    
-    }
-    
     if(fwrite(c, sizeof(Cliente), 1, arq) && ftell(arq) != -1){
-        retorno = criaNoCliente(c, ftell(arq) - sizeof(NoCliente));
+        retorno = criaNoCliente(c, (ftell(arq) - sizeof(NoCliente)) /;
         fflush(arq); // força os dados a serem escritos
     }
     
-    if(fclose(arq) != 0) { // nao conseguiu fechar arquivo
-        free(retorno);
-        retorno = NULL;
-    }
-
     return retorno;
 }
 
@@ -144,7 +134,7 @@ int validaCPF(char *cpf) {
 }
 
 // função suporte de validaCPF()
-int restoCPF(int x) {
+static int restoCPF(int x) {
     x = x * 10 / 11;
     printf("x: %d\n", x); // @db
     return (x == 10) ? 0 : x;
@@ -162,7 +152,7 @@ int validaNome(char *nome) {
     return 1;
 }
 
-int validaTelefone(char *telefone) {
+static int validaTelefone(char *telefone) {
     size_t n = strlen(telefone);
 
     for(size_t i = 0; i < n; ++i) {
@@ -175,7 +165,7 @@ int validaTelefone(char *telefone) {
 
 //--Menu----------------------------------------------------------------------
 
-int menuClientes() {
+static int menuClientes() {
     int resp;
 
     printf("|==========================|\n");

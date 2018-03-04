@@ -24,8 +24,10 @@ void loopConsultas();
 
 int main() {
     NoCliente *raizCliente = NULL;
+    FILE *arqCliente;
     int m;
 
+    arqCliente = abreArquivo(CLIENTE_ARQ);
     criaArvoreCliente(&raizCliente);
     limpaTela();
     sobre();
@@ -35,7 +37,7 @@ int main() {
         switch(m) {
             case 1:
                 limpaTela();
-                loopClientes(&raizCliente);
+                loopClientes(arqCliente, &raizCliente);
                 break;
             case 2:
                 limpaTela(); 
