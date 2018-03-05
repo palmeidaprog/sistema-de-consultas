@@ -48,17 +48,17 @@ typedef struct NoCliente {
 
 //----------------------------------------------------------------------------
 
-void cadastrarCliente(NoCliente **raizCliente, char *cpf);
+void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf);
 
 //--Arvore--------------------------------------------------------------------
 
-void criaArvoreCliente(NoCliente **raizCliente);
+void criaArvoreCliente(FILE *arq, NoCliente **raizCliente);
 void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no);
 NoCliente *criaNoCliente(Cliente *c, long long int pos);
 
 //--Arquivo-------------------------------------------------------------------
 
-NoCliente *inserirCliente(Cliente *c);
+NoCliente *escreveCliente(FILE *arq, Cliente *c);
 
 //--Validações----------------------------------------------------------------
 
@@ -67,9 +67,13 @@ int restoCPF(int x);
 int validaNome(char *nome);
 int validaTelefone(char *telefone);
 
+//--io------------------------------------------------------------------------
+
+void pegaCPF(char *cpf);
+
 //--Menu----------------------------------------------------------------------
 
 int menuClientes();
-void loopClientes(NoCliente **raizCliente);
+void loopClientes(FILE *arq, NoCliente **raizCliente);
 
 #endif

@@ -28,7 +28,7 @@ int main() {
     int m;
 
     arqCliente = abreArquivo(CLIENTE_ARQ);
-    criaArvoreCliente(&raizCliente);
+    criaArvoreCliente(arqCliente, &raizCliente);
     limpaTela();
     sobre();
 

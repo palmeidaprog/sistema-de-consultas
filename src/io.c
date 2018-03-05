@@ -38,7 +38,7 @@ void limpaBuffer() {
 }
 
 // verifica a existencia do arquivo
-FILE *abreArquiv(char *nomeDoArquivo) {
+FILE *abreArquivo(char *nomeDoArquivo) {
     FILE *f;
 
     f = fopen(nomeDoArquivo, "r+b");
@@ -55,7 +55,6 @@ void fechaArquivo(FILE *f, char *nomeDoArquivo) {
     if(fclose(f) != 0) {
         printf("Nao foi possivel fechar o arquivo %s\n", nomeDoArquivo);
     }
-    abreArquivo();
 }
 
 

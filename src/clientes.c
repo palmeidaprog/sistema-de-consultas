@@ -9,7 +9,7 @@
 
 #include "clientes.h"
 
-void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
+void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
     NoCliente *no;
     Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
 
@@ -19,7 +19,7 @@ void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
     pegaString(cl->email, EMAIL_TAM, CLIENTE_EMAIL_MSG);
     cl->status = 1;
     
-    no = inserirCliente(cl);
+    no = escreveCliente(arq, cl);
     if(!no) {
         printf("ERRO: Nao foi possivel gravar no arquivo \"%s\"", 
             CLIENTE_ARQ);
@@ -31,31 +31,28 @@ void cadastrarCliente(NoCliente **raizCliente, char *cpf) {
 
 //--Arvore--------------------------------------------------------------------
 
-static void criaArvoreCliente(FILE *f, NoCliente **raizCliente) {
-    FILE *arq;
+void criaArvoreCliente(FILE *arq, NoCliente **raizCliente) {
     int const TAM = 25;
     Cliente v[TAM];
     NoCliente *no;
     long long pos = 0, n;
-    
-    arq = fopen(CLIENTE_ARQ, "rb");
-    if(arq == NULL) {
-        printf("Arquivo %s nao pode ser aberto.\n\n", CLIENTE_ARQ);
-        return ;
-    }
 
     n = fread(v, sizeof(Cliente), TAM, arq);
     while(n > 0) {
+        if(!feof(arq) && n != TAM) {
+            printf("Erro de leitura no arquivo %s\n", CLIENTE_ARQ);
+            return ;
+        }
         for(int i = 0; i < n; i++) {
             no = criaNoCliente(&v[i], pos);
-            inserirIndiceCliente(raizCliente, no);
-            pos += sizeof(Cliente);
+            inserirIndiceCliente(&(*raizCliente), no);
+            ++pos;
         }
         n = fread(v, sizeof(Cliente), TAM, arq);
     }
 }
 
-static void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
+void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
     if(*raizCliente == NULL) { // arvore vazia
         *raizCliente = no;
         return;
@@ -63,19 +60,18 @@ static void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
 
     if(strcmp((*raizCliente)->cpf, no->cpf) > 0) {
         inserirIndiceCliente(&((*raizCliente)->esq), no);
-    }
-    else {
+    } else {
         inserirIndiceCliente(&((*raizCliente)->dir), no);
     }
 }
 
-static NoCliente *criaNoCliente(Cliente *c, long long int pos) {
+NoCliente *criaNoCliente(Cliente *c, long long int pos) {
     NoCliente *no = NULL;
     
     if(pos < 0) {
         return NULL;
     }
-
+    
     no = (NoCliente *) malloc(sizeof(NoCliente));
     no->dir = NULL;
     no->esq = NULL;
@@ -87,15 +83,14 @@ static NoCliente *criaNoCliente(Cliente *c, long long int pos) {
 //--Arquivo-------------------------------------------------------------------
 
 // retorna 1 se conseguiu incluir no arquivo
-static NoCliente *inserirCliente(Cliente *c) {
-    FILE *arq;
+NoCliente *escreveCliente(FILE *arq, Cliente *c) {
     NoCliente *retorno = NULL;
 
     if(fwrite(c, sizeof(Cliente), 1, arq) && ftell(arq) != -1){
-        retorno = criaNoCliente(c, (ftell(arq) - sizeof(NoCliente)) /;
+        retorno = criaNoCliente(c, (ftell(arq) - sizeof(NoCliente)) /
+             sizeof(NoCliente));
         fflush(arq); // força os dados a serem escritos
     }
-    
     return retorno;
 }
 
@@ -104,7 +99,6 @@ static NoCliente *inserirCliente(Cliente *c) {
 int validaCPF(char *cpf) {
     size_t n = strlen(cpf);
     int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11;
-    printf("cpf: %s\n", cpf); // @db
 
     for(size_t i = 0; i < n; ++i) {
         if(i <= 8) {
@@ -120,21 +114,17 @@ int validaCPF(char *cpf) {
         }
         --multiplicador;
     }
-    printf("%d %d\n%c %c\n", primeiroDigito, segundoDigito, cpf[9], cpf[10]); // @db
     primeiroDigito = restoCPF(primeiroDigito);
     segundoDigito = restoCPF(segundoDigito);
-
-    printf("%d %d\n%c %c\n", primeiroDigito, segundoDigito, cpf[9], cpf[10]); // @db
 
     if(primeiroDigito != (cpf[9] - '0') || segundoDigito != (cpf[10] - '0')) {
         return 0;
     }
-
     return 1;
 }
 
 // função suporte de validaCPF()
-static int restoCPF(int x) {
+int restoCPF(int x) {
     x = x * 10 / 11;
     printf("x: %d\n", x); // @db
     return (x == 10) ? 0 : x;
@@ -152,7 +142,7 @@ int validaNome(char *nome) {
     return 1;
 }
 
-static int validaTelefone(char *telefone) {
+int validaTelefone(char *telefone) {
     size_t n = strlen(telefone);
 
     for(size_t i = 0; i < n; ++i) {
@@ -163,9 +153,23 @@ static int validaTelefone(char *telefone) {
     return 1;
 }
 
+//--io------------------------------------------------------------------------
+
+void pegaCPF(char *cpf) {
+    int erro = 0;
+    
+    do {    
+        if(erro) {
+            printf("CPF Invalido! ");
+        }
+        pegaString(cpf, CPF_TAM, "Digite o CPF: ");
+        erro = 1;
+    } while(!validaCPF(cpf));
+}
+
 //--Menu----------------------------------------------------------------------
 
-static int menuClientes() {
+int menuClientes() {
     int resp;
 
     printf("|==========================|\n");
@@ -182,7 +186,7 @@ static int menuClientes() {
     return resp;
 }
 
-void loopClientes(NoCliente **raizCliente) {
+void loopClientes(FILE *arq, NoCliente **raizCliente) {
     int m;
     int const VOLTAR = 2;
     char cpf[CPF_TAM];
@@ -191,15 +195,11 @@ void loopClientes(NoCliente **raizCliente) {
         m = menuClientes();
         switch(m) {
             case 1:
-                pegaString(cpf, CPF_TAM, CPF_MSG);
-                if(validaCPF(cpf)) {
-                    cadastrarCliente(raizCliente, cpf);
-                }
-                else {
-                    printf("CPF Invalido\n\n");
-                }
+                pegaCPF(cpf);
+                cadastrarCliente(arq, raizCliente, cpf);
                 break;
-            case 2: 
+            case 2:
+                limpaTela();
                 break;  
             default: 
                 limpaTela();
