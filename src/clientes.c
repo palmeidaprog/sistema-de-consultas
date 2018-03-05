@@ -123,7 +123,7 @@ int validaCPF(char *cpf) {
             segundoDigito += (cpf[i] - '0') * multiplicador;
         }
 
-        if(cpf[i] < 48 || cpf[i] > 57) {
+        if(cpf[i] < 48 || cpf[i] > 57) { // contem nao numeros
             return 0;
         }
         --multiplicador;
@@ -139,8 +139,7 @@ int validaCPF(char *cpf) {
 
 // função suporte de validaCPF()
 int restoCPF(int x) {
-    x = x * 10 / 11;
-    printf("x: %d\n", x); // @db
+    x = x * 10 % 11;
     return (x == 10) ? 0 : x;
 } 
 
