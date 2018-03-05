@@ -100,6 +100,12 @@ int validaCPF(char *cpf) {
     size_t n = strlen(cpf);
     int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11;
 
+    if(n != 11) {
+        return 0;
+    }
+    
+    for()
+
     for(size_t i = 0; i < n; ++i) {
         if(i <= 8) {
             primeiroDigito += (cpf[i] - '0') * (multiplicador - 1);
