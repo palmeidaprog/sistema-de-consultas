@@ -1,0 +1,3 @@
+- Validacao do CPF deve ficar preso no loop ate entrar um CPF adequado ou deve
+voltar ao menu anterior quando entrado erraado.
+

@@ -99,12 +99,20 @@ NoCliente *escreveCliente(FILE *arq, Cliente *c) {
 int validaCPF(char *cpf) {
     size_t n = strlen(cpf);
     int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11;
+    char cpfInvalidos[10][11] = { "00000000000", "11111111111", "22222222222", 
+        "33333333333", "44444444444", "55555555555", "66666666666", 
+        "77777777777", "88888888888", "99999999999"};
 
     if(n != 11) {
         return 0;
     }
     
-    for()
+    // verifica se todos digitos sao iguais
+    for(int i = 0; i < 10; i++) {
+        if(strcmp(cpfInvalidos[i], cpf) == 0) {
+            return 0;
+        }
+    }
 
     for(size_t i = 0; i < n; ++i) {
         if(i <= 8) {
