@@ -11,7 +11,14 @@
 
 void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
     NoCliente *no;
-    Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
+    Cliente *cl;
+    
+    if(buscar(*raizCliente, cpf) != NULL) {
+        printf("Cliente ja cadastrado\n\n");
+        return ;
+    }
+    
+    cl = (Cliente *) malloc(sizeof(Cliente));
 
     strcpy(cl->cpf, cpf);
     pegaString(cl->nome, NOME_TAM, CLIENTE_NOME_MSG);
@@ -19,14 +26,13 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
     pegaString(cl->email, EMAIL_TAM, CLIENTE_EMAIL_MSG);
     cl->status = 1;
     
-    no = escreveCliente(arq, cl);
+    no = escreveCliente(arq, cl, -1);
     if(!no) {
         printf("ERRO: Nao foi possivel gravar no arquivo \"%s\"", 
             CLIENTE_ARQ);
         return ;
     }
     inserirIndiceCliente(raizCliente, no);
-
 }
 
 void exibirTodos(FILE *arq, NoCliente *raiz) {
@@ -39,7 +45,7 @@ void exibirTodos(FILE *arq, NoCliente *raiz) {
 
     if(ehFolha(raiz)) {
         leCliente(arq, raiz, &cliente);
-        imprimeCliente(&cliente, pos);
+        imprimeCliente(&cliente, ++pos);
         return ;
     }
     if(raiz->esq != NULL) {
@@ -48,6 +54,26 @@ void exibirTodos(FILE *arq, NoCliente *raiz) {
     if(raiz->dir != NULL) {
         exibirTodos(arq, raiz->dir);
     }
+}
+
+void removerCliente(FILE *arq, NoCliente **raiz, char *cpf) {
+    Cliente cliente;
+    NoCliente *pos;
+
+    pos = buscar(*raiz, cpf);
+    if(pos == NULL) {
+        printf("Cliente com esse CPF (%s) nao existe\n\n", cpf);
+        return;
+    }
+
+    if(!leCliente(arq, pos, &cliente)) {
+        printf("Erro ao ler o arquivo %s\n\n", CLIENTE_ARQ);
+    }
+    cliente.status = 0;
+    escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
+    // removerIndiceCliente(Cli)
+
+
 }
 
 //--Arvore--------------------------------------------------------------------
@@ -84,6 +110,8 @@ void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no) {
     } else {
         inserirIndiceCliente(&((*raizCliente)->dir), no);
     }
+
+    return ;
 }
 
 NoCliente *criaNoCliente(Cliente *c, long long int pos) {
@@ -92,13 +120,61 @@ NoCliente *criaNoCliente(Cliente *c, long long int pos) {
     if(pos < 0) {
         return NULL;
     }
-    
     no = (NoCliente *) malloc(sizeof(NoCliente));
     no->dir = NULL;
     no->esq = NULL;
     strcpy(no->cpf, c->cpf);
-    no->indice = pos; 
+    no->indice = pos;
     return no;
+}
+
+void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov, 
+    NoCliente *pos) {
+    NoCliente *maior;
+
+    if(ehFolha(remov)) {
+        removeFolhaCliente(raizCliente, remov);
+    } else { // nao é folha
+        maior = maiorIndiceCliente(*raizCliente);
+        copiaNoCliente(remov, maior); // copia maior no lugar do removido
+        if(!ehFolha(maior)) {
+            moveNoCliente(maior, maior->esq); // move filho
+        }
+    }
+}
+
+void removeFolhaCliente(NoCliente **raiz, NoCliente *remov) {
+    if(*raiz == remov) {
+        free(*raiz);
+        *raiz = NULL;
+    } else if(strcmp(remov->cpf, (*raiz)->cpf) > 0) {
+        removeFolhaCliente(&((*raiz)->dir), remov);
+    } else {
+        removeFolhaCliente(&((*raiz)->esq), remov);
+    }
+}
+
+void copiaNoCliente(NoCliente *destino, NoCliente *origem) {
+    strcpy(destino->cpf, origem->cpf);
+    destino->indice = origem->indice;
+}
+
+void moveNoCliente(NoCliente *destino, NoCliente *origem) {
+    copiaNoCliente(destino, origem);
+    destino->esq = origem->esq;
+    destino->dir = origem->dir;
+    free(origem);
+}
+
+NoCliente *maiorIndiceCliente(NoCliente *raiz) {
+    if(raiz == NULL) {
+        return NULL;
+    }
+
+    while(!ehFolha(raiz)) {
+        raiz = raiz->dir;
+    }
+    return raiz;
 }
 
 int ehFolha(NoCliente *no) {
@@ -108,12 +184,37 @@ int ehFolha(NoCliente *no) {
     return 0;
 }
 
+NoCliente *buscar(NoCliente *raiz, char *cpf) {
+    int cmp;
+
+    if(raiz == NULL) {
+        return NULL;
+    }
+    while(ehFolha(raiz)) {
+        cmp = strcmp(cpf, raiz->cpf);
+        if(cmp == 0) {
+            return raiz;
+        } else if(cmp > 0) {
+            raiz = raiz->dir;
+        } else {
+            raiz = raiz->esq;
+        }
+    }
+    return NULL;   
+}
+
 //--Arquivo-------------------------------------------------------------------
 
 // retorna 1 se conseguiu incluir no arquivo
-NoCliente *escreveCliente(FILE *arq, Cliente *c) {
+NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos) {
     NoCliente *retorno = NULL;
 
+    if(pos == -1) {
+        fseek(arq, 0, SEEK_END);
+    }
+    else {
+        fseek(arq, pos, SEEK_SET);
+    }
     if(fwrite(c, sizeof(Cliente), 1, arq) && ftell(arq) != -1){
         retorno = criaNoCliente(c, (ftell(arq) - sizeof(NoCliente)) /
              sizeof(NoCliente));
@@ -160,7 +261,7 @@ int validaCPF(char *cpf) {
             segundoDigito += (cpf[i] - '0') * multiplicador;
         }
 
-        if(cpf[i] < 48 || cpf[i] > 57) { // contem nao numeros
+        if(!ehNumero(cpf[i])) { // contem nao numeros
             return 0;
         }
         --multiplicador;
@@ -184,8 +285,7 @@ int validaNome(char *nome) {
     size_t n = strlen(nome);
 
     for(size_t i = 0; i < n; ++i) {
-        if((nome[i] < 'A' || nome[i] > 'Z') && nome[i] != ' ' && 
-            (nome[i] < 'a' || nome[i] > 'z')) {
+        if(!ehLetra(nome[i]) && !ehEspaco(nome[i])) {
             return 0;
         }
     }
@@ -196,11 +296,29 @@ int validaTelefone(char *telefone) {
     size_t n = strlen(telefone);
 
     for(size_t i = 0; i < n; ++i) {
-        if(telefone[i] < 48 || telefone[i] > 57) {
+        if(!ehEspaco(telefone[i])) {
             return 0;
         }
     }
     return 1;
+}
+
+int ehEspaco(char c) {
+    return (c == ' ');
+}
+
+int ehNumero(char c) {
+    if(c >= 48 || c <= 57) {
+        return 1;
+    }
+    return 0;
+}
+
+int ehLetra(char c) {
+    if((c >= 'A' && c <= 'Z') && (c >= 'a' && c <= 'z')) {
+        return 1;
+    }
+    return 0;
 }
 
 //--io------------------------------------------------------------------------
@@ -227,6 +345,10 @@ void imprimeCliente(Cliente *c, int pos) {
     printf("E-mail: %s\n\n", c->email);
 }
 
+int validaEmail(char *email) {
+    return 0;
+}
+
 //--Menu----------------------------------------------------------------------
 
 int menuClientes() {
@@ -235,9 +357,10 @@ int menuClientes() {
     printf("|=================================|\n");
     printf("|       Menu Clientes             |\n");
     printf("|                                 |\n");
-    printf("|  1 - Cadastrar                  |\n");
-    printf("|  2 - Imprime Todos Clientes     |\n");
-    printf("|  3 - Voltar                     |\n");
+    printf("|  %d - Cadastrar                  |\n", CADASTRAR);
+    printf("|  %d - Remover                    |\n", REMOVER);
+    printf("|  %d - Imprime Todos Clientes     |\n", EXIBIR_TODOS);
+    printf("|  %d - Voltar                     |\n", VOLTAR);
     printf("|                                 |\n");
     printf("|=================================|\n\n");
     printf("Sua escolha: ");
@@ -249,21 +372,26 @@ int menuClientes() {
 
 void loopClientes(FILE *arq, NoCliente **raizCliente) {
     int m;
-    int const VOLTAR = 2;
     char cpf[CPF_TAM];
 
     do {
         m = menuClientes();
         switch(m) {
-            case 1:
+            case CADASTRAR:
+                limpaTela();
                 pegaCPF(cpf);
                 cadastrarCliente(arq, raizCliente, cpf);
                 break;
-            case 2: 
+            case REMOVER:
+                limpaTela();
+                pegaCPF(cpf);
+                removerCliente(arq, raizCliente, cpf);
+                break;
+            case EXIBIR_TODOS: 
                 limpaTela();
                 exibirTodos(arq, *raizCliente);
                 break;
-            case 3:
+            case VOLTAR:
                 limpaTela();
                 break;  
             default: 

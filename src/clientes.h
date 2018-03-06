@@ -24,6 +24,12 @@
 #define CLIENTE_TEL_MSG "Insira o telefone do cliente: "
 #define CLIENTE_EMAIL_MSG "Insira o e-mail do cliente: "
 
+// menu constates
+#define CADASTRAR 1
+#define REMOVER 2
+#define EXIBIR_TODOS 3
+#define VOLTAR 4
+
 #include "io.h"
 #include <stdio.h>
 #include <string.h>
@@ -55,12 +61,22 @@ void exibirTodos(FILE *arq, NoCliente *raizCliente);
 
 void criaArvoreCliente(FILE *arq, NoCliente **raizCliente);
 void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no);
+void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov, 
+    NoCliente *pos);
+void removeFolhaCliente(NoCliente **raiz, NoCliente *remov);
+void copiaNoCliente(NoCliente *destino, NoCliente *origem);
+void moveNoCliente(NoCliente *destino, NoCliente *origem);
+NoCliente *maiorIndiceCliente(NoCliente *raiz);
 NoCliente *criaNoCliente(Cliente *c, long long int pos);
 int ehFolha(NoCliente *no);
+NoCliente *buscar(NoCliente *raiz, char *cpf);
+int buscarRemover(NoCliente **raiz, NoCliente *anterior, NoCliente *remov, 
+    char *cpf); // suporte para removeIndice
 
 //--Arquivo-------------------------------------------------------------------
 
-NoCliente *escreveCliente(FILE *arq, Cliente *c);
+// se pos -1 escreve no final
+NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos);
 int leCliente(FILE *arq, NoCliente *no, Cliente *cliente);
 
 //--Validações----------------------------------------------------------------
@@ -69,6 +85,10 @@ int validaCPF(char *cpf);
 int restoCPF(int x); 
 int validaNome(char *nome);
 int validaTelefone(char *telefone);
+int validaEmail(char *email);
+int ehEspaco(char c);
+int ehNumero(char c);
+int ehLetra(char c);
 
 //--io------------------------------------------------------------------------
 
