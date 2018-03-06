@@ -29,6 +29,27 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
 
 }
 
+void exibirTodos(FILE *arq, NoCliente *raiz) {
+    Cliente cliente;
+    int pos = 0;
+
+    if(raiz == NULL) {
+        printf("Não existe clientes cadastrados\n\n");
+    }
+
+    if(ehFolha(raiz)) {
+        leCliente(arq, raiz, &cliente);
+        imprimeCliente(&cliente, pos);
+        return ;
+    }
+    if(raiz->esq != NULL) {
+        exibirTodos(arq, raiz->esq);
+    }
+    if(raiz->dir != NULL) {
+        exibirTodos(arq, raiz->dir);
+    }
+}
+
 //--Arvore--------------------------------------------------------------------
 
 void criaArvoreCliente(FILE *arq, NoCliente **raizCliente) {
@@ -80,6 +101,13 @@ NoCliente *criaNoCliente(Cliente *c, long long int pos) {
     return no;
 }
 
+int ehFolha(NoCliente *no) {
+    if(no->dir == NULL && no->esq == NULL) {
+        return 1;
+    }
+    return 0;
+}
+
 //--Arquivo-------------------------------------------------------------------
 
 // retorna 1 se conseguiu incluir no arquivo
@@ -92,6 +120,15 @@ NoCliente *escreveCliente(FILE *arq, Cliente *c) {
         fflush(arq); // força os dados a serem escritos
     }
     return retorno;
+}
+
+// retorna 0 se nao conseguir ler
+int leCliente(FILE *arq, NoCliente *no, Cliente *cliente) {
+    fseek(arq, no->indice * sizeof(Cliente), SEEK_SET);
+    if(fread(cliente, sizeof(Cliente), 1, arq) != 1) {
+        return 0;
+    }
+    return 1;
 }
 
 //--Validações----------------------------------------------------------------
@@ -180,18 +217,29 @@ void pegaCPF(char *cpf) {
     } while(!validaCPF(cpf));
 }
 
+void imprimeCliente(Cliente *c, int pos) {
+    if(pos) { // so imprime se pos != 0
+        printf("Cliente No. %d\n", pos);
+    }
+    printf("Nome: %s\n", c->nome);
+    printf("CPF: %s\n", c->cpf);
+    printf("Telefone: %s\n", c->telefone);
+    printf("E-mail: %s\n\n", c->email);
+}
+
 //--Menu----------------------------------------------------------------------
 
 int menuClientes() {
     int resp;
 
-    printf("|==========================|\n");
-    printf("|       Menu Clientes      |\n");
-    printf("|                          |\n");
-    printf("|  1 - Cadastrar           |\n");
-    printf("|  2 - Voltar              |\n");
-    printf("|                          |\n");
-    printf("|==========================|\n\n");
+    printf("|=================================|\n");
+    printf("|       Menu Clientes             |\n");
+    printf("|                                 |\n");
+    printf("|  1 - Cadastrar                  |\n");
+    printf("|  2 - Imprime Todos Clientes     |\n");
+    printf("|  3 - Voltar                     |\n");
+    printf("|                                 |\n");
+    printf("|=================================|\n\n");
     printf("Sua escolha: ");
     scanf("%d", &resp);
     limpaBuffer();
@@ -211,7 +259,11 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
                 pegaCPF(cpf);
                 cadastrarCliente(arq, raizCliente, cpf);
                 break;
-            case 2:
+            case 2: 
+                limpaTela();
+                exibirTodos(arq, *raizCliente);
+                break;
+            case 3:
                 limpaTela();
                 break;  
             default: 
