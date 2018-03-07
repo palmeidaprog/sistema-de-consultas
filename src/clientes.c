@@ -232,18 +232,32 @@ int leCliente(FILE *arq, NoCliente *no, Cliente *cliente) {
     return 1;
 }
 
-void limpaArquivo(FILE *arq) {
+void limpaArquivoCliente(FILE *arq) {
     FILE *aux;
     int const TAM = 25;
-    int n = 0;
-    Cliente v[TAM];
+    int nLidos = 0, nEscrever = 0;
+    Cliente lidos[TAM], escrever[TAM];
 
     aux = abreArquivo("aux.dat");
-    while(fread(&))
-
     fseek(arq, 0, SEEK_SET);
-    
+    do {
+        nLidos = fread(lidos, sizeof(Cliente), TAM, arq);
+        nEscrever = 0;
+        for(int i = 0; i < nLidos; i++) {
+            if(lidos[i].status) {
+                escrever[nEscrever++] = lidos[i];
+            }
+        }
 
+        if(nEscrever != fwrite(escrever, sizeof(Cliente), nEscrever, arq)) {
+            printf("Erro ao executar limpeza no arquivo %s\n\n", CLIENTE_ARQ);
+        }
+    } while(nLidos == TAM);
+
+    fechaArquivo(arq, CLIENTE_ARQ);
+    fechaArquivo(aux, "aux.dat");
+    remove(CLIENTE_ARQ);
+    rename("aux.dat", CLIENTE_ARQ);
 }
 
 //--Validações----------------------------------------------------------------

@@ -48,6 +48,7 @@ int main() {
                 loopConsultas();
                 break;
             case 4:
+                limpaArquivoCliente(arqCliente);
                 break;
             default:
                 limpaTela();

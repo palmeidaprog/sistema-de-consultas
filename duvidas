@@ -2,3 +2,5 @@
 voltar ao menu anterior quando entrado erraado.
 
 - Arvore e Arquivo juntos no mesmo modulo. (encapsulamento)
+
+- Checar modo de leitura em array (limpaArquivo() e criaArvore())
