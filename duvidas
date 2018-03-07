@@ -4,3 +4,10 @@ voltar ao menu anterior quando entrado erraado.
 - Arvore e Arquivo juntos no mesmo modulo. (encapsulamento)
 
 - Checar modo de leitura em array (limpaArquivo() e criaArvore())
+
+- verificar validacao de eMail se esta adequada. Regra:
+apenas encontra . - _ letras e numeros. Arroba tem que existir e tem que 
+existir um ponto apos a arroba (nao pode ser o ultimo caractere)
+
+
+Temp: 

@@ -263,13 +263,12 @@ void limpaArquivoCliente(FILE *arq) {
 //--Validações----------------------------------------------------------------
 
 int validaCPF(char *cpf) {
-    size_t n = strlen(cpf);
-    int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11;
+    int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11, i = 0;
     char cpfInvalidos[10][11] = { "00000000000", "11111111111", "22222222222", 
         "33333333333", "44444444444", "55555555555", "66666666666", 
         "77777777777", "88888888888", "99999999999"};
 
-    if(n != 11) {
+    if(strlen(cpf) != 11) {
         return 0;
     }
     
@@ -280,7 +279,7 @@ int validaCPF(char *cpf) {
         }
     }
 
-    for(size_t i = 0; i < n; ++i) {
+    while(cpf[i] != '\0') {
         if(i <= 8) {
             primeiroDigito += (cpf[i] - '0') * (multiplicador - 1);
         }
@@ -293,6 +292,7 @@ int validaCPF(char *cpf) {
             return 0;
         }
         --multiplicador;
+        ++i;
     }
     primeiroDigito = restoCPF(primeiroDigito);
     segundoDigito = restoCPF(segundoDigito);
@@ -310,9 +310,9 @@ int restoCPF(int x) {
 } 
 
 int validaNome(char *nome) {
-    size_t n = strlen(nome);
+    int i = 0;
 
-    for(size_t i = 0; i < n; ++i) {
+    while(nome[i] != '\0') {
         if(!ehLetra(nome[i]) && !ehEspaco(nome[i])) {
             return 0;
         }
@@ -321,12 +321,13 @@ int validaNome(char *nome) {
 }
 
 int validaTelefone(char *telefone) {
-    size_t n = strlen(telefone);
+    int i = 0;
 
-    for(size_t i = 0; i < n; ++i) {
+    while(telefone[i] != '\0') {
         if(!ehEspaco(telefone[i])) {
             return 0;
         }
+        ++i;
     }
     return 1;
 }
@@ -373,7 +374,48 @@ void imprimeCliente(Cliente *c, int pos) {
     printf("E-mail: %s\n\n", c->email);
 }
 
+// apenas encontra . - _ letras e numeros. Arroba tem que existir e tem que 
+// existir um ponto apos a arroba (nao pode ser o ultimo caractere)
 int validaEmail(char *email) {
+    int arroba = 0, pontoAposArroba = 0, i = 0, letraAntesArroba = 0;
+
+    if(!ehLetra(email[0] && !ehNumero(email[0])) {
+        return 0;
+    }
+
+    while(email[i] != '\0') {
+        if(!arroba) {
+            if(email[i] == '@') {
+                // tem que existir letra antes da arroba e arroba nao pode
+                // ser o ultimo caractere
+                if(!letraAntesArroba || email[i+1] == '\0') {
+                    return 0;
+                }
+            // antes da arroba tem que ter pelo menos 1 letra
+            if(!letraAntesArroba && ehLetra(email[i]) {
+                letraAntesArroba = 1;
+            }
+            if(!arroehLetra())
+            
+                
+        }
+        // caracteres invalidos no email
+        if(!validoNoEmail(email[i])) {
+            if(arroba || (!arroba && email[i] != '_')) { // _ antes do @
+                return 0;
+            }
+        } 
+        ++i;
+    }
+
+
+    return 0;
+}
+
+int validoNoEmail(char c) {
+    if(ehNumero(c) || ehLetra(c) || c == '-' || c == '.') {
+        return 1;
+    }
     return 0;
 }
 

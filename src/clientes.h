@@ -78,7 +78,7 @@ int buscarRemover(NoCliente **raiz, NoCliente *anterior, NoCliente *remov,
 // se pos -1 escreve no final
 NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos);
 int leCliente(FILE *arq, NoCliente *no, Cliente *cliente);
-void limpaArquivo(FILE *arq);
+void limpaArquivoCliente(FILE *arq);
 
 //--Validações----------------------------------------------------------------
 
@@ -86,10 +86,11 @@ int validaCPF(char *cpf);
 int restoCPF(int x); 
 int validaNome(char *nome);
 int validaTelefone(char *telefone);
-int validaEmail(char *email);
 int ehEspaco(char c);
 int ehNumero(char c);
 int ehLetra(char c);
+int validaEmail(char *email);
+int validoNoEmail(char c);
 
 //--io------------------------------------------------------------------------
 
