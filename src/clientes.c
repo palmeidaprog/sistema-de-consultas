@@ -41,6 +41,7 @@ void exibirTodos(FILE *arq, NoCliente *raiz) {
 
     if(raiz == NULL) {
         printf("Não existe clientes cadastrados\n\n");
+        return ;
     }
 
     if(ehFolha(raiz)) {
@@ -71,9 +72,7 @@ void removerCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     }
     cliente.status = 0;
     escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
-    // removerIndiceCliente(Cli)
-
-
+    removerIndiceCliente(raiz, pos);
 }
 
 //--Arvore--------------------------------------------------------------------
@@ -91,8 +90,10 @@ void criaArvoreCliente(FILE *arq, NoCliente **raizCliente) {
             return ;
         }
         for(int i = 0; i < n; i++) {
-            no = criaNoCliente(&v[i], pos);
-            inserirIndiceCliente(&(*raizCliente), no);
+            if(v[i].status) {
+                no = criaNoCliente(&v[i], pos);
+                inserirIndiceCliente(&(*raizCliente), no);
+            }
             ++pos;
         }
         n = fread(v, sizeof(Cliente), TAM, arq);
@@ -128,8 +129,7 @@ NoCliente *criaNoCliente(Cliente *c, long long int pos) {
     return no;
 }
 
-void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov, 
-    NoCliente *pos) {
+void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov) {
     NoCliente *maior;
 
     if(ehFolha(remov)) {
@@ -230,6 +230,20 @@ int leCliente(FILE *arq, NoCliente *no, Cliente *cliente) {
         return 0;
     }
     return 1;
+}
+
+void limpaArquivo(FILE *arq) {
+    FILE *aux;
+    int const TAM = 25;
+    int n = 0;
+    Cliente v[TAM];
+
+    aux = abreArquivo("aux.dat");
+    while(fread(&))
+
+    fseek(arq, 0, SEEK_SET);
+    
+
 }
 
 //--Validações----------------------------------------------------------------

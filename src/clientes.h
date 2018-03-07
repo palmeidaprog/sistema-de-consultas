@@ -56,13 +56,13 @@ typedef struct NoCliente {
 
 void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf);
 void exibirTodos(FILE *arq, NoCliente *raizCliente);
+void removerCliente(FILE *arq, NoCliente **raiz, char *cpf);
 
 //--Arvore--------------------------------------------------------------------
 
 void criaArvoreCliente(FILE *arq, NoCliente **raizCliente);
 void inserirIndiceCliente(NoCliente **raizCliente, NoCliente *no);
-void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov, 
-    NoCliente *pos);
+void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov);
 void removeFolhaCliente(NoCliente **raiz, NoCliente *remov);
 void copiaNoCliente(NoCliente *destino, NoCliente *origem);
 void moveNoCliente(NoCliente *destino, NoCliente *origem);
@@ -78,6 +78,7 @@ int buscarRemover(NoCliente **raiz, NoCliente *anterior, NoCliente *remov,
 // se pos -1 escreve no final
 NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos);
 int leCliente(FILE *arq, NoCliente *no, Cliente *cliente);
+void limpaArquivo(FILE *arq);
 
 //--Validações----------------------------------------------------------------
 
