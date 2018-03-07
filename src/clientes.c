@@ -379,7 +379,7 @@ void imprimeCliente(Cliente *c, int pos) {
 int validaEmail(char *email) {
     int arroba = 0, pontoAposArroba = 0, i = 0, letraAntesArroba = 0;
 
-    if(!ehLetra(email[0] && !ehNumero(email[0])) {
+    if(!ehLetra(email[0]) && !ehNumero(email[0])) {
         return 0;
     }
 
@@ -391,25 +391,25 @@ int validaEmail(char *email) {
                 if(!letraAntesArroba || email[i+1] == '\0') {
                     return 0;
                 }
+                arroba = 1;
+            }
             // antes da arroba tem que ter pelo menos 1 letra
-            if(!letraAntesArroba && ehLetra(email[i]) {
+            if(!letraAntesArroba && ehLetra(email[i])) {
                 letraAntesArroba = 1;
             }
-            if(!arroehLetra())
-            
-                
         }
         // caracteres invalidos no email
         if(!validoNoEmail(email[i])) {
             if(arroba || (!arroba && email[i] != '_')) { // _ antes do @
                 return 0;
             }
-        } 
+        }
         ++i;
     }
-
-
-    return 0;
+    if(!arroba || !letraAntesArroba || !pontoAposArroba) {
+        return 0;
+    }
+    return 1;
 }
 
 int validoNoEmail(char c) {
