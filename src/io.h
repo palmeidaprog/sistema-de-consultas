@@ -16,7 +16,7 @@
 
 void limpaBuffer();
 void limpaTela();
-void pegaString(char *str, size_t n, char *msg);
+void pegaString(char *str, size_t n);
 int existeArquivo(char *nomeDoArquivo);
 FILE *abreArquivo(char *nomeDoArquivo);
 void fechaArquivo(FILE *f, char *nomeDoArquivo);

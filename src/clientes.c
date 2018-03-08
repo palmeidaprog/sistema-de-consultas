@@ -18,18 +18,13 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
         return ;
     }
     
-    cl = (Cliente *) malloc(sizeof(Cliente));
-
-    strcpy(cl->cpf, cpf);
-    pegaString(cl->nome, NOME_TAM, CLIENTE_NOME_MSG);
-    pegaString(cl->telefone, TELEFONE_TAM, CLIENTE_TEL_MSG);
-    pegaString(cl->email, EMAIL_TAM, CLIENTE_EMAIL_MSG);
-    cl->status = 1;
-    
+    cl = criaCliente(cpf);
     no = escreveCliente(arq, cl, -1);
     if(!no) {
         printf("ERRO: Nao foi possivel gravar no arquivo \"%s\"", 
             CLIENTE_ARQ);
+    
+    
         return ;
     }
     inserirIndiceCliente(raizCliente, no);
@@ -73,6 +68,19 @@ void removerCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     cliente.status = 0;
     escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
     removerIndiceCliente(raiz, pos);
+}
+
+Cliente *criaCliente(char *cpf) {
+    Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
+
+    strcpy(cl->cpf, cpf);
+    // TODO: Resolver problema de ENTER no nome
+    pegaDadoCliente(cl->nome, NOME);
+    pegaDadoCliente(cl->telefone, TELEFONE);
+    pegaDadoCliente(cl->email, EMAIL);
+    cl->status = 1;
+
+    return cl;
 }
 
 //--Arvore--------------------------------------------------------------------
@@ -350,30 +358,6 @@ int ehLetra(char c) {
     return 0;
 }
 
-//--io------------------------------------------------------------------------
-
-void pegaCPF(char *cpf) {
-    int erro = 0;
-    
-    do {    
-        if(erro) {
-            printf("CPF Invalido! ");
-        }
-        pegaString(cpf, CPF_TAM, "Digite o CPF: ");
-        erro = 1;
-    } while(!validaCPF(cpf));
-}
-
-void imprimeCliente(Cliente *c, int pos) {
-    if(pos) { // so imprime se pos != 0
-        printf("Cliente No. %d\n", pos);
-    }
-    printf("Nome: %s\n", c->nome);
-    printf("CPF: %s\n", c->cpf);
-    printf("Telefone: %s\n", c->telefone);
-    printf("E-mail: %s\n\n", c->email);
-}
-
 // apenas encontra . - _ letras e numeros. Arroba tem que existir e tem que 
 // existir um ponto apos a arroba (nao pode ser o ultimo caractere)
 int validaEmail(char *email) {
@@ -419,6 +403,48 @@ int validoNoEmail(char c) {
     return 0;
 }
 
+// valida tudo
+int validacao(char *aValidar, ClienteTipo tipo) {
+    switch(tipo) {
+        case EMAIL: 
+            return validaEmail(aValidar);
+        case CPF: 
+            return validaCPF(aValidar);
+        case NOME: 
+            return validaNome(aValidar);
+        default: // TELEFONE
+            return validaTelefone(aValidar);
+    }
+}
+
+//--io------------------------------------------------------------------------
+
+void pegaDadoCliente(char *dado, ClienteTipo tipo) { 
+    int erro = 0;
+    char str[50]; 
+    
+    do {
+        if(erro) {
+            pegaErro(tipo, str);
+            printf("%s", str);
+        }
+        pegaMensagem(tipo, str);
+        printf("%s", str);
+        pegaString(dado, pegaTamanho(tipo));
+        erro =1;
+    } while(!validacao(dado, tipo));
+}
+
+void imprimeCliente(Cliente *c, int pos) {
+    if(pos) { // so imprime se pos != 0
+        printf("Cliente No. %d\n", pos);
+    }
+    printf("Nome: %s\n", c->nome);
+    printf("CPF: %s\n", c->cpf);
+    printf("Telefone: %s\n", c->telefone);
+    printf("E-mail: %s\n\n", c->email);
+}
+
 //--Menu----------------------------------------------------------------------
 
 int menuClientes() {
@@ -449,12 +475,12 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
         switch(m) {
             case CADASTRAR:
                 limpaTela();
-                pegaCPF(cpf);
+                pegaDadoCliente(cpf, CPF);
                 cadastrarCliente(arq, raizCliente, cpf);
                 break;
             case REMOVER:
                 limpaTela();
-                pegaCPF(cpf);
+                pegaDadoCliente(cpf, CPF);
                 removerCliente(arq, raizCliente, cpf);
                 break;
             case EXIBIR_TODOS: 

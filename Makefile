@@ -4,7 +4,7 @@ LIBS = -lm
 CC = gcc
 EXEC = bin/sistema
 
-SRC = src/main.c src/io.c src/clientes.c src/medicos.c src/consultas.c
+SRC = src/main.c src/io.c src/clientesconstantes.c src/clientes.c src/medicos.c src/consultas.c 
 
 all: $(TARGET)
 

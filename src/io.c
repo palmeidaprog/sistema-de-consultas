@@ -18,10 +18,9 @@ void limpaTela() {
     #endif
 }
 
-void pegaString(char *str, size_t n, char *msg) {
+void pegaString(char *str, size_t n) {
     size_t len;
 
-    printf("%s", msg);
     fgets(str, n, stdin);
     len = strlen(str) - 1;
     if(str[len] == '\n') {

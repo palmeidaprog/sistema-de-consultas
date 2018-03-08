@@ -9,20 +9,12 @@
 
 #ifndef CLIENTES_H
 #define CLIENTES_H
+ // mensagens para pegaString()
 
-// Constantes
-#define CPF_TAM 12 
-#define NOME_TAM 128
-#define TELEFONE_TAM 16
-#define EMAIL_TAM 64
-#define CLIENTE_ARQ "clientes.dat"
-
-// mensagens para pegaString()
-
-#define CPF_MSG "Insira o CPF (Sem pontos e hifen): "
+/*#define CPF_MSG "Insira o CPF (Sem pontos e hifen): "
 #define CLIENTE_NOME_MSG "Insira o nome do cliente: "
 #define CLIENTE_TEL_MSG "Insira o telefone do cliente: "
-#define CLIENTE_EMAIL_MSG "Insira o e-mail do cliente: "
+#define CLIENTE_EMAIL_MSG "Insira o e-mail do cliente: "*/
 
 // menu constates
 #define CADASTRAR 1
@@ -31,6 +23,7 @@
 #define VOLTAR 4
 
 #include "io.h"
+#include "clientesconstantes.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -57,6 +50,7 @@ typedef struct NoCliente {
 void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf);
 void exibirTodos(FILE *arq, NoCliente *raizCliente);
 void removerCliente(FILE *arq, NoCliente **raiz, char *cpf);
+Cliente *criaCliente(char *cpf);
 
 //--Arvore--------------------------------------------------------------------
 
@@ -91,10 +85,11 @@ int ehNumero(char c);
 int ehLetra(char c);
 int validaEmail(char *email);
 int validoNoEmail(char c);
+int validacao(char *aValidar, ClienteTipo tipo);
 
 //--io------------------------------------------------------------------------
 
-void pegaCPF(char *cpf);
+void pegaDadoCliente(char *dado, ClienteTipo tipo);
 void imprimeCliente(Cliente *c, int pos);
 
 //--Menu----------------------------------------------------------------------
