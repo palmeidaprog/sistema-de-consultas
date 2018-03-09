@@ -17,7 +17,9 @@
 #define EMAIL_TAM 64
 #define CLIENTE_ARQ "clientes.dat"
 
+#include "io.h"
 #include <string.h>
+#include <stdio.h>
 
 typedef enum ClienteTipo {
     EMAIL,

@@ -85,23 +85,22 @@ Cliente *criaCliente(char *cpf) {
 
 void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     NoCliente *pos;
-    Cliente *cliente;
-    char dado[NOME_TAM];
+    Cliente cliente;
 
     pos = buscar(*raiz, cpf);
     if(pos == NULL) {
-        prntf("Cliente nao existe\n\n");
+        printf("Cliente nao existe\n\n");
         return ;
     }
 
-    if(!leCLiente(arq, pos, cliente)) {
+    if(!leCliente(arq, pos, &cliente)) {
         printf("Erro ao ler arquivo %s\n\n", CLIENTE_ARQ);
     }
-    imprimeCliente(cliente, 0);
+    imprimeCliente(&cliente, 0);
     printf("Digite os novos dados:");
-    pegaDadoCliente(cliente->telefone, TELEFONE);
-    pegaDadoCliente(cliente->email, EMAIL);
-    escreveCliente(arq, cliente, pos->indice * sizeof(Cliente));
+    pegaDadoCliente(cliente.telefone, TELEFONE);
+    pegaDadoCliente(cliente.email, EMAIL);
+    escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
     printf("Dados modificados com exito\n\n");
 }
 
