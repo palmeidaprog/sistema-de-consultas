@@ -24,7 +24,7 @@
 #define VOLTAR 5
 
 #include "io.h"
-#include "clientesconstantes.h"
+#include "validacao.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -76,22 +76,8 @@ NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos);
 int leCliente(FILE *arq, NoCliente *no, Cliente *cliente);
 void limpaArquivoCliente(FILE *arq);
 
-//--Validações----------------------------------------------------------------
-
-int validaCPF(char *cpf);
-int restoCPF(int x); 
-int validaNome(char *nome);
-int validaTelefone(char *telefone);
-int ehEspaco(char c);
-int ehNumero(char c);
-int ehLetra(char c);
-int validaEmail(char *email);
-int validoNoEmail(char c);
-int validacao(char *aValidar, ClienteTipo tipo);
-
 //--io------------------------------------------------------------------------
 
-void pegaDadoCliente(char *dado, ClienteTipo tipo);
 void imprimeCliente(Cliente *c, int pos);
 
 //--Menu----------------------------------------------------------------------

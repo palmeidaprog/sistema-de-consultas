@@ -7,8 +7,8 @@
  * E-mail: pauloalmeidaf@gmail.com
  */
 
-#ifndef CLIENTESCONSTANTES_H
-#define CLIENTESCONSTANTES_H
+#ifndef VALIDACAO_H
+#define VALIDACAO_H
 
 // Constantes
 #define CPF_TAM 12 
@@ -29,5 +29,17 @@ typedef enum ClienteTipo {
 int pegaTamanho(ClienteTipo tipo);
 void pegaErro(ClienteTipo tipo, char *erro);
 void pegaMensagem(ClienteTipo tipo, char *msg);
+void pegaDadoCliente(char *dado, ClienteTipo tipo);
 
-#endif // CLIENTESCONSTANTES_H
+int validaCPF(char *cpf);
+int restoCPF(int x); 
+int validaNome(char *nome);
+int validaTelefone(char *telefone);
+int ehEspaco(char c);
+int ehNumero(char c);
+int ehLetra(char c);
+int validaEmail(char *email);
+int validoNoEmail(char c);
+int validacao(char *aValidar, ClienteTipo tipo);
+
+#endif // VALIDACAO_H
