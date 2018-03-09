@@ -83,6 +83,28 @@ Cliente *criaCliente(char *cpf) {
     return cl;
 }
 
+void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
+    NoCliente *pos;
+    Cliente *cliente;
+    char dado[NOME_TAM];
+
+    pos = buscar(*raiz, cpf);
+    if(pos == NULL) {
+        prntf("Cliente nao existe\n\n");
+        return ;
+    }
+
+    if(!leCLiente(arq, pos, cliente)) {
+        printf("Erro ao ler arquivo %s\n\n", CLIENTE_ARQ);
+    }
+    imprimeCliente(cliente, 0);
+    printf("Digite os novos dados:");
+    pegaDadoCliente(cliente->1telefone, TELEFONE);
+    pegaDadoCliente(cliente->email, EMAIL);
+    escreveCliente(arq, cliente, pos->indice * sizeof(Cliente));
+    printf("Dados modificados com exito\n\n");
+}
+
 //--Arvore--------------------------------------------------------------------
 
 void criaArvoreCliente(FILE *arq, NoCliente **raizCliente) {
@@ -455,6 +477,7 @@ int menuClientes() {
     printf("|                                 |\n");
     printf("|  %d - Cadastrar                  |\n", CADASTRAR);
     printf("|  %d - Remover                    |\n", REMOVER);
+    printf("|  %d - Alterar                    |\n", ALTERAR);
     printf("|  %d - Imprime Todos Clientes     |\n", EXIBIR_TODOS);
     printf("|  %d - Voltar                     |\n", VOLTAR);
     printf("|                                 |\n");

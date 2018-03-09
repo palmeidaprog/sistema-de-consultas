@@ -19,8 +19,9 @@
 // menu constates
 #define CADASTRAR 1
 #define REMOVER 2
-#define EXIBIR_TODOS 3
-#define VOLTAR 4
+#define ALTERAR 3
+#define EXIBIR_TODOS 4
+#define VOLTAR 5
 
 #include "io.h"
 #include "clientesconstantes.h"
@@ -51,6 +52,7 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf);
 void exibirTodos(FILE *arq, NoCliente *raizCliente);
 void removerCliente(FILE *arq, NoCliente **raiz, char *cpf);
 Cliente *criaCliente(char *cpf);
+void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf);
 
 //--Arvore--------------------------------------------------------------------
 
