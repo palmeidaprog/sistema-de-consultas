@@ -28,7 +28,7 @@ void pegaErro(ClienteTipo tipo, char *erro) {
             strcpy(erro, "ERRO: Email deve conter apenas uma arroba.\n");
             break;
         case CPF: 
-            strcpy(erro, "ERRO: Apenas 11 numeros sem pontos e/ou hifen.\n");
+            strcpy(erro, "CPF Inválido\n\n");
             break;
         case NOME:
             strcpy(erro, "ERRO: Nome contem apenas letras e espacos.\n") ;
@@ -56,7 +56,8 @@ void pegaMensagem(ClienteTipo tipo, char *msg) {
     }
 }
 
-void pegaDadoCliente(char *dado, ClienteTipo tipo) { 
+// so retorna 0 caso validacao do CPF seja invalida
+int pegaDadoCliente(char *dado, ClienteTipo tipo) { 
     int erro = 0;
     char str[50]; 
     
@@ -69,7 +70,14 @@ void pegaDadoCliente(char *dado, ClienteTipo tipo) {
         printf("%s", str);
         pegaString(dado, pegaTamanho(tipo));
         erro =1;
-    } while(!validacao(dado, tipo));
+        // CPF nao fica preso no loop
+        if(tipo == CPF && !validacao(dado, tipo)) { 
+            pegaErro(tipo, str);
+            printf("%s", str);
+            return 0;
+        }
+    } while(tipo != CPF && !validacao(dado, tipo));
+    return 1;
 }
 
 

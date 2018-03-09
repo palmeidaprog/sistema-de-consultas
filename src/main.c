@@ -8,6 +8,7 @@
  */
 
 #include "io.h"
+#include "clientes_types.h"
 #include "clientes.h"
 #include <stdio.h>
 

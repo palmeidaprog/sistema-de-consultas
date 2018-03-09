@@ -10,13 +10,6 @@
 #ifndef VALIDACAO_H
 #define VALIDACAO_H
 
-// Constantes
-#define CPF_TAM 12 
-#define NOME_TAM 128
-#define TELEFONE_TAM 16
-#define EMAIL_TAM 64
-#define CLIENTE_ARQ "clientes.dat"
-
 #include "io.h"
 #include <string.h>
 #include <stdio.h>
@@ -31,7 +24,7 @@ typedef enum ClienteTipo {
 int pegaTamanho(ClienteTipo tipo);
 void pegaErro(ClienteTipo tipo, char *erro);
 void pegaMensagem(ClienteTipo tipo, char *msg);
-void pegaDadoCliente(char *dado, ClienteTipo tipo);
+int pegaDadoCliente(char *dado, ClienteTipo tipo);
 
 int validaCPF(char *cpf);
 int restoCPF(int x); 
