@@ -8,17 +8,18 @@
  */
 
 #include "validacao.h"
+#include "clientes.h"
 
 int pegaTamanho(ClienteTipo tipo) {
     switch(tipo) {
         case EMAIL: 
-            return 64;
+            return EMAIL_TAM;
         case CPF: 
-            return 12;
+            return CPF_TAM;
         case NOME: 
-            return 128;
+            return NOME_TAM;
         default:  // TELEFONE
-            return 16;
+            return TELEFONE_TAM;
     }
 }
 
@@ -137,6 +138,7 @@ int validaNome(char *nome) {
         if(!ehLetra(nome[i]) && !ehEspaco(nome[i])) {
             return 0;
         }
+        ++i;
     }
     return 1;
 }
@@ -145,7 +147,7 @@ int validaTelefone(char *telefone) {
     int i = 0;
 
     while(telefone[i] != '\0') {
-        if(!ehEspaco(telefone[i])) {
+        if(!ehNumero(telefone[i])) {
             return 0;
         }
         ++i;
@@ -154,18 +156,18 @@ int validaTelefone(char *telefone) {
 }
 
 int ehEspaco(char c) {
-    return (c == ' ');
+    return (c == ' '); 
 }
 
 int ehNumero(char c) {
-    if(c >= 48 || c <= 57) {
+    if(c >= 48 && c <= 57) {
         return 1;
     }
     return 0;
 }
 
 int ehLetra(char c) {
-    if((c >= 'A' && c <= 'Z') && (c >= 'a' && c <= 'z')) {
+    if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
         return 1;
     }
     return 0;
@@ -173,7 +175,7 @@ int ehLetra(char c) {
 
 // apenas encontra . - _ letras e numeros. Arroba tem que existir e tem que 
 // existir um ponto apos a arroba (nao pode ser o ultimo caractere)
-int validaEmail(char *email) {
+int validaEmail(char *email) { // FIXME: Corrigir validacao
     int arroba = 0, pontoAposArroba = 0, i = 0, letraAntesArroba = 0;
 
     if(!ehLetra(email[0]) && !ehNumero(email[0])) {
@@ -189,11 +191,16 @@ int validaEmail(char *email) {
                     return 0;
                 }
                 arroba = 1;
+                ++i;
+                continue;
             }
             // antes da arroba tem que ter pelo menos 1 letra
             if(!letraAntesArroba && ehLetra(email[i])) {
                 letraAntesArroba = 1;
             }
+        }
+        if(arroba && email[i] == '.') {
+            pontoAposArroba = 1;
         }
         // caracteres invalidos no email
         if(!validoNoEmail(email[i])) {

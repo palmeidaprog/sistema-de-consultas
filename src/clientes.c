@@ -28,6 +28,7 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
         return ;
     }
     inserirIndiceCliente(raizCliente, no);
+    printf("Cliente %s foi cadastrado com sucesso\n\n", cpf);
 }
 
 void exibirTodos(FILE *arq, NoCliente *raiz) {
@@ -68,6 +69,7 @@ void removerCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     cliente.status = 0;
     escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
     removerIndiceCliente(raiz, pos);
+    printf("Cliente %s removido com sucesso\n\n", cpf);
 }
 
 Cliente *criaCliente(char *cpf) {
@@ -213,6 +215,12 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
                 limpaTela();
                 if(pegaDadoCliente(cpf, CPF)) {
                     removerCliente(arq, raizCliente, cpf);
+                }
+                break;
+            case ALTERAR:
+                limpaTela();
+                if(pegaDadoCliente(cpf, CPF)) {
+                    alterarCliente(arq, raizCliente, cpf);
                 }
                 break;
             case EXIBIR_TODOS: 

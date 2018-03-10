@@ -11,9 +11,9 @@
 #define CLIENTES_TYPES_H
 
 // Constantes
-#define CPF_TAM 12 
+#define CPF_TAM 13 // + 1 para o /0
 #define NOME_TAM 128
-#define TELEFONE_TAM 16
+#define TELEFONE_TAM 17 // +1 para o /0
 #define EMAIL_TAM 64
 #define CLIENTE_ARQ "clientes.dat" // TODO funcao
 
