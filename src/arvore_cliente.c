@@ -122,7 +122,7 @@ NoCliente *buscar(NoCliente *raiz, char *cpf) {
     if(raiz == NULL) {
         return NULL;
     }
-    while(ehFolha(raiz)) {
+    while(raiz != NULL) {
         cmp = strcmp(cpf, raiz->cpf);
         if(cmp == 0) {
             return raiz;

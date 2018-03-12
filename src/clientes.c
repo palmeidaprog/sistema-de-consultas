@@ -99,7 +99,7 @@ void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
         printf("Erro ao ler arquivo %s\n\n", CLIENTE_ARQ);
     }
     imprimeCliente(&cliente, 0);
-    printf("Digite os novos dados:");
+    printf("Digite os novos dados:\n\n");
     pegaDadoCliente(cliente.telefone, TELEFONE);
     pegaDadoCliente(cliente.email, EMAIL);
     escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
@@ -120,8 +120,8 @@ NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos) {
         fseek(arq, pos, SEEK_SET);
     }
     if(fwrite(c, sizeof(Cliente), 1, arq) && ftell(arq) != -1){
-        retorno = criaNoCliente(c, (ftell(arq) - sizeof(NoCliente)) /
-             sizeof(NoCliente));
+        retorno = criaNoCliente(c, (ftell(arq) - sizeof(Cliente)) /
+             sizeof(Cliente));
         fflush(arq); // força os dados a serem escritos
     }
     return retorno;
@@ -153,11 +153,12 @@ void limpaArquivoCliente(FILE *arq) {
             }
         }
 
-        if(nEscrever != fwrite(escrever, sizeof(Cliente), nEscrever, arq)) {
+        if(nEscrever != fwrite(escrever, sizeof(Cliente), nEscrever, aux)) {
             printf("Erro ao executar limpeza no arquivo %s\n\n", CLIENTE_ARQ);
         }
     } while(nLidos == TAM);
-
+    
+    fflush(aux);
     fechaArquivo(arq, CLIENTE_ARQ);
     fechaArquivo(aux, "aux.dat");
     remove(CLIENTE_ARQ);
