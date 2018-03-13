@@ -15,7 +15,7 @@
 #define NOME_TAM 128
 #define TELEFONE_TAM 17 // +1 para o /0
 #define EMAIL_TAM 64
-#define CLIENTE_ARQ "clientes.dat" // TODO funcao
+
 
 // tipo de clientes.h
 typedef struct Cliente {
