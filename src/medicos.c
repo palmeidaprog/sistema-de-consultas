@@ -7,4 +7,8 @@
  * E-mail: pauloalmeidaf@gmail.com
  */
 
+#include "medicos.h"
 
+void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
+
+}

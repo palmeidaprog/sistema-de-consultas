@@ -8,8 +8,9 @@
  */
 
 #include "io.h"
-#include "clientes_types.h"
+#include "validacao.h"
 #include "clientes.h"
+#include "medicos.h"
 #include <stdio.h>
 
 //--Protótipos----------------------------------------------------------------
@@ -24,10 +25,12 @@ void loopConsultas();
 
 int main() {
     NoCliente *raizCliente = NULL;
-    FILE *arqCliente;
+    NoMedico *raizMedico = NULL;
+    FILE *arqCliente, *arqMedico;
     int m;
 
     arqCliente = abreArquivo(CLIENTE_ARQ);
+    arqMedico = abreArquivo(MEDICOS_ARQ);
     criaArvoreCliente(arqCliente, &raizCliente);
     limpaTela();
     sobre();
@@ -41,7 +44,7 @@ int main() {
                 break;
             case 2:
                 limpaTela(); 
-                loopMedicos();
+                loopMedicos(arqMedico, &raizMedico);
                 break;
             case 3: 
                 limpaTela();
@@ -88,8 +91,5 @@ int menuPrincipal() {
 
     return resp;
 }
-
-
-void loopMedicos() { }
 
 void loopConsultas() { }

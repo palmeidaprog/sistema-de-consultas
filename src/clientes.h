@@ -10,11 +10,6 @@
 #ifndef CLIENTES_H
 #define CLIENTES_H
 
-/*#define CPF_MSG "Insira o CPF (Sem pontos e hifen): "
-#define CLIENTE_NOME_MSG "Insira o nome do cliente: "
-#define CLIENTE_TEL_MSG "Insira o telefone do cliente: "
-#define CLIENTE_EMAIL_MSG "Insira o e-mail do cliente: "*/
-
 // menu constates
 #define CADASTRAR 1
 #define REMOVER 2

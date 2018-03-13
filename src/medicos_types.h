@@ -11,10 +11,16 @@
 #define MEDICOS_TYPES_H
 
 #define CRM_TAM 9 // 8 + 1
+#define MEDICOS_ARQ "medicos.dat" 
+
+#ifndef STRUCT_TAM
+#define STRUCT_TAM
+
 #define NOME_TAM 128
 #define TELEFONE_TAM 17 // +1 para o /0
 #define EMAIL_TAM 64
-#define CLIENTE_ARQ "medicos.dat" 
+
+#endif // STRUCT_TAM
 
 typedef enum Especialidade {
     CLINICA = 1, // clinico geral (tudo nao cirurgico)
@@ -25,7 +31,8 @@ typedef enum Especialidade {
     NEUROLOGIA = 6, // sist. nervoso
     PSIQUIATRIA = 7, // mente
     UROLOGIA = 8, // sistema urinario e reprod. masculino
-    GINECOLOGIA = 9 // sistema urinario e reprod. feminino
+    GINECOLOGIA = 9, // sistema urinario e reprod. feminino
+    OTORRONOLARINGOLOGIA = 10 // ouvido, nariz, garganta, pescoço
 } Especialidade;
 
 //tipo de medicos.h
@@ -45,4 +52,4 @@ typedef struct NoMedico {
     struct NoMedico *dir, *esq;
 } NoMedico;
 
-#endif // MEDICOS_TYPES_H
+#endif // MEDICOS_TYPES_H#ifndef STRUCT_TAM

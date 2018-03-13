@@ -10,12 +10,18 @@
 #ifndef CLIENTES_TYPES_H
 #define CLIENTES_TYPES_H
 
+#ifndef STRUCT_TAM
+#define STRUCT_TAM
+
 // Constantes
 #define CPF_TAM 13 // + 1 para o /0
 #define NOME_TAM 128
 #define TELEFONE_TAM 17 // +1 para o /0
 #define EMAIL_TAM 64
 
+#endif // STRUCT_TAM
+
+#define CLIENTE_ARQ "clientes.dat"
 
 // tipo de clientes.h
 typedef struct Cliente {

@@ -12,7 +12,6 @@
 
 #include "clientes_types.h"
 #include "validacao.h"
-#include "arvore_cliente.h"
 
 
 //--Protótipos----------------------------------------------------------------

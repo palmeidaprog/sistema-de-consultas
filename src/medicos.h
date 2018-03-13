@@ -11,6 +11,9 @@
 #ifndef MEDICOS_H
 #define MEDICOS_H
 
+#include "medicos_types.h"
+#include <stdio.h>
 
+void loopMedicos(FILE *arqMed, NoMedico **raizMedico);
 
 #endif // MEDICOS_H
