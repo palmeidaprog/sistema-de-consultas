@@ -39,8 +39,8 @@ void exibirTodos(FILE *arq, NoCliente *raizCliente);
 void removerCliente(FILE *arq, NoCliente **raiz, char *cpf);
 Cliente *criaCliente(char *cpf);
 void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf);
-void buscaNome(FILE *arq);
-void buscaCPF(FILE *arq, NoCliente *raiz);
+void buscaNome(FILE *arq, char *nome);
+void buscaCPF(FILE *arq, NoCliente *raiz, char *cpf);
 
 //--Arquivo-------------------------------------------------------------------
 

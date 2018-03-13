@@ -106,17 +106,15 @@ void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     printf("Dados modificados com exito\n\n");
 }
 
-void buscaNome(FILE *arq) {
-    char nome[NOME_TAM];
+void buscaNome(FILE *arq, char *nome) {
     int pos;
     Cliente cliente;
 
-    pegaDadoCliente(nome, NOME);
     pos = buscaPorNome(arq, nome);
     if(pos == -1) {
         printf("Cliente com nome %s nao existe\n\n", nome);
     } else {
-        if(leCliente(arq, pos, &cliente)) {
+        if(!leCliente(arq, pos, &cliente)) {
             printf("Erro ao ler cliente do arquivo\n\n");
         } else {
             imprimeCliente(&cliente, 0);
@@ -124,17 +122,15 @@ void buscaNome(FILE *arq) {
     }
 }
 
-void buscaCPF(FILE *arq, NoCliente *raiz) {
-    char cpf[CPF_TAM];
+void buscaCPF(FILE *arq, NoCliente *raiz, char *cpf) {
     NoCliente *pos;
     Cliente cliente;
 
-    pegaDadoCliente(cpf, CPF);
     pos = buscar(raiz, cpf);
     if(pos == NULL) {
         printf("Cliente com cpf %s nao existe\n\n", cpf);
     } else {
-        if(leCliente(arq, pos->indice * sizeof(Cliente), &cliente)) {
+        if(!leCliente(arq, pos->indice * sizeof(Cliente), &cliente)) {
             printf("Erro ao ler cliente do arquivo\n\n");
         } else {
             imprimeCliente(&cliente, 0);
@@ -282,13 +278,13 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
             case PROCURA_CPF:
                 limpaTela();
                 if(pegaDadoCliente(cpf, CPF)) {
-                    buscaCPF(arq, *raizCliente);
+                    buscaCPF(arq, *raizCliente, cpf);
                 }
                 break;
             case PROCURA_NOME:
                 limpaTela();
                 if(pegaDadoCliente(nome, NOME)) {
-                    buscaNome(arq);
+                    buscaNome(arq, nome);
                 }
                 break;
             case EXIBIR_TODOS: 
