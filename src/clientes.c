@@ -23,8 +23,6 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
     if(!no) {
         printf("ERRO: Nao foi possivel gravar no arquivo \"%s\"", 
             CLIENTE_ARQ);
-    
-    
         return ;
     }
     inserirIndiceCliente(raizCliente, no);
@@ -150,7 +148,8 @@ int buscaPorNome(FILE *arq, char *nome) {
         n = fread(clientes, sizeof(Cliente), TAM, arq);
         for(int i = 0; i < n; ++i) {
             if(strcmp(nome, clientes[i].nome) == 0) {
-                return ftell(arq) - (sizeof(Cliente) * (n - (i+1)));
+                return ftell(arq) - (sizeof(Cliente) - (sizeof(Cliente) * 
+                    (n - (i+1))));
             }
         }
     } while(n == TAM);
