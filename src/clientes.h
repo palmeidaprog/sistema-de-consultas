@@ -19,8 +19,10 @@
 #define CADASTRAR 1
 #define REMOVER 2
 #define ALTERAR 3
-#define EXIBIR_TODOS 4
-#define VOLTAR 5
+#define PROCURA_CPF 4
+#define PROCURA_NOME 5
+#define EXIBIR_TODOS 6
+#define VOLTAR 7
 
 #include "clientes_types.h"
 #include "io.h"
@@ -37,13 +39,16 @@ void exibirTodos(FILE *arq, NoCliente *raizCliente);
 void removerCliente(FILE *arq, NoCliente **raiz, char *cpf);
 Cliente *criaCliente(char *cpf);
 void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf);
+void buscaNome(FILE *arq);
+void buscaCPF(FILE *arq, NoCliente *raiz);
 
 //--Arquivo-------------------------------------------------------------------
 
 // se pos -1 escreve no final
 NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos);
-int leCliente(FILE *arq, NoCliente *no, Cliente *cliente);
+int leCliente(FILE *arq, long long pos, Cliente *cliente);
 void limpaArquivoCliente(FILE *arq);
+int buscaPorNome(FILE *arq, char *nome);
 
 //--io------------------------------------------------------------------------
 

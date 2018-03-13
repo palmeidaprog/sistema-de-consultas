@@ -41,7 +41,7 @@ void exibirTodos(FILE *arq, NoCliente *raiz) {
     }
 
     if(ehFolha(raiz)) {
-        leCliente(arq, raiz, &cliente);
+        leCliente(arq, raiz->indice * sizeof(Cliente), &cliente);
         imprimeCliente(&cliente, ++pos);
         return ;
     }
@@ -60,10 +60,10 @@ void removerCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     pos = buscar(*raiz, cpf);
     if(pos == NULL) {
         printf("Cliente com esse CPF (%s) nao existe\n\n", cpf);
-        return;
+        return ;
     }
 
-    if(!leCliente(arq, pos, &cliente)) {
+    if(!leCliente(arq, pos->indice * sizeof(Cliente), &cliente)) {
         printf("Erro ao ler o arquivo %s\n\n", CLIENTE_ARQ);
     }
     cliente.status = 0;
@@ -95,7 +95,7 @@ void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
         return ;
     }
 
-    if(!leCliente(arq, pos, &cliente)) {
+    if(!leCliente(arq, pos->indice * sizeof(Cliente), &cliente)) {
         printf("Erro ao ler arquivo %s\n\n", CLIENTE_ARQ);
     }
     imprimeCliente(&cliente, 0);
@@ -106,8 +106,60 @@ void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     printf("Dados modificados com exito\n\n");
 }
 
+void buscaNome(FILE *arq) {
+    char nome[NOME_TAM];
+    int pos;
+    Cliente cliente;
+
+    pegaDadoCliente(nome, NOME);
+    pos = buscaPorNome(arq, nome);
+    if(pos == -1) {
+        printf("Cliente com nome %s nao existe\n\n", nome);
+    } else {
+        if(leCliente(arq, pos, &cliente)) {
+            printf("Erro ao ler cliente do arquivo\n\n");
+        } else {
+            imprimeCliente(&cliente, 0);
+        }
+    }
+}
+
+void buscaCPF(FILE *arq, NoCliente *raiz) {
+    char cpf[CPF_TAM];
+    NoCliente *pos;
+    Cliente cliente;
+
+    pegaDadoCliente(cpf, CPF);
+    pos = buscar(raiz, cpf);
+    if(pos == NULL) {
+        printf("Cliente com cpf %s nao existe\n\n", cpf);
+    } else {
+        if(leCliente(arq, pos->indice * sizeof(Cliente), &cliente)) {
+            printf("Erro ao ler cliente do arquivo\n\n");
+        } else {
+            imprimeCliente(&cliente, 0);
+        }
+    }
+}
 
 //--Arquivo-------------------------------------------------------------------
+
+int buscaPorNome(FILE *arq, char *nome) {
+    int const TAM = 100;
+    int n;
+    Cliente clientes[TAM];
+
+    fseek(arq, 0, SEEK_SET);
+    do {
+        n = fread(clientes, sizeof(Cliente), TAM, arq);
+        for(int i = 0; i < n; ++i) {
+            if(strcmp(nome, clientes[i].nome) == 0) {
+                return ftell(arq) - (sizeof(Cliente) * (n - (i+1)));
+            }
+        }
+    } while(n == TAM);
+    return -1;    
+}
 
 // retorna 1 se conseguiu incluir no arquivo
 NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos) {
@@ -128,8 +180,9 @@ NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos) {
 }
 
 // retorna 0 se nao conseguir ler
-int leCliente(FILE *arq, NoCliente *no, Cliente *cliente) {
-    fseek(arq, no->indice * sizeof(Cliente), SEEK_SET);
+int leCliente(FILE *arq, long long pos, Cliente *cliente) {
+
+    fseek(arq, pos, SEEK_SET);
     if(fread(cliente, sizeof(Cliente), 1, arq) != 1) {
         return 0;
     }
@@ -157,7 +210,7 @@ void limpaArquivoCliente(FILE *arq) {
             printf("Erro ao executar limpeza no arquivo %s\n\n", CLIENTE_ARQ);
         }
     } while(nLidos == TAM);
-    
+
     fflush(aux);
     fechaArquivo(arq, CLIENTE_ARQ);
     fechaArquivo(aux, "aux.dat");
@@ -188,6 +241,8 @@ int menuClientes() {
     printf("|  %d - Cadastrar                  |\n", CADASTRAR);
     printf("|  %d - Remover                    |\n", REMOVER);
     printf("|  %d - Alterar                    |\n", ALTERAR);
+    printf("|  %d - Procurar por CPF           |\n", PROCURA_CPF);
+    printf("|  %d - Procurar por Nome          |\n", PROCURA_NOME);
     printf("|  %d - Imprime Todos Clientes     |\n", EXIBIR_TODOS);
     printf("|  %d - Voltar                     |\n", VOLTAR);
     printf("|                                 |\n");
@@ -201,7 +256,7 @@ int menuClientes() {
 
 void loopClientes(FILE *arq, NoCliente **raizCliente) {
     int m;
-    char cpf[CPF_TAM];
+    char cpf[CPF_TAM], nome[NOME_TAM];
 
     do {
         m = menuClientes();
@@ -222,6 +277,18 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
                 limpaTela();
                 if(pegaDadoCliente(cpf, CPF)) {
                     alterarCliente(arq, raizCliente, cpf);
+                }
+                break;
+            case PROCURA_CPF:
+                limpaTela();
+                if(pegaDadoCliente(cpf, CPF)) {
+                    buscaCPF(arq, *raizCliente);
+                }
+                break;
+            case PROCURA_NOME:
+                limpaTela();
+                if(pegaDadoCliente(nome, NOME)) {
+                    buscaNome(arq);
                 }
                 break;
             case EXIBIR_TODOS: 

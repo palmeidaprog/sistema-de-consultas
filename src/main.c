@@ -14,7 +14,6 @@
 
 //--Protótipos----------------------------------------------------------------
 
-
 void sobre();
 int menuPrincipal();
 // mover para os modulos posteriormente
