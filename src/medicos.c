@@ -13,7 +13,7 @@ void cadastrarMedico(FILE *arq, NoMedico **raizMedico, char *crm) {
     NoMedico *no;
     Medico *med;
     
-    if(buscar(*raizMedico, crm) != NULL) {
+    if(buscarMedico(*raizMedico, crm) != NULL) {
         printf("Medico ja cadastrado\n\n");
         return ;
     }
@@ -27,6 +27,186 @@ void cadastrarMedico(FILE *arq, NoMedico **raizMedico, char *crm) {
     }
     inserirIndiceMedico(raizMedico, no);
     printf("Medico %s foi cadastrado com sucesso\n\n", crm);
+}
+
+void exibirTodosMedicos(FILE *arq, NoMedico *raiz) {
+    Medico medico;
+    int pos = 0;
+
+    if(raiz == NULL) {
+        printf("Não existe medicos cadastrados\n\n");
+        return ;
+    }
+
+    if(ehFolha(raiz)) {
+        leMedico(arq, raiz->indice * sizeof(Medico), &medico);
+        imprimeMedico(&medico, ++pos);
+        return ;
+    }
+    if(raiz->esq != NULL) {
+        exibirTodos(arq, raiz->esq);
+    }
+    if(raiz->dir != NULL) {
+        exibirTodos(arq, raiz->dir);
+    }
+}
+
+void removerMedico(FILE *arq, NoMedico **raiz, char *crm) {
+    Medico medico;
+    NoMedico *pos;
+
+    pos = buscarMedico(*raiz, crm);
+    if(pos == NULL) {
+        printf("Medico com esse CRM (%s) nao existe\n\n", crm);
+        return ;
+    }
+
+    if(!leMedico(arq, pos->indice * sizeof(Medico), &medico)) {
+        printf("Erro ao ler o arquivo %s\n\n", MEDICOS_ARQ);
+    }
+    medico.status = 0;
+    escreveMedico(arq, &medico, pos->indice * sizeof(Medico));
+    removerIndiceMedico(raiz, pos);
+    printf("Medico %s removido com sucesso\n\n", crm);
+}
+
+Medico *criaMedico(char *crm) { // TODO: 
+    Medico *med = (Medico *) malloc(sizeof(Medico));
+
+    strcpy(med->crm, crm);
+    // TODO: Resolver problema de ENTER no nome
+    pegaDado(med->nome, NOME);
+    pegaDado(med->telefone, TELEFONE);
+    pegaDado(med->email, EMAIL);
+    med->status = 1;
+
+    return med;
+}
+
+void alterarMedico(FILE *arq, NoMedico **raiz, char *crm) {
+    NoMedico *pos;
+    Medico medico;
+
+    pos = buscarMedico(*raiz, crm);
+    if(pos == NULL) {
+        printf("Medico nao existe\n\n");
+        return ;
+    }
+
+    if(!leMedico(arq, pos->indice * sizeof(Medico), &medico)) {
+        printf("Erro ao ler arquivo %s\n\n", MEDICOS_ARQ);
+    }
+    imprimeMedico(&medico, 0);
+    printf("Digite os novos dados:\n\n");
+    pegaDado(medico.telefone, TELEFONE);
+    pegaDado(medico.email, EMAIL);
+    escreveMedico(arq, &medico, pos->indice * sizeof(Medico));
+    printf("Dados modificados com exito\n\n");
+}
+
+void buscaNomeMedico(FILE *arq, char *nome) {
+    int pos;
+    Medico medico;
+
+    pos = buscaPorNomeMedico(arq, nome);
+    if(pos == -1) {
+        printf("Medico com nome %s nao existe\n\n", nome);
+    } else {
+        if(!leMedico(arq, pos, &medico)) {
+            printf("Erro ao ler medico do arquivo\n\n");
+        } else {
+            imprimeMedico(&medico, 0);
+        }
+    }
+}
+
+//--Arquivo-------------------------------------------------------------------
+
+int buscaPorNomeMedico(FILE *arq, char *nome) {
+    int const TAM = 100;
+    int n;
+    Medico medicos[TAM];
+
+    fseek(arq, 0, SEEK_SET);
+    do {
+        n = fread(medicos, sizeof(Medico), TAM, arq);
+        for(int i = 0; i < n; ++i) {
+            if(strcmp(nome, medicos[i].nome) == 0) {
+                return ftell(arq) - (sizeof(Medico) - (sizeof(Medico) * 
+                    (n - (i+1))));
+            }
+        }
+    } while(n == TAM);
+    return -1;    
+}
+
+// retorna 1 se conseguiu incluir no arquivo
+NoMedico *escreveMedico(FILE *arq, Medico *med, int pos) {
+    NoMedico *retorno = NULL;
+
+    if(pos == -1) {
+        fseek(arq, 0, SEEK_END);
+    }
+    else {
+        fseek(arq, pos, SEEK_SET);
+    }
+    if(fwrite(med, sizeof(Medico), 1, arq) && ftell(arq) != -1){
+        retorno = criaNoMedico(med, (ftell(arq) - sizeof(Medico)) /
+             sizeof(Medico));
+        fflush(arq); // força os dados a serem escritos
+    }
+    return retorno;
+}
+
+// retorna 0 se nao conseguir ler
+int leMedico(FILE *arq, long long pos, Medico *medico) {
+
+    fseek(arq, pos, SEEK_SET);
+    if(fread(medico, sizeof(Medico), 1, arq) != 1) {
+        return 0;
+    }
+    return 1;
+}
+
+void limpaArquivoMedico(FILE *arq) {
+    FILE *aux;
+    int const TAM = 25;
+    int nLidos = 0, nEscrever = 0;
+    Medico lidos[TAM], escrever[TAM];
+
+    aux = abreArquivo("aux.dat");
+    fseek(arq, 0, SEEK_SET);
+    do {
+        nLidos = fread(lidos, sizeof(Medico), TAM, arq);
+        nEscrever = 0;
+        for(int i = 0; i < nLidos; i++) {
+            if(lidos[i].status) {
+                escrever[nEscrever++] = lidos[i];
+            }
+        }
+
+        if(nEscrever != fwrite(escrever, sizeof(Medico), nEscrever, aux)) {
+            printf("Erro ao executar limpeza no arquivo %s\n\n", MEDICOS_ARQ);
+        }
+    } while(nLidos == TAM);
+
+    fflush(aux);
+    fechaArquivo(arq, MEDICOS_ARQ);
+    fechaArquivo(aux, "aux.dat");
+    remove(MEDICOS_ARQ);
+    rename("aux.dat", MEDICOS_ARQ);
+}
+
+//--io------------------------------------------------------------------------
+
+void imprimeMedico(Medico *med, int pos) {
+    if(pos) { // so imprime se pos != 0
+        printf("Medico No. %d\n", pos);
+    }
+    printf("Nome: %s\n", med->nome);
+    printf("CRM: %s\n", med->crm);
+    printf("Telefone: %s\n", med->telefone);
+    printf("E-mail: %s\n\n", med->email);
 }
 
 //--Menu----------------------------------------------------------------------

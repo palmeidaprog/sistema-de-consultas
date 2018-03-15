@@ -8,10 +8,11 @@
  */
 
 #include "validacao.h"
-#include "clientes.h"
 
-int pegaTamanho(ClienteTipo tipo) {
+int pegaTamanho(Tipo tipo) {
     switch(tipo) {
+        case CRM: 
+            return CRM_TAM;
         case EMAIL: 
             return EMAIL_TAM;
         case CPF: 
@@ -23,8 +24,11 @@ int pegaTamanho(ClienteTipo tipo) {
     }
 }
 
-void pegaErro(ClienteTipo tipo, char *erro) {
+void pegaErro(Tipo tipo, char *erro) {
     switch(tipo) {
+        case CRM: 
+            strcpy(erro, "CRM Invalido\n\n");
+            break;
         case EMAIL: 
             strcpy(erro, "ERRO: Email deve conter apenas uma arroba.\n");
             break;
@@ -40,25 +44,28 @@ void pegaErro(ClienteTipo tipo, char *erro) {
     }
 }
 
-void pegaMensagem(ClienteTipo tipo, char *msg) {
+void pegaMensagem(Tipo tipo, char *msg) {
     switch(tipo) {
+        case CRM: 
+            strcpy(msg, "Insira o CRM do Medico: ");
+            break;
         case EMAIL: 
-            strcpy(msg, "Insira o e-mail do cliente: ");
+            strcpy(msg, "Insira o e-mail: ");
             break;
         case CPF: 
             strcpy(msg, "Insira o CPF (Sem pontos e hifen): ");
             break;
         case NOME:
-            strcpy(msg, "Insira o nome do cliente: ");
+            strcpy(msg, "Insira o nome: ");
             break;
         default:  // TELEFONE
-            strcpy(msg, "Insira o telefone do cliente: ");
+            strcpy(msg, "Insira o telefone: ");
             break;
     }
 }
 
-// so retorna 0 caso validacao do CPF seja invalida
-int pegaDadoCliente(char *dado, ClienteTipo tipo) { 
+// so retorna 0 caso validacao do CPF/CRM seja invalida
+int pegaDado(char *dado, Tipo tipo) { 
     int erro = 0;
     char str[50]; 
     
@@ -72,17 +79,21 @@ int pegaDadoCliente(char *dado, ClienteTipo tipo) {
         pegaString(dado, pegaTamanho(tipo));
         erro =1;
         // CPF nao fica preso no loop
-        if(tipo == CPF && !validacao(dado, tipo)) { 
+        if((tipo == CPF || tipo == CRM) && !validacao(dado, tipo)) { 
             pegaErro(tipo, str);
             printf("%s", str);
             return 0;
         }
-    } while(tipo != CPF && !validacao(dado, tipo));
+    } while(tipo != CPF && tipo != CRM && !validacao(dado, tipo));
     return 1;
 }
 
 
 //--Validações----------------------------------------------------------------
+
+int validaCRM(char *crm) { // TODO: Implementar
+    return 1;
+}
 
 int validaCPF(char *cpf) {
     int primeiroDigito = 0, segundoDigito = 0, multiplicador = 11, i = 0;
@@ -175,7 +186,7 @@ int ehLetra(char c) {
 
 // apenas encontra . - _ letras e numeros. Arroba tem que existir e tem que 
 // existir um ponto apos a arroba (nao pode ser o ultimo caractere)
-int validaEmail(char *email) { // FIXME: Corrigir validacao
+int validaEmail(char *email) {
     int arroba = 0, pontoAposArroba = 0, i = 0, letraAntesArroba = 0;
 
     if(!ehLetra(email[0]) && !ehNumero(email[0])) {
@@ -224,8 +235,10 @@ int validoNoEmail(char c) {
 }
 
 // valida tudo
-int validacao(char *aValidar, ClienteTipo tipo) {
+int validacao(char *aValidar, Tipo tipo) {
     switch(tipo) {
+        case CRM: 
+            return validaCRM(aValidar);
         case EMAIL: 
             return validaEmail(aValidar);
         case CPF: 

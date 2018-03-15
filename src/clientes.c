@@ -75,9 +75,9 @@ Cliente *criaCliente(char *cpf) {
 
     strcpy(cl->cpf, cpf);
     // TODO: Resolver problema de ENTER no nome
-    pegaDadoCliente(cl->nome, NOME);
-    pegaDadoCliente(cl->telefone, TELEFONE);
-    pegaDadoCliente(cl->email, EMAIL);
+    pegaDado(cl->nome, NOME);
+    pegaDado(cl->telefone, TELEFONE);
+    pegaDado(cl->email, EMAIL);
     cl->status = 1;
 
     return cl;
@@ -98,8 +98,8 @@ void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     }
     imprimeCliente(&cliente, 0);
     printf("Digite os novos dados:\n\n");
-    pegaDadoCliente(cliente.telefone, TELEFONE);
-    pegaDadoCliente(cliente.email, EMAIL);
+    pegaDado(cliente.telefone, TELEFONE);
+    pegaDado(cliente.email, EMAIL);
     escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
     printf("Dados modificados com exito\n\n");
 }
@@ -258,31 +258,31 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
         switch(m) {
             case CADASTRAR:
                 limpaTela();
-                if(pegaDadoCliente(cpf, CPF)) {
+                if(pegaDado(cpf, CPF)) {
                     cadastrarCliente(arq, raizCliente, cpf);
                 }
                 break;
             case REMOVER:
                 limpaTela();
-                if(pegaDadoCliente(cpf, CPF)) {
+                if(pegaDado(cpf, CPF)) {
                     removerCliente(arq, raizCliente, cpf);
                 }
                 break;
             case ALTERAR:
                 limpaTela();
-                if(pegaDadoCliente(cpf, CPF)) {
+                if(pegaDado(cpf, CPF)) {
                     alterarCliente(arq, raizCliente, cpf);
                 }
                 break;
             case PROCURA_CPF:
                 limpaTela();
-                if(pegaDadoCliente(cpf, CPF)) {
+                if(pegaDado(cpf, CPF)) {
                     buscaCPF(arq, *raizCliente, cpf);
                 }
                 break;
             case PROCURA_NOME:
                 limpaTela();
-                if(pegaDadoCliente(nome, NOME)) {
+                if(pegaDado(nome, NOME)) {
                     buscaNome(arq, nome);
                 }
                 break;

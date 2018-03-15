@@ -11,21 +11,29 @@
 #define VALIDACAO_H
 
 #include "io.h"
+#include "medicos.h"
+#include "clientes.h"
 #include <string.h>
 #include <stdio.h>
 
-typedef enum ClienteTipo {
+
+typedef enum Tipo {
     EMAIL,
     CPF,
     NOME,
-    TELEFONE
-} ClienteTipo;
+    TELEFONE,
+    CRM
+} Tipo;
 
-int pegaTamanho(ClienteTipo tipo);
-void pegaErro(ClienteTipo tipo, char *erro);
-void pegaMensagem(ClienteTipo tipo, char *msg);
-int pegaDadoCliente(char *dado, ClienteTipo tipo);
+int pegaDado(char *dado, Tipo tipo);
 
+int pegaTamanho(Tipo tipo);
+void pegaErro(Tipo tipo, char *erro);
+void pegaMensagem(Tipo tipo, char *msg);
+
+//--Validações----------------------------------------------------------------
+
+int validaCRM(char *crm);
 int validaCPF(char *cpf);
 int restoCPF(int x); 
 int validaNome(char *nome);
@@ -35,6 +43,6 @@ int ehNumero(char c);
 int ehLetra(char c);
 int validaEmail(char *email);
 int validoNoEmail(char c);
-int validacao(char *aValidar, ClienteTipo tipo);
+int validacao(char *aValidar, Tipo tipo);
 
 #endif // VALIDACAO_H

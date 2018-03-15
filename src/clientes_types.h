@@ -14,12 +14,13 @@
 #define STRUCT_TAM
 
 // Constantes
-#define CPF_TAM 13 // + 1 para o /0
 #define NOME_TAM 128
 #define TELEFONE_TAM 17 // +1 para o /0
 #define EMAIL_TAM 64
 
 #endif // STRUCT_TAM
+
+#define CPF_TAM 13 // + 1 para o /0
 
 #define CLIENTE_ARQ "clientes.dat"
 
@@ -39,5 +40,10 @@ typedef struct NoCliente {
     struct NoCliente *dir, *esq;
 } NoCliente;
 
+// usado para validar CRM
+typedef enum Estado {
+    PE,
+    PB
+} Estado;
 
 #endif // CLIENTES_TYPES_H

@@ -23,7 +23,26 @@
 #include "medicos_types.h"
 #include "arvore_medicos.h"
 #include "io.h"
+#include <string.h>
 #include <stdio.h>
+
+void cadastrarMedico(FILE *arq, NoMedico **raizMedico, char *crm);
+void exibirTodosMedicos(FILE *arq, NoMedico *raiz);
+void removerMedico(FILE *arq, NoMedico **raiz, char *crm);
+Medico *criaMedico(char *crm);
+void alterarMedico(FILE *arq, NoMedico **raiz, char *crm);
+void buscaNomeMedico(FILE *arq, char *nome);
+
+//--Arquivo-------------------------------------------------------------------
+
+int buscaPorNomeMedico(FILE *arq, char *nome);
+NoMedico *escreveMedico(FILE *arq, Medico *med, int pos);
+int leMedico(FILE *arq, long long pos, Medico *medico);
+void limpaArquivoMedico(FILE *arq);
+
+//--io------------------------------------------------------------------------
+
+void imprimeMedico(Medico *med, int pos);
 
 //--Menu----------------------------------------------------------------------
 
