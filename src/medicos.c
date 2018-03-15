@@ -38,16 +38,16 @@ void exibirTodosMedicos(FILE *arq, NoMedico *raiz) {
         return ;
     }
 
-    if(ehFolha(raiz)) {
+    if(ehFolhaMedico(raiz)) {
         leMedico(arq, raiz->indice * sizeof(Medico), &medico);
         imprimeMedico(&medico, ++pos);
         return ;
     }
     if(raiz->esq != NULL) {
-        exibirTodos(arq, raiz->esq);
+        exibirTodosMedicos(arq, raiz->esq);
     }
     if(raiz->dir != NULL) {
-        exibirTodos(arq, raiz->dir);
+        exibirTodosMedicos(arq, raiz->dir);
     }
 }
 
@@ -242,37 +242,37 @@ void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
         switch(m) {
             case CADASTRAR_M:
                 limpaTela();
-                if(pegaDadoMedico(crm, crm)) {
+                if(pegaDado(crm, CRM)) {
                     cadastrarMedico(arqMed, raizMedico, crm);
                 }
                 break;
             case REMOVER_M:
                 limpaTela();
-                if(pegaDadoMedico(crm, crm)) {
+                if(pegaDado(crm, CRM)) {
                     removerMedico(arqMed, raizMedico, crm);
                 }
                 break;
             case ALTERAR_M:
                 limpaTela();
-                if(pegaDadoMedico(crm, crm)) {
+                if(pegaDado(crm, CRM)) {
                     alterarMedico(arqMed, raizMedico, crm);
                 }
                 break;
             case PROCURA_CRM:
                 limpaTela();
-                if(pegaDadoMedico(crm, crm)) {
-                    buscacrm(arqMed, *raizMedico, crm);
+                if(pegaDado(crm, CRM)) {
+                    //buscaCRM(arqMed, *raizMedico, crm);
                 }
                 break;
             case PROCURA_NOME_M:
                 limpaTela();
-                if(pegaDadoMedico(nome, NOME)) {
-                    buscaNome(arqMed, nome);
+                if(pegaDado(nome, NOME)) {
+                    buscaNomeMedico(arqMed, nome);
                 }
                 break;
             case EXIBIR_TODOS_M: 
                 limpaTela();
-                exibirTodos(arqMed, *raizMedico);
+                exibirTodosMedicos(arqMed, *raizMedico);
                 break;
             case VOLTAR_M:
                 limpaTela();
