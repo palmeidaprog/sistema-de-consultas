@@ -74,6 +74,7 @@ Medico *criaMedico(char *crm) { // TODO:
     pegaDado(med->nome, NOME);
     pegaDado(med->telefone, TELEFONE);
     pegaDado(med->email, EMAIL);
+    inicializarMatriz(med->atendimento);
     med->status = 1;
 
     return med;
@@ -203,6 +204,7 @@ void imprimeMedico(Medico *med, int pos) {
     printf("CRM: %s\n", med->crm);
     printf("Telefone: %s\n", med->telefone);
     printf("E-mail: %s\n\n", med->email);
+    imprimeTableHorario(med->atendimento);
 }
 
 //--Menu----------------------------------------------------------------------

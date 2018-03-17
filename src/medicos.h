@@ -20,6 +20,9 @@
 #define EXIBIR_TODOS_M 6
 #define VOLTAR_M 7
 
+
+#include "tempo_types.h"
+#include "tempo.h"
 #include "medicos_types.h"
 #include "arvore_medicos.h"
 #include "io.h"

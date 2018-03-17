@@ -9,6 +9,16 @@
 
 #include "tempo.h"
 
+void inicializarMatriz(Hora a[5][2]) {
+    for(int i = 0; i < 5; i++) {
+        for(int j = 0; j < 2; j++) {
+            a[i][j].hora = 0;
+            a[i][j].min = 0;
+            a[i][j].seg = 0;
+        }
+    }
+}
+
 void imprimeTableHorario(Hora a[5][2]) {
     printf("|===========================================================|\n");
     printf("|   Tur   |   Seg   |   Ter   |   Qua   |   Qui   |   Sex   |\n");
@@ -55,7 +65,7 @@ Hora pegaHora() {
         limpaBuffer();
     } while(h.hora < 1 || h.hora > 24);
         
-
+    return h;
 }
 
 
