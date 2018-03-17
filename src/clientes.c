@@ -29,26 +29,23 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
     printf("Cliente %s foi cadastrado com sucesso\n\n", cpf);
 }
 
-void exibirTodos(FILE *arq, NoCliente *raiz) {
+void exibirTodos(FILE *arq, NoCliente *raiz, int *pos) {
     Cliente cliente;
-    int pos = 0;
-
+    
     if(raiz == NULL) {
         printf("Não existe clientes cadastrados\n\n");
         return ;
     }
 
-    if(ehFolha(raiz)) {
-        leCliente(arq, raiz->indice * sizeof(Cliente), &cliente);
-        imprimeCliente(&cliente, ++pos);
-        return ;
-    }
     if(raiz->esq != NULL) {
-        exibirTodos(arq, raiz->esq);
+        exibirTodos(arq, raiz->esq, pos);
     }
+    leCliente(arq, raiz->indice * sizeof(Cliente), &cliente);
+    imprimeCliente(&cliente, ++*pos);
     if(raiz->dir != NULL) {
-        exibirTodos(arq, raiz->dir);
+        exibirTodos(arq, raiz->dir, pos);
     }
+
 }
 
 void removerCliente(FILE *arq, NoCliente **raiz, char *cpf) {
@@ -250,7 +247,7 @@ int menuClientes() {
 }
 
 void loopClientes(FILE *arq, NoCliente **raizCliente) {
-    int m;
+    int m, n;
     char cpf[CPF_TAM], nome[NOME_TAM];
 
     do {
@@ -288,7 +285,8 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
                 break;
             case EXIBIR_TODOS: 
                 limpaTela();
-                exibirTodos(arq, *raizCliente);
+                n = 0;
+                exibirTodos(arq, *raizCliente, &n);
                 break;
             case VOLTAR:
                 limpaTela();

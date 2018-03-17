@@ -14,6 +14,7 @@
 #include "medicos.h"
 #include "clientes.h"
 #include <string.h>
+#include <ctype.h>
 #include <stdio.h>
 
 
@@ -30,6 +31,7 @@ int pegaDado(char *dado, Tipo tipo);
 int pegaTamanho(Tipo tipo);
 void pegaErro(Tipo tipo, char *erro);
 void pegaMensagem(Tipo tipo, char *msg);
+int confirmacao(char *msg);
 
 //--Validações----------------------------------------------------------------
 

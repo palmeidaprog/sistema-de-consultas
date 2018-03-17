@@ -17,7 +17,7 @@ int pegaTamanho(Tipo tipo) {
             return EMAIL_TAM;
         case CPF: 
             return CPF_TAM;
-        case NOME: 
+        case NOME:
             return NOME_TAM;
         default:  // TELEFONE
             return TELEFONE_TAM;
@@ -88,10 +88,49 @@ int pegaDado(char *dado, Tipo tipo) {
     return 1;
 }
 
+int confirmacao(char *msg) {
+    char resp;
+
+    do {
+        printf("%s (S/N) ", msg);
+        scanf("%c", &resp);
+        limpaBuffer();
+    } while(resp != 's' && resp != 'n');
+    return (resp == 's');
+}
+
 
 //--Validações----------------------------------------------------------------
 
 int validaCRM(char *crm) { // TODO: Implementar
+    int estado = 0;
+    char estados[][2] = { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", 
+        "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", 
+        "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" };
+    size_t tamanho;
+    
+    tamanho = strlen(crm);
+    if(tamanho < 3 || tamanho > 8) {
+        return 0;
+    }
+
+    for(int i = 0; i < 27; i++) {
+        if(estados[i][0] == crm[0] && estados[i][1] == crm[1]) {
+            estado = 1;
+            break;
+        }
+    }
+
+    if(!estado) {
+        return 0;
+    }
+
+    tamanho -= 1; // funcionar como indice
+    for(int i = 2; i < tamanho; i++) {
+        if(!ehNumero(crm[i])) {
+            return 0;
+        }
+    }
     return 1;
 }
 

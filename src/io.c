@@ -21,7 +21,9 @@ void limpaTela() {
 void pegaString(char *str, size_t n) {
     size_t len;
 
-    fgets(str, n, stdin);
+    do {
+        fgets(str, n, stdin);
+    } while(strcmp(str, "\n") == 0); // rele a string caso so venha \n
     len = strlen(str) - 1;
     if(str[len] == '\n') {
         str[len] = '\0';

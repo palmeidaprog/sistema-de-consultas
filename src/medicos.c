@@ -29,25 +29,21 @@ void cadastrarMedico(FILE *arq, NoMedico **raizMedico, char *crm) {
     printf("Medico %s foi cadastrado com sucesso\n\n", crm);
 }
 
-void exibirTodosMedicos(FILE *arq, NoMedico *raiz) {
+void exibirTodosMedicos(FILE *arq, NoMedico *raiz, int *pos) {
     Medico medico;
-    int pos = 0;
 
     if(raiz == NULL) {
         printf("Não existe medicos cadastrados\n\n");
         return ;
     }
 
-    if(ehFolhaMedico(raiz)) {
-        leMedico(arq, raiz->indice * sizeof(Medico), &medico);
-        imprimeMedico(&medico, ++pos);
-        return ;
-    }
     if(raiz->esq != NULL) {
-        exibirTodosMedicos(arq, raiz->esq);
+        exibirTodosMedicos(arq, raiz->esq, pos);
     }
+    leMedico(arq, raiz->indice * sizeof(Medico), &medico);
+    imprimeMedico(&medico, ++*pos);
     if(raiz->dir != NULL) {
-        exibirTodosMedicos(arq, raiz->dir);
+        exibirTodosMedicos(arq, raiz->dir, pos);
     }
 }
 
@@ -234,7 +230,7 @@ int menuMedicos() {
 }
 
 void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
-    int m;
+    int m, n;
     char crm[CRM_TAM], nome[NOME_TAM];
 
     do {
@@ -272,7 +268,8 @@ void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
                 break;
             case EXIBIR_TODOS_M: 
                 limpaTela();
-                exibirTodosMedicos(arqMed, *raizMedico);
+                n = 0;
+                exibirTodosMedicos(arqMed, *raizMedico, &n);
                 break;
             case VOLTAR_M:
                 limpaTela();

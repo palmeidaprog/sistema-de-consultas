@@ -10,6 +10,8 @@
 #ifndef MEDICOS_TYPES_H
 #define MEDICOS_TYPES_H
 
+#include "tempo_types.h"
+
 #define CRM_TAM 9 // 8 + 1
 #define MEDICOS_ARQ "medicos.dat" 
 
@@ -42,6 +44,7 @@ typedef struct Medico {
     char telefone[TELEFONE_TAM];
     char email[EMAIL_TAM];
     Especialidade especialidade;
+    Hora atendimento[5][2];
     int status;
 } Medico;
 
@@ -51,5 +54,6 @@ typedef struct NoMedico {
     char crm[CRM_TAM];
     struct NoMedico *dir, *esq;
 } NoMedico;
+
 
 #endif // MEDICOS_TYPES_H#ifndef STRUCT_TAM

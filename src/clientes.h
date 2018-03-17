@@ -30,7 +30,7 @@
 //----------------------------------------------------------------------------
 
 void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf);
-void exibirTodos(FILE *arq, NoCliente *raizCliente);
+void exibirTodos(FILE *arq, NoCliente *raizCliente, int *pos);
 void removerCliente(FILE *arq, NoCliente **raiz, char *cpf);
 Cliente *criaCliente(char *cpf);
 void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf);

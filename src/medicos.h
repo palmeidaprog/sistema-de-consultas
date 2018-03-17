@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 void cadastrarMedico(FILE *arq, NoMedico **raizMedico, char *crm);
-void exibirTodosMedicos(FILE *arq, NoMedico *raiz);
+void exibirTodosMedicos(FILE *arq, NoMedico *raiz, int *pos);
 void removerMedico(FILE *arq, NoMedico **raiz, char *crm);
 Medico *criaMedico(char *crm);
 void alterarMedico(FILE *arq, NoMedico **raiz, char *crm);
