@@ -56,9 +56,11 @@ void preencherHorario(Hora a[5][2]) {
         if(confirmacao(msg)) {
             if(confirmacao("Expediente da manha?")) {
                 a[i][0].hora = pegaInt(HORA);
+                a[i][0].min = pegaInt(MIN);
             }
             if(confirmacao("Expediente da tarde?")) {
-                a[i][0].min = pegaInt(MIN);
+                a[i][1].hora = pegaInt(HORA);
+                a[i][1].min = pegaInt(MIN);
             }
         }
     }

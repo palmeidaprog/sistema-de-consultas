@@ -70,7 +70,7 @@ void pegaMensagem(Tipo tipo, char *msg) {
             strcpy(msg, "Insira a hora: ");
             break;
         case MIN:
-            strcpy(msg, "Insira os mnutos: ");
+            strcpy(msg, "Insira os minutos: ");
             break;
         default:  // TELEFONE
             strcpy(msg, "Insira o telefone: ");
