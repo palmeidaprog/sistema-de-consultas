@@ -102,6 +102,24 @@ int pegaDado(char *dado, Tipo tipo) {
     return 1;
 }
 
+void pegaInt(Tipo tipo) {
+    int erro = 0;
+    int dado;
+    char str[50];
+
+    do {
+        if(erro) {
+            pegaErro(tipo, str);
+            printf("%s", str);
+        }
+        pegaMensagem(tipo, str);
+        printf("%s", str);
+        scanf("%d", &dado);
+        limpaBuffer();
+        erro = 1;
+    } while(!validaInt(tipo, dado));
+}
+
 int confirmacao(char *msg) {
     char resp;
 
@@ -115,6 +133,31 @@ int confirmacao(char *msg) {
 
 
 //--Validações----------------------------------------------------------------
+
+int validaInt(Tipo tipo, int dado) {
+    switch(tipo) {
+        case HORA:
+            return validaHora(dado);
+        case MIN:
+            return validaMinuto(dado);
+        default: 
+            break;
+    }
+}
+
+int validaHora(int hora) {
+    if(hora < 0 || hora > 23) {
+        return 0;
+    }
+    return 1;
+}
+
+int validaMinuto(int minuto) {
+    if(minuto < 0 || minuto > 59) {
+        return 0;
+    }
+    return 1;
+}
 
 int validaCRM(char *crm) { // TODO: Implementar
     int estado = 0;

@@ -23,7 +23,9 @@ typedef enum Tipo {
     CPF,
     NOME,
     TELEFONE,
-    CRM
+    CRM,
+    HORA,
+    MIN
 } Tipo;
 
 int pegaDado(char *dado, Tipo tipo);
@@ -31,10 +33,14 @@ int pegaDado(char *dado, Tipo tipo);
 int pegaTamanho(Tipo tipo);
 void pegaErro(Tipo tipo, char *erro);
 void pegaMensagem(Tipo tipo, char *msg);
+void pegaInt(Tipo tipo);
 int confirmacao(char *msg);
 
 //--Validações----------------------------------------------------------------
 
+int validaInt(Tipo tipo, int dado);
+int validaHora(int hora);
+int validaMinuto(int minuto);
 int validaCRM(char *crm);
 int validaCPF(char *cpf);
 int restoCPF(int x); 
