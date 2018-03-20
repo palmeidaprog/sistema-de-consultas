@@ -19,8 +19,10 @@ int pegaTamanho(Tipo tipo) {
             return CPF_TAM;
         case NOME:
             return NOME_TAM;
-        default:  // TELEFONE
+        case TELEFONE:  
             return TELEFONE_TAM;
+        default: // HORA / MIN
+            return 0; 
     }
 }
 
@@ -37,6 +39,12 @@ void pegaErro(Tipo tipo, char *erro) {
             break;
         case NOME:
             strcpy(erro, "ERRO: Nome contem apenas letras e espacos.\n") ;
+            break;
+        case HORA:
+            strcpy(erro, "ERRO: Hora deve ser um numero entre 00 e 23.\n") ;
+            break;
+        case MIN:
+            strcpy(erro, "ERRO: Minutos deve ser um numero entre 00 e 59.\n") ;
             break;
         default: // TELEFONE
             strcpy(erro, "ERRO: Numero de telefone apenas contem numeros.\n");
@@ -57,6 +65,12 @@ void pegaMensagem(Tipo tipo, char *msg) {
             break;
         case NOME:
             strcpy(msg, "Insira o nome: ");
+            break;
+        case HORA:
+            strcpy(msg, "Insira a hora: ");
+            break;
+        case MIN:
+            strcpy(msg, "Insira os mnutos: ");
             break;
         default:  // TELEFONE
             strcpy(msg, "Insira o telefone: ");

@@ -12,28 +12,37 @@
 void inicializarMatriz(Hora a[5][2]) {
     for(int i = 0; i < 5; i++) {
         for(int j = 0; j < 2; j++) {
-            a[i][j].hora = 0;
+            a[i][j].hora = -1;
             a[i][j].min = 0;
             a[i][j].seg = 0;
         }
     }
 }
 
-void imprimeTableHorario(Hora a[5][2]) {
+void imprimeTabelaHorario(Hora a[5][2]) {
     printf("|===========================================================|\n");
     printf("|   Tur   |   Seg   |   Ter   |   Qua   |   Qui   |   Sex   |\n");
     printf("|===========================================================|\n");
     printf("|  Manha  |");
     for(int i = 0; i < 5; i++) {
-        printf("  %02dh%02d  |", a[i][0].hora, a[i][0].min);
+        printHora(a[i][0]);
     }
     printf("\n");
     printf("|  Tarde  |");
     for(int i = 0; i < 5; i++) {
-        printf("  %02dh%02d  |", a[i][1].hora, a[i][1].min);
+        printHora(a[i][1]);
     }
     printf("\n");
     printf("|===================================================|\n");
+}
+
+// suporte para imprimeTabelaHorarrio
+void printHora(Hora hora) {
+    if(hora.hora == -1) {
+        printf("    -    |");
+    } else {
+        printf("  %02dh%02d  |", hora.hora, hora.min);
+    }
 }
 
 void preencherHorario(Hora a[5][2]) {

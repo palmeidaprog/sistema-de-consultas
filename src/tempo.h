@@ -17,5 +17,6 @@
 
 void inicializarMatriz(Hora a[5][2]);
 void imprimeTableHorario(Hora a[5][2]);
+void printHora(Hora hora);
 
 #endif // TEMPO_H
