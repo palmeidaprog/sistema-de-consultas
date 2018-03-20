@@ -55,26 +55,13 @@ void preencherHorario(Hora a[5][2]) {
         strcat(msg, "?");
         if(confirmacao(msg)) {
             if(confirmacao("Expediente da manha?")) {
-                
+                a[i][0].hora = pegaInt(HORA);
             }
             if(confirmacao("Expediente da tarde?")) {
-
+                a[i][0].min = pegaInt(MIN);
             }
         }
     }
-
-}
-
-Hora pegaHora() {
-    Hora h;
-
-    do {
-        printf("Insira hora: ");
-        scanf("%d", &h.hora);
-        limpaBuffer();
-    } while(h.hora < 1 || h.hora > 24);
-        
-    return h;
 }
 
 

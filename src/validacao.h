@@ -33,7 +33,7 @@ int pegaDado(char *dado, Tipo tipo);
 int pegaTamanho(Tipo tipo);
 void pegaErro(Tipo tipo, char *erro);
 void pegaMensagem(Tipo tipo, char *msg);
-void pegaInt(Tipo tipo);
+int pegaInt(Tipo tipo);
 int confirmacao(char *msg);
 
 //--Validações----------------------------------------------------------------

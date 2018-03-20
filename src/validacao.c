@@ -102,7 +102,7 @@ int pegaDado(char *dado, Tipo tipo) {
     return 1;
 }
 
-void pegaInt(Tipo tipo) {
+int pegaInt(Tipo tipo) {
     int erro = 0;
     int dado;
     char str[50];
@@ -118,6 +118,8 @@ void pegaInt(Tipo tipo) {
         limpaBuffer();
         erro = 1;
     } while(!validaInt(tipo, dado));
+    
+    return dado;
 }
 
 int confirmacao(char *msg) {
@@ -138,10 +140,8 @@ int validaInt(Tipo tipo, int dado) {
     switch(tipo) {
         case HORA:
             return validaHora(dado);
-        case MIN:
+        default: // MIN
             return validaMinuto(dado);
-        default: 
-            break;
     }
 }
 
@@ -159,7 +159,7 @@ int validaMinuto(int minuto) {
     return 1;
 }
 
-int validaCRM(char *crm) { // TODO: Implementar
+int validaCRM(char *crm) {
     int estado = 0;
     char estados[][2] = { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", 
         "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", 

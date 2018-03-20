@@ -66,15 +66,15 @@ void removerMedico(FILE *arq, NoMedico **raiz, char *crm) {
     printf("Medico %s removido com sucesso\n\n", crm);
 }
 
-Medico *criaMedico(char *crm) { // TODO: 
+Medico *criaMedico(char *crm) { 
     Medico *med = (Medico *) malloc(sizeof(Medico));
 
     strcpy(med->crm, crm);
-    // TODO: Resolver problema de ENTER no nome
     pegaDado(med->nome, NOME);
     pegaDado(med->telefone, TELEFONE);
     pegaDado(med->email, EMAIL);
     inicializarMatriz(med->atendimento);
+    preencherHorario(med->atendimento);
     med->status = 1;
 
     return med;
@@ -204,7 +204,7 @@ void imprimeMedico(Medico *med, int pos) {
     printf("CRM: %s\n", med->crm);
     printf("Telefone: %s\n", med->telefone);
     printf("E-mail: %s\n\n", med->email);
-    imprimeTableHorario(med->atendimento);
+    imprimeTabelaHorario(med->atendimento);
 }
 
 //--Menu----------------------------------------------------------------------
