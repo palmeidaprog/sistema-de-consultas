@@ -10,7 +10,7 @@
 #ifndef MEDICOS_TYPES_H
 #define MEDICOS_TYPES_H
 
-#include "tempo_types.h"
+#include "tempo.h"
 
 #define CRM_TAM 9 // 8 + 1
 #define MEDICOS_ARQ "medicos.dat" 

@@ -10,7 +10,7 @@
 #ifndef ARVORE_MEDICOS_H
 #define ARVORE_MEDICOS_H
 
-#include "medicos_types.h"
+#include "medicos.h"
 #include "validacao.h"
 #include <stdio.h>
 #include <string.h>
