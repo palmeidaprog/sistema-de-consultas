@@ -40,7 +40,9 @@ void exibirTodosMedicos(FILE *arq, NoMedico *raiz, int *pos) {
     if(raiz->esq != NULL) {
         exibirTodosMedicos(arq, raiz->esq, pos);
     }
-    leMedico(arq, raiz->indice * sizeof(Medico), &medico);
+    if(!leMedico(arq, raiz->indice * sizeof(Medico), &medico)) {
+        printf("Erro ao ler o arquivo de Medicos (medicos.dat)");
+    }
     imprimeMedico(&medico, ++*pos);
     if(raiz->dir != NULL) {
         exibirTodosMedicos(arq, raiz->dir, pos);

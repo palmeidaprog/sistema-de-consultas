@@ -33,7 +33,8 @@ void imprimeTabelaHorario(Hora a[5][2]) {
         printHora(a[i][1]);
     }
     printf("\n");
-    printf("|===================================================|\n");
+    printf("|===========================================================|\n");
+    printf("\n");
 }
 
 // suporte para imprimeTabelaHorarrio

@@ -32,6 +32,7 @@ int main() {
     arqCliente = abreArquivo(CLIENTE_ARQ);
     arqMedico = abreArquivo(MEDICOS_ARQ);
     criaArvoreCliente(arqCliente, &raizCliente);
+    criaArvoreMedico(arqMedico, &raizMedico);
     limpaTela();
     sobre();
 
