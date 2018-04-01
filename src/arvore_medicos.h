@@ -10,6 +10,7 @@
 #ifndef ARVORE_MEDICOS_H
 #define ARVORE_MEDICOS_H
 
+#pragma warning(disable: 4996)
 #include "medicos.h"
 #include "validacao.h"
 #include <stdio.h>

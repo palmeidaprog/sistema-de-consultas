@@ -10,6 +10,8 @@
 #ifndef CONSULTAS_H
 #define CONSULTAS_H
 
+#pragma warning(disable: 4996)
+
 typedef struct Consulta {
     int n;
 } Consultas;

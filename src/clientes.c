@@ -138,7 +138,7 @@ void buscaCPF(FILE *arq, NoCliente *raiz, char *cpf) {
 int buscaPorNome(FILE *arq, char *nome) {
     int const TAM = 100;
     int n;
-    Cliente clientes[TAM];
+    Cliente clientes[100];
 
     fseek(arq, 0, SEEK_SET);
     do {
@@ -185,7 +185,7 @@ void limpaArquivoCliente(FILE *arq) {
     FILE *aux;
     int const TAM = 25;
     int nLidos = 0, nEscrever = 0;
-    Cliente lidos[TAM], escrever[TAM];
+    Cliente lidos[25], escrever[25];
 
     aux = abreArquivo("aux.dat");
     fseek(arq, 0, SEEK_SET);

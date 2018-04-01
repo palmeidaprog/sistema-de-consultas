@@ -61,7 +61,7 @@ void pegaMensagem(Tipo tipo, char *msg) {
             strcpy(msg, "Insira o e-mail: ");
             break;
         case CPF: 
-            strcpy(msg, "Insira o CPF (Sem pontos e hifen): ");
+            strcpy(msg, "Insira o CPF (Sem pontos e hifen): "); // ___.___.___-__\rInsira o CPF (Sem pontos e hifen): ");
             break;
         case NOME:
             strcpy(msg, "Insira o nome: ");
@@ -183,7 +183,7 @@ int validaCRM(char *crm) {
     }
 
     tamanho -= 1; // funcionar como indice
-    for(int i = 2; i < tamanho; i++) {
+    for(size_t i = 2; i < tamanho; i++) {
         if(!ehNumero(crm[i])) {
             return 0;
         }

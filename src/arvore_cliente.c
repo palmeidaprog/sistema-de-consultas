@@ -11,7 +11,7 @@
 
 void criaArvoreCliente(FILE *arq, NoCliente **raizCliente) {
     int const TAM = 25;
-    Cliente v[TAM];
+    Cliente v[25];
     NoCliente *no;
     long long pos = 0, n;
 

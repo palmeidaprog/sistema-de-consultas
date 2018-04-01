@@ -19,6 +19,7 @@
 #define EXIBIR_TODOS 6
 #define VOLTAR 7
 
+#pragma warning(disable: 4996)
 #include "clientes_types.h"
 #include "io.h"
 #include "validacao.h"

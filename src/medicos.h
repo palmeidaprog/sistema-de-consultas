@@ -20,6 +20,7 @@
 #define EXIBIR_TODOS_M 6
 #define VOLTAR_M 7
 
+#pragma warning(disable: 4996)
 #include "medicos_types.h"
 #include "tempo.h"
 #include "arvore_medicos.h"

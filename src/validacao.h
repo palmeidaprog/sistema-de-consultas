@@ -10,6 +10,7 @@
 #ifndef VALIDACAO_H
 #define VALIDACAO_H
 
+#pragma warning(disable: 4996)
 #include "io.h"
 #include "medicos.h"
 #include "clientes.h"

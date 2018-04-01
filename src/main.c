@@ -7,6 +7,7 @@
  * E-mail: pauloalmeidaf@gmail.com
  */
 
+#pragma warning(disable: 4996)
 #include "io.h"
 #include "validacao.h"
 #include "clientes.h"

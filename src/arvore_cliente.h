@@ -10,6 +10,7 @@
 #ifndef ARVORE_CLIENTE_H
 #define ARVORE_CLIENTE_H
 
+#pragma warning(disable: 4996)
 #include "clientes.h"
 #include "validacao.h"
 

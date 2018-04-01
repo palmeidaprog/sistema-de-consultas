@@ -11,7 +11,7 @@
 
 void criaArvoreMedico(FILE *arq, NoMedico **raizMedico) {
     int const TAM = 100;
-    Medico v[TAM];
+    Medico v[100];
     NoMedico *no;
     long long pos = 0, n;
 

@@ -10,6 +10,7 @@
 #ifndef TEMPO_H
 #define TEMPO_H
 
+#pragma warning(disable: 4996)
 #include "tempo_types.h"
 #include "validacao.h"
 #include <string.h>
