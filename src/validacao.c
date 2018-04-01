@@ -245,6 +245,10 @@ int restoCPF(int x) {
 int validaNome(char *nome) {
     int i = 0;
 
+    if(strlen(nome) <= 1) {
+        return 0;
+    }
+
     while(nome[i] != '\0') {
         if(!ehLetra(nome[i]) && !ehEspaco(nome[i])) {
             return 0;
