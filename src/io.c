@@ -69,11 +69,6 @@ void pegaString(char *str, size_t n) {
     n -= 2;
     
     while(i < n) {
-        if(i == 3 || i == 6) {
-            printf(".");
-        } else if(i == 9) {
-            printf("-");
-        }
         str[i] = getche();
         if(str[i] == '\n') {
             break;

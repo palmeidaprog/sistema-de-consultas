@@ -90,7 +90,11 @@ int pegaDado(char *dado, Tipo tipo) {
         }
         pegaMensagem(tipo, str);
         printf("%s", str);
-        pegaString(dado, pegaTamanho(tipo));
+        if(tipo == CPF) {
+            pegaCPF(dado, pegaTamanho(tipo));    
+        } else {
+            pegaString(dado, pegaTamanho(tipo));
+        }
         erro =1;
         // CPF nao fica preso no loop
         if((tipo == CPF || tipo == CRM) && !validacao(dado, tipo)) { 

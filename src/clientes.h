@@ -19,7 +19,9 @@
 #define EXIBIR_TODOS 6
 #define VOLTAR 7
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
 #pragma warning(disable: 4996)
+#endif
 #include "clientes_types.h"
 #include "io.h"
 #include "validacao.h"

@@ -10,7 +10,10 @@
 #ifndef ARVORE_CLIENTE_H
 #define ARVORE_CLIENTE_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
 #pragma warning(disable: 4996)
+#endif
+
 #include "clientes.h"
 #include "validacao.h"
 

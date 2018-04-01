@@ -10,7 +10,10 @@
 #ifndef ARVORE_MEDICOS_H
 #define ARVORE_MEDICOS_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
 #pragma warning(disable: 4996)
+#endif
+
 #include "medicos.h"
 #include "validacao.h"
 #include <stdio.h>

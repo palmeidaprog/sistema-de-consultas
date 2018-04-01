@@ -10,14 +10,16 @@
 #ifndef VALIDACAO_H
 #define VALIDACAO_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
 #pragma warning(disable: 4996)
+#endif
+
 #include "io.h"
 #include "medicos.h"
 #include "clientes.h"
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-
+#include <string.h> 
+#include <ctype.h> 
+#include <stdio.h> 
 
 typedef enum Tipo {
     EMAIL,
@@ -30,7 +32,6 @@ typedef enum Tipo {
 } Tipo;
 
 int pegaDado(char *dado, Tipo tipo);
-
 int pegaTamanho(Tipo tipo);
 void pegaErro(Tipo tipo, char *erro);
 void pegaMensagem(Tipo tipo, char *msg);
