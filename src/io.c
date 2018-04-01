@@ -70,7 +70,10 @@ void pegaString(char *str, size_t n) {
     
     while(i < n) {
         str[i] = getche();
-        if(str[i] == '\n') {
+        if(str[i] == '\n' || str[i] == 13) {
+            #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+            printf("\n");
+            #endif
             break;
         }
         ++i;
