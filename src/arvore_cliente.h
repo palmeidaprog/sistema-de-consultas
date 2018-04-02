@@ -32,5 +32,6 @@ int ehFolha(NoCliente *no);
 NoCliente *buscar(NoCliente *raiz, char *cpf);
 int buscarRemover(NoCliente **raiz, NoCliente *anterior, NoCliente *remov, 
     char *cpf); // suporte para removeIndice
+void desalocaClientes(NoCliente **raiz);
 
 #endif // ARVORE_CLIENTE_H

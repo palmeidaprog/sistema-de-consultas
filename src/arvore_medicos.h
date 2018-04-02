@@ -31,5 +31,6 @@ NoMedico *maiorIndiceMedico(NoMedico *raiz);
 NoMedico *criaNoMedico(Medico *m, long long int pos);
 int ehFolhaMedico(NoMedico *no);
 NoMedico *buscarMedico(NoMedico *raiz, char *cpf);
+void desalocaMedicos(NoMedico **raiz);
 
 #endif // ARVORE_MEDICOS_H

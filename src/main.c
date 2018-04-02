@@ -57,6 +57,7 @@ int main() {
                 break;
             case 4:
                 limpaArquivoCliente(arqCliente);
+                desalocaClientes(&raizCliente);
                 break;
             default:
                 limpaTela();
