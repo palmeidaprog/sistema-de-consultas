@@ -11,7 +11,7 @@
 
 void criaArvoreCliente(FILE *arq, NoCliente **raizCliente) {
     int const TAM = 25;
-    Cliente v[25];
+    Cliente v[TAM];
     NoCliente *no;
     long long pos = 0, n;
 
@@ -69,10 +69,8 @@ void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov) {
     } else { // nao é folha
         maior = maiorIndiceCliente(*raizCliente);
         copiaNoCliente(remov, maior); // copia maior no lugar do removido
-        if(!ehFolha(maior)) { 
+        if(!ehFolha(maior)) {
             moveNoCliente(maior, maior->esq); // move filho
-        } else {
-            removeFolhaCliente(raizCliente, maior);
         }
     }
 }
@@ -105,7 +103,7 @@ NoCliente *maiorIndiceCliente(NoCliente *raiz) {
         return NULL;
     }
 
-    while(raiz->dir != NULL) {
+    while(!ehFolha(raiz)) {
         raiz = raiz->dir;
     }
     return raiz;
@@ -135,13 +133,4 @@ NoCliente *buscar(NoCliente *raiz, char *cpf) {
         }
     }
     return NULL;   
-}
-
-void desalocaClientes(NoCliente **raiz) {
-    if(*raiz != NULL) {
-        desalocaClientes(&((*raiz)->esq));
-        desalocaClientes(&((*raiz)->dir));
-        free(*raiz);
-        *raiz = NULL;
-    }
 }

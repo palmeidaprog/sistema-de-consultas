@@ -10,26 +10,20 @@
 #ifndef IO_H
 #define IO_H
 
-#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
-#pragma warning(disable: 4996)
-#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-//nao é windows
-#if !defined(Win32) && !defined(_Win32) && !defined(_WIN32) && !defined(_WIN64) 
+#if !defined(Win32) && !defined(_Win32) // windows
 #include <termios.h>
 #include <unistd.h>
 #include <assert.h>
-#else
-#include <conio.h>
 #endif
+
 
 void limpaBuffer();
 void limpaTela();
-void pegaCPF(char *str, size_t n);
 void pegaString(char *str, size_t n);
 int existeArquivo(char *nomeDoArquivo);
 FILE *abreArquivo(char *nomeDoArquivo);

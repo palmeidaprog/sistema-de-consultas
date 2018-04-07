@@ -19,7 +19,7 @@ void inicializarMatriz(Hora a[5][2]) {
     }
 }
 
-void imprimeTabelaHorario(Hora a[5][2]) {
+/*void imprimeTabelaHorario(Hora a[5][2]) {
     printf("|===========================================================|\n");
     printf("|   Tur   |   Seg   |   Ter   |   Qua   |   Qui   |   Sex   |\n");
     printf("|===========================================================|\n");
@@ -37,16 +37,9 @@ void imprimeTabelaHorario(Hora a[5][2]) {
     printf("\n");
 }
 
-// suporte para imprimeTabelaHorarrio
-void printHora(Hora hora) {
-    if(hora.hora == -1) {
-        printf("    -    |");
-    } else {
-        printf("  %02dh%02d  |", hora.hora, hora.min);
-    }
-}
 
-void preencherHorario(Hora a[5][2]) {
+
+/*void preencherHorario(Hora a[5][2]) {
     char semana[5][25] = { "Segunda", "Terca", "Quarta", "Quinta", "Sexta" };
     char msg[100];
 
@@ -65,6 +58,6 @@ void preencherHorario(Hora a[5][2]) {
             }
         }
     }
-}
+}*/
 
 

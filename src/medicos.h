@@ -20,11 +20,7 @@
 #define EXIBIR_TODOS_M 6
 #define VOLTAR_M 7
 
-#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
-#pragma warning(disable: 4996)
-#endif
 #include "medicos_types.h"
-#include "tempo.h"
 #include "arvore_medicos.h"
 #include "io.h"
 #include <string.h>
@@ -47,10 +43,15 @@ void limpaArquivoMedico(FILE *arq);
 //--io------------------------------------------------------------------------
 
 void imprimeMedico(Medico *med, int pos);
+void preencherHorario(int a[][2]);
+void printHora(int x);
+void imprimeTabelaHorario(int a[][2]);
+void pegaEspecialidade(Especialidade e, char *especNome);
 
 //--Menu----------------------------------------------------------------------
 
 int menuMedicos();
+int menuEspecialidades();
 void loopMedicos(FILE *arqMed, NoMedico **raizMedico);
 
 #endif // MEDICOS_H

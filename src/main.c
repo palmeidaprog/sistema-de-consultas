@@ -7,10 +7,6 @@
  * E-mail: pauloalmeidaf@gmail.com
  */
 
-#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
-#pragma warning(disable: 4996)
-#endif
-
 #include "io.h"
 #include "validacao.h"
 #include "clientes.h"
@@ -57,7 +53,6 @@ int main() {
                 break;
             case 4:
                 limpaArquivoCliente(arqCliente);
-                desalocaClientes(&raizCliente);
                 break;
             default:
                 limpaTela();

@@ -11,30 +11,29 @@
 
 // limpa tela (usando comando nativo)
 void limpaTela() {
-    #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+    #if defined(Win32) || defined(_Win32) // windows
     system("cls");
     #else // POSIX
     system("clear");
     #endif
 }
 
-// nao é windows
-#if !defined(Win32) && !defined(_Win32) && !defined(_WIN32) && !defined(_WIN64) 
+#if !defined(Win32) && !defined(_Win32) // nao é windows
 int getche() {
       int c = 0;
 
       struct termios org_opts, new_opts;
       int res = 0;
-      // Salva configuracao atual do terminal
+          //-----  store old settings -----------
       res = tcgetattr(STDIN_FILENO, &org_opts);
       assert(res == 0);
-      // Novo parametro do terminal
+          //---- set new terminal parms --------
       memcpy(&new_opts, &org_opts, sizeof(new_opts));
       new_opts.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOPRT 
         | ECHOKE | ICRNL);
       tcsetattr(STDIN_FILENO, TCSANOW, &new_opts);
       c = getchar();
-      // Restaura configs anteriormente salvas
+          //------  restore old settings ---------
       res = tcsetattr(STDIN_FILENO, TCSANOW, &org_opts);
       assert(res == 0);
       printf("%c", c);
@@ -42,38 +41,13 @@ int getche() {
 }
 #endif
 
-void pegaCPF(char *str, size_t n) {
-    size_t i = 0;
+void pegaString(char *str, size_t n) {
+    int i = 0;
     n -= 2;
     
     while(i < n) {
-        if(i == 3 || i == 6) {
-            printf(".");
-        } else if(i == 9) {
-            printf("-");
-        }
         str[i] = getche();
         if(str[i] == '\n') {
-            break;
-        }
-        ++i;
-    }
-    str[i] = '\0';
-    if(i == n) {
-        printf("\n");
-    }
-}
-
-void pegaString(char *str, size_t n) {
-    size_t i = 0;
-    n -= 2;
-    
-    while(i < n) {
-        str[i] = getche();
-        if(str[i] == '\n' || str[i] == 13) {
-            #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
-            printf("\n");
-            #endif
             break;
         }
         ++i;

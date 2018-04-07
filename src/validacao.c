@@ -61,7 +61,7 @@ void pegaMensagem(Tipo tipo, char *msg) {
             strcpy(msg, "Insira o e-mail: ");
             break;
         case CPF: 
-            strcpy(msg, "Insira o CPF (Sem pontos e hifen): "); // ___.___.___-__\rInsira o CPF (Sem pontos e hifen): ");
+            strcpy(msg, "Insira o CPF (Sem pontos e hifen): ");
             break;
         case NOME:
             strcpy(msg, "Insira o nome: ");
@@ -90,11 +90,7 @@ int pegaDado(char *dado, Tipo tipo) {
         }
         pegaMensagem(tipo, str);
         printf("%s", str);
-        if(tipo == CPF) {
-            pegaCPF(dado, pegaTamanho(tipo));    
-        } else {
-            pegaString(dado, pegaTamanho(tipo));
-        }
+        pegaString(dado, pegaTamanho(tipo));
         erro =1;
         // CPF nao fica preso no loop
         if((tipo == CPF || tipo == CRM) && !validacao(dado, tipo)) { 
@@ -187,7 +183,7 @@ int validaCRM(char *crm) {
     }
 
     tamanho -= 1; // funcionar como indice
-    for(size_t i = 2; i < tamanho; i++) {
+    for(int i = 2; i < tamanho; i++) {
         if(!ehNumero(crm[i])) {
             return 0;
         }
@@ -244,10 +240,6 @@ int restoCPF(int x) {
 
 int validaNome(char *nome) {
     int i = 0;
-
-    if(strlen(nome) <= 1) {
-        return 0;
-    }
 
     while(nome[i] != '\0') {
         if(!ehLetra(nome[i]) && !ehEspaco(nome[i])) {

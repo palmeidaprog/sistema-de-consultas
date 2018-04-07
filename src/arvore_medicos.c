@@ -11,7 +11,7 @@
 
 void criaArvoreMedico(FILE *arq, NoMedico **raizMedico) {
     int const TAM = 100;
-    Medico v[100];
+    Medico v[TAM];
     NoMedico *no;
     long long pos = 0, n;
 
@@ -71,8 +71,6 @@ void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov) {
         copiaNoMedico(remov, maior); // copia maior no lugar do removido
         if(!ehFolhaMedico(maior)) {
             moveNoMedico(maior, maior->esq); // move filho
-        } else {
-            removeFolhaMedico(raizMedico, maior);
         }
     }
 }
@@ -135,13 +133,4 @@ NoMedico *buscarMedico(NoMedico *raiz, char *crm) {
         }
     }
     return NULL;   
-}
-
-void desalocaMedicos(NoMedico **raiz) {
-    if(*raiz != NULL) {
-        desalocaMedicos(&((*raiz)->esq));
-        desalocaMedicos(&((*raiz)->dir));
-        free(*raiz);
-        *raiz = NULL;
-    }
 }
