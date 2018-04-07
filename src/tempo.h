@@ -15,9 +15,8 @@
 #include <string.h>
 #include <stdio.h>
 
-void inicializarMatriz(Hora a[5][2]);
-void imprimeTabelaHorario(Hora a[5][2]);
-void printHora(Hora hora);
-void preencherHorario(Hora a[5][2]);
+//void inicializarMatriz(Hora a[5][2]);
+//void printHora(Hora hora);
+//void preencherHorario(Hora a[5][2]);
 
 #endif // TEMPO_H

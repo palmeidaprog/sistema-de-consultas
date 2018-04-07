@@ -44,7 +44,7 @@ typedef struct Medico {
     char telefone[TELEFONE_TAM];
     char email[EMAIL_TAM];
     Especialidade especialidade;
-    Hora atendimento[5][2];
+    int atendimento[5][2];
     int status;
 } Medico;
 

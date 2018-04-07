@@ -75,8 +75,8 @@ Medico *criaMedico(char *crm) {
     pegaDado(med->nome, NOME);
     pegaDado(med->telefone, TELEFONE);
     pegaDado(med->email, EMAIL);
-    inicializarMatriz(med->atendimento);
     preencherHorario(med->atendimento);
+    med->especialidade = menuEspecialidades();
     med->status = 1;
 
     return med;
@@ -199,14 +199,101 @@ void limpaArquivoMedico(FILE *arq) {
 //--io------------------------------------------------------------------------
 
 void imprimeMedico(Medico *med, int pos) {
+    char especNome[20];
+
     if(pos) { // so imprime se pos != 0
         printf("Medico No. %d\n", pos);
     }
     printf("Nome: %s\n", med->nome);
     printf("CRM: %s\n", med->crm);
     printf("Telefone: %s\n", med->telefone);
-    printf("E-mail: %s\n\n", med->email);
+    printf("E-mail: %s\n", med->email);
+    pegaEspecialidade(med->especialidade, especNome);
+    printf("Especialidade: %s\n", especNome);
     imprimeTabelaHorario(med->atendimento);
+    printf("\n");
+}
+
+void imprimeTabelaHorario(int a[][2]) {
+    printf("|===================================|\n");
+    printf("|Turno| Seg | Ter | Qua | Qui | Sex |\n");
+    printf("|===================================|\n");
+    printf("|Manha|");
+    for(int i = 0; i < 5; i++) {
+        printHora(a[i][0]);
+    }
+    printf("\n");
+    printf("|Tarde|");
+    for(int i = 0; i < 5; i++) {
+        printHora(a[i][1]);
+    }
+    printf("\n");
+    printf("|===================================|\n");
+    printf("\n");
+}
+
+// suporte para imprimeTabelaHorarrio
+void printHora(int x) {
+    if(!x) {
+        printf("     |");
+    } else {
+        printf("  X  |");
+    }
+}
+
+void preencherHorario(int a[][2]) {
+    char semana[5][25] = { "Segunda", "Terca", "Quarta", "Quinta", "Sexta" };
+    char msg[100];
+
+    for(int i = 0; i < 5; i++) {
+        strcpy(msg, "Deseja incluir horario de atendimento na ");
+        strcat(msg, semana[i]);
+        strcat(msg, "?");
+        if(confirmacao(msg)) {
+            a[i][0] = confirmacao("Expediente da manha?");
+            a[i][1] = confirmacao("Expediente da tarde?");
+        } else {
+            a[i][0] = 0;
+            a[i][1] = 0;
+        }
+    }
+}
+
+void pegaEspecialidade(Especialidade e, char *especNome) {
+    switch(e) {
+        case 1:
+            strcpy(especNome, "Clinica");
+            break;
+        case 2:
+            strcpy(especNome, "Pediatria");
+            break;
+        case 3:
+            strcpy(especNome, "Geriatria");
+            break;
+        case 4:
+            strcpy(especNome, "Ortopedia");
+            break;
+        case 5:
+            strcpy(especNome, "Oftamologia");
+            break;
+        case 6:
+            strcpy(especNome, "Neurologia");
+            break;
+        case 7:
+            strcpy(especNome, "Psiquiatria");
+            break;
+        case 8:
+            strcpy(especNome, "Urologia");
+            break;
+        case 9:
+            strcpy(especNome, "Ginecologia");
+            break;
+        default:
+            strcpy(especNome, "Otorrinolaringologia");
+            break;
+            
+    }
+
 }
 
 //--Menu----------------------------------------------------------------------
@@ -231,6 +318,40 @@ int menuMedicos() {
     limpaBuffer();
 
     return resp;
+}
+
+
+
+int menuEspecialidades() {
+    int resp, erro = 0;
+
+    do {
+        if(erro) {
+            limpaTela();
+            printf("Especialidade invalida.\n");
+        }
+        printf("|=================================|\n");
+        printf("|     Escolha a Especialidade     |\n");
+        printf("|                                 |\n");
+        printf("|  %d - CLINICA                   |\n", CLINICA);
+        printf("|  %d - PEDIATRIA                 |\n", PEDIATRIA);
+        printf("|  %d - GERIATRIA                 |\n", GERIATRIA);
+        printf("|  %d - ORTOPEDIA                 |\n", ORTOPEDIA);
+        printf("|  %d - OFTAMOLOGIA               |\n", OFTAMOLOGIA);
+        printf("|  %d - NEUROLOGIA                |\n", NEUROLOGIA);
+        printf("|  %d - PSIQUIATRIA               |\n", PSIQUIATRIA);
+        printf("|  %d - UROLOGIA                  |\n", UROLOGIA);
+        printf("|  %d - GINECOLOGIA               |\n", GINECOLOGIA);
+        printf("|  %d - OTORRONOLARINGOLOGIA      |\n", OTORRONOLARINGOLOGIA);
+        printf("|                                 |\n");
+        printf("|=================================|\n\n");
+        printf("Sua escolha: ");
+        scanf("%d", &resp);
+        limpaBuffer();
+        erro = 1;
+    } while(resp < CLINICA || resp > OTORRONOLARINGOLOGIA);
+    return resp;
+
 }
 
 void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
