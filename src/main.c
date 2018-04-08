@@ -22,7 +22,6 @@
 void sobre();
 int menuPrincipal();
 // mover para os modulos posteriormente
-void loopMedicos();
 void loopConsultas();
 
 //--main()--------------------------------------------------------------------

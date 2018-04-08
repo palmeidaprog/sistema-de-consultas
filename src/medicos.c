@@ -168,7 +168,7 @@ void listaEspecialidade(FILE *arq, Especialidade e) {
 int buscaPorNomeMedico(FILE *arq, char *nome) {
     int const TAM = 100;
     int n;
-    Medico medicos[TAM];
+    Medico medicos[100];
 
     fseek(arq, 0, SEEK_SET);
     do {
@@ -215,7 +215,7 @@ void limpaArquivoMedico(FILE *arq) {
     FILE *aux;
     int const TAM = 25;
     int nLidos = 0, nEscrever = 0;
-    Medico lidos[TAM], escrever[TAM];
+    Medico lidos[25], escrever[25];
 
     aux = abreArquivo("aux.dat");
     fseek(arq, 0, SEEK_SET);

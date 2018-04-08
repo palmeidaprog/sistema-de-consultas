@@ -19,15 +19,19 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#if !defined(Win32) && !defined(_Win32) // windows
+//nao é windows
+#if !defined(Win32) && !defined(_Win32) && !defined(_WIN32) && !defined(_WIN64) 
 #include <termios.h>
 #include <unistd.h>
 #include <assert.h>
+#else // windows
+#include <conio.h>
 #endif
 
 
 void limpaBuffer();
 void limpaTela();
+void pegaCPF(char *str, size_t n);
 void pegaString(char *str, size_t n);
 int existeArquivo(char *nomeDoArquivo);
 FILE *abreArquivo(char *nomeDoArquivo);

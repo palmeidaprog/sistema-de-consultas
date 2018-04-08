@@ -183,7 +183,7 @@ int validaCRM(char *crm) {
     }
 
     tamanho -= 1; // funcionar como indice
-    for(int i = 2; i < tamanho; i++) {
+    for(size_t i = 2; i < tamanho; i++) {
         if(!ehNumero(crm[i])) {
             return 0;
         }
