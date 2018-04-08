@@ -85,7 +85,6 @@ Medico *criaMedico(char *crm) {
 void alterarMedico(FILE *arq, NoMedico **raiz, char *crm) {
     NoMedico *pos;
     Medico medico;
-    char msg[] = "Desja alterar o";
 
     pos = buscarMedico(*raiz, crm);
     if(pos == NULL) {
@@ -111,7 +110,7 @@ void alterarMedico(FILE *arq, NoMedico **raiz, char *crm) {
     }
 
     if(confirmacao("Deseja alterar a especialidade?")) {
-        medico.especialidade = menuEspecialidades;
+        medico.especialidade = menuEspecialidades();
     }
 
     if(confirmacao("Deseja alterar o horario de atendimento?")) {
@@ -139,6 +138,32 @@ void buscaNomeMedico(FILE *arq, char *nome) {
 }
 
 //--Arquivo-------------------------------------------------------------------
+
+void listaEspecialidade(FILE *arq, Especialidade e) {
+    int const TAM = 100;
+    int n, pos = 0;
+    char especNome[20];
+    Medico medicos[100];
+
+    pegaEspecialidade(e, especNome);
+    printf("Medicos da Especialidade %s:\n\n", especNome);
+    fseek(arq, 0, SEEK_SET);
+    do {
+        n = fread(medicos, sizeof(Medico), TAM, arq);
+        for(int i = 0; i < n; ++i) {
+            if(medicos[i].status && medicos[i].especialidade == e) {
+                ++pos;
+                imprimeMedico(&medicos[i], pos);
+            }
+        }
+    } while(n == TAM);
+    if(!feof(arq)) {
+        printf("Erro ao ler o arquivo de Medicos!\n\n");
+    } else {
+        printf("Existem um total de %d medicos especialistas em %s.\n\n", pos, 
+            especNome);
+    }
+}
 
 int buscaPorNomeMedico(FILE *arq, char *nome) {
     int const TAM = 100;
@@ -328,6 +353,7 @@ int menuMedicos() {
     printf("|  %d - Alterar                    |\n", ALTERAR_M);
     printf("|  %d - Procurar por crm           |\n", PROCURA_CRM);
     printf("|  %d - Procurar por Nome          |\n", PROCURA_NOME_M);
+    printf("|  %d - Medicos da Especialidade   |\n", MEDICOS_ESPEC_M);
     printf("|  %d - Imprime Todos Medicos      |\n", EXIBIR_TODOS_M);
     printf("|  %d - Voltar                     |\n", VOLTAR_M);
     printf("|                                 |\n");
@@ -352,16 +378,16 @@ int menuEspecialidades() {
         printf("|=================================|\n");
         printf("|     Escolha a Especialidade     |\n");
         printf("|                                 |\n");
-        printf("|  %d - CLINICA                   |\n", CLINICA);
-        printf("|  %d - PEDIATRIA                 |\n", PEDIATRIA);
-        printf("|  %d - GERIATRIA                 |\n", GERIATRIA);
-        printf("|  %d - ORTOPEDIA                 |\n", ORTOPEDIA);
-        printf("|  %d - OFTAMOLOGIA               |\n", OFTAMOLOGIA);
-        printf("|  %d - NEUROLOGIA                |\n", NEUROLOGIA);
-        printf("|  %d - PSIQUIATRIA               |\n", PSIQUIATRIA);
-        printf("|  %d - UROLOGIA                  |\n", UROLOGIA);
-        printf("|  %d - GINECOLOGIA               |\n", GINECOLOGIA);
-        printf("|  %d - OTORRONOLARINGOLOGIA      |\n", OTORRONOLARINGOLOGIA);
+        printf("|  %d - CLINICA                    |\n", CLINICA);
+        printf("|  %d - PEDIATRIA                  |\n", PEDIATRIA);
+        printf("|  %d - GERIATRIA                  |\n", GERIATRIA);
+        printf("|  %d - ORTOPEDIA                  |\n", ORTOPEDIA);
+        printf("|  %d - OFTAMOLOGIA                |\n", OFTAMOLOGIA);
+        printf("|  %d - NEUROLOGIA                 |\n", NEUROLOGIA);
+        printf("|  %d - PSIQUIATRIA                |\n", PSIQUIATRIA);
+        printf("|  %d - UROLOGIA                   |\n", UROLOGIA);
+        printf("|  %d - GINECOLOGIA                |\n", GINECOLOGIA);
+        printf("|  %d - OTORRONOLARINGOLOGIA       |\n", OTORRONOLARINGOLOGIA);
         printf("|                                 |\n");
         printf("|=================================|\n\n");
         printf("Sua escolha: ");
@@ -387,13 +413,11 @@ void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
                 }
                 break;
             case REMOVER_M:
-                limpaTela();
                 if(pegaDado(crm, CRM)) {
                     removerMedico(arqMed, raizMedico, crm);
                 }
                 break;
             case ALTERAR_M:
-                limpaTela();
                 if(pegaDado(crm, CRM)) {
                     alterarMedico(arqMed, raizMedico, crm);
                 }
@@ -414,6 +438,10 @@ void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
                 limpaTela();
                 n = 0;
                 exibirTodosMedicos(arqMed, *raizMedico, &n);
+                break;
+            case MEDICOS_ESPEC_M: 
+                limpaTela();
+                listaEspecialidade(arqMed, menuEspecialidades());
                 break;
             case VOLTAR_M:
                 limpaTela();

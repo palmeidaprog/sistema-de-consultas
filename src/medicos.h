@@ -17,8 +17,9 @@
 #define ALTERAR_M 3
 #define PROCURA_CRM 4
 #define PROCURA_NOME_M 5
-#define EXIBIR_TODOS_M 6
-#define VOLTAR_M 7
+#define MEDICOS_ESPEC_M 6
+#define EXIBIR_TODOS_M 7
+#define VOLTAR_M 8
 
 #include "medicos_types.h"
 #include "arvore_medicos.h"
@@ -35,6 +36,7 @@ void buscaNomeMedico(FILE *arq, char *nome);
 
 //--Arquivo-------------------------------------------------------------------
 
+void listaEspecialidade(FILE *arq, Especialidade e);
 int buscaPorNomeMedico(FILE *arq, char *nome);
 NoMedico *escreveMedico(FILE *arq, Medico *med, int pos);
 int leMedico(FILE *arq, long long pos, Medico *medico);
