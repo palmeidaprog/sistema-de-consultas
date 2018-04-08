@@ -19,7 +19,7 @@ void limpaTela() {
 }
 
 // funcao de implementacao do getche para o terminal do Linux e do mac OS
-#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+#if !defined(Win32) && !defined(_Win32) && !defined(_WIN32) && !defined(_WIN64)  // windows
 int getche() {
       int c = 0;
 
