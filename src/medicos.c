@@ -17,7 +17,7 @@ void cadastrarMedico(FILE *arq, NoMedico **raizMedico, char *crm) {
         printf("Medico ja cadastrado\n\n");
         return ;
     }
-    
+
     med = criaMedico(crm);
     no = escreveMedico(arq, med, -1);
     if(!no) {
@@ -85,6 +85,7 @@ Medico *criaMedico(char *crm) {
 void alterarMedico(FILE *arq, NoMedico **raiz, char *crm) {
     NoMedico *pos;
     Medico medico;
+    char msg[] = "Desja alterar o";
 
     pos = buscarMedico(*raiz, crm);
     if(pos == NULL) {
@@ -97,8 +98,26 @@ void alterarMedico(FILE *arq, NoMedico **raiz, char *crm) {
     }
     imprimeMedico(&medico, 0);
     printf("Digite os novos dados:\n\n");
-    pegaDado(medico.telefone, TELEFONE);
-    pegaDado(medico.email, EMAIL);
+    if(confirmacao("Deseja alterar o nome?")) {
+        pegaDado(medico.nome, NOME);
+    }
+
+    if(confirmacao("Deseja alterar o telefone?")) {
+        pegaDado(medico.telefone, TELEFONE);
+    }
+
+    if(confirmacao("Deseja alterar o e-mail?")) {
+        pegaDado(medico.email, EMAIL);
+    }
+
+    if(confirmacao("Deseja alterar a especialidade?")) {
+        medico.especialidade = menuEspecialidades;
+    }
+
+    if(confirmacao("Deseja alterar o horario de atendimento?")) {
+        preencherHorario(medico.atendimento);
+    }
+    
     escreveMedico(arq, &medico, pos->indice * sizeof(Medico));
     printf("Dados modificados com exito\n\n");
 }

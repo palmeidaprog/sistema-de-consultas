@@ -95,8 +95,16 @@ void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf) {
     }
     imprimeCliente(&cliente, 0);
     printf("Digite os novos dados:\n\n");
-    pegaDado(cliente.telefone, TELEFONE);
-    pegaDado(cliente.email, EMAIL);
+    if(confirmacao("Deseja alterar o nome?")) {
+        pegaDado(cliente.nome, NOME);
+    }
+    if(confirmacao("Deseja alterar o telefone?")) {
+        pegaDado(cliente.telefone, TELEFONE);
+    }
+    if(confirmacao("Deseja alterar o e-mail?")) {
+        pegaDado(cliente.email, EMAIL);
+    }
+
     escreveCliente(arq, &cliente, pos->indice * sizeof(Cliente));
     printf("Dados modificados com exito\n\n");
 }
