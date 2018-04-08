@@ -10,6 +10,10 @@
 #ifndef VALIDACAO_H
 #define VALIDACAO_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+#pragma warning(disable: 4996)
+#endif
+
 #include "io.h"
 #include "medicos.h"
 #include "clientes.h"

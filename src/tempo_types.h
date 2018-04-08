@@ -10,6 +10,10 @@
 #ifndef TEMPO_TYPES_H
 #define TEMPO_TYPES_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+#pragma warning(disable: 4996)
+#endif
+
 typedef struct Hora {
     int hora, min, seg;
 } Hora;

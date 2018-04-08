@@ -10,6 +10,10 @@
 #ifndef CLIENTES_TYPES_H
 #define CLIENTES_TYPES_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+#pragma warning(disable: 4996)
+#endif
+
 #ifndef STRUCT_TAM
 #define STRUCT_TAM
 

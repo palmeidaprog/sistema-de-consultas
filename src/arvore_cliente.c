@@ -134,3 +134,12 @@ NoCliente *buscar(NoCliente *raiz, char *cpf) {
     }
     return NULL;   
 }
+
+void desalocaClientes(NoCliente **raiz) {
+    if(*raiz != NULL) {
+        desalocaClientes(&((*raiz)->esq));
+        desalocaClientes(&((*raiz)->dir));
+        free(*raiz);
+        *raiz = NULL;
+    }
+ } 

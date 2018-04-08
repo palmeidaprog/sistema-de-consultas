@@ -134,3 +134,12 @@ NoMedico *buscarMedico(NoMedico *raiz, char *crm) {
     }
     return NULL;   
 }
+
+void desalocaMedicos(NoMedico **raiz) {
+    if(*raiz != NULL) {
+        desalocaMedicos(&((*raiz)->esq));
+        desalocaMedicos(&((*raiz)->dir));
+        free(*raiz);
+        *raiz = NULL;
+    }
+}

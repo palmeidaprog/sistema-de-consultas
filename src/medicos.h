@@ -11,6 +11,10 @@
 #ifndef MEDICOS_H
 #define MEDICOS_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+#pragma warning(disable: 4996)
+#endif
+
 // menu constantes
 #define CADASTRAR_M 1
 #define REMOVER_M 2

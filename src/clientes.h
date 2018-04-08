@@ -10,6 +10,10 @@
 #ifndef CLIENTES_H
 #define CLIENTES_H
 
+#if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
+#pragma warning(disable: 4996)
+#endif
+
 // menu constates
 #define CADASTRAR 1
 #define REMOVER 2
