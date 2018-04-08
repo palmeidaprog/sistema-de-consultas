@@ -56,5 +56,6 @@ int ehLetra(char c);
 int validaEmail(char *email);
 int validoNoEmail(char c);
 int validacao(char *aValidar, Tipo tipo);
+void trim(char *str);
 
 #endif // VALIDACAO_H

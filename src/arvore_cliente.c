@@ -71,6 +71,8 @@ void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov) {
         copiaNoCliente(remov, maior); // copia maior no lugar do removido
         if(!ehFolha(maior)) {
             moveNoCliente(maior, maior->esq); // move filho
+        } else {
+            removeFolhaCliente(raizCliente, maior);
         }
     }
 }
@@ -103,7 +105,7 @@ NoCliente *maiorIndiceCliente(NoCliente *raiz) {
         return NULL;
     }
 
-    while(!ehFolha(raiz)) {
+    while(raiz->dir != NULL) {
         raiz = raiz->dir;
     }
     return raiz;

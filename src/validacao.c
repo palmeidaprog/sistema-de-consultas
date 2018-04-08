@@ -90,7 +90,11 @@ int pegaDado(char *dado, Tipo tipo) {
         }
         pegaMensagem(tipo, str);
         printf("%s", str);
-        pegaString(dado, pegaTamanho(tipo));
+        if(tipo == CPF) {
+            pegaCPF(dado, pegaTamanho(tipo));
+        } else {
+            pegaString(dado, pegaTamanho(tipo));
+        }
         erro =1;
         // CPF nao fica preso no loop
         if((tipo == CPF || tipo == CRM) && !validacao(dado, tipo)) { 
@@ -241,6 +245,11 @@ int restoCPF(int x) {
 int validaNome(char *nome) {
     int i = 0;
 
+    trim(nome);
+    if(strlen(nome) <= 1) {
+        return 0;
+    }
+
     while(nome[i] != '\0') {
         if(!ehLetra(nome[i]) && !ehEspaco(nome[i])) {
             return 0;
@@ -286,7 +295,7 @@ int validaEmail(char *email) {
     int arroba = 0, pontoAposArroba = 0, i = 0, letraAntesArroba = 0;
 
     if(!ehLetra(email[0]) && !ehNumero(email[0])) {
-        return 0;
+        return 0; 
     }
 
     while(email[i] != '\0') {
@@ -344,4 +353,33 @@ int validacao(char *aValidar, Tipo tipo) {
         default: // TELEFONE
             return validaTelefone(aValidar);
     }
+}
+
+// funcao suporte
+void trim(char *str) {
+    int i = 0, j = 0, espacoAntes = 0;
+    char novaString[NOME_TAM];
+
+    while(str[i] != '\0' && str[i] == ' ') {
+        ++i;
+    }
+
+    while(str[i] != '\0') {
+        if(isalpha(str[i])) {
+            novaString[j++] = str[i];
+            espacoAntes = 0;
+        } else if(str[i] == ' ') {
+            if(!espacoAntes) {
+                novaString[j++] = str[i];
+                espacoAntes = 1;
+            } 
+        }
+        ++i;
+    }
+    if(novaString[j - 1] == ' ') {
+        novaString[j-1] = '\0';
+    } else {
+        novaString[j] = '\0';
+    }
+    strcpy(str, novaString);
 }

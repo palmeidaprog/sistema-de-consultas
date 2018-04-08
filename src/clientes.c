@@ -268,13 +268,11 @@ void loopClientes(FILE *arq, NoCliente **raizCliente) {
                 }
                 break;
             case REMOVER:
-                limpaTela();
                 if(pegaDado(cpf, CPF)) {
                     removerCliente(arq, raizCliente, cpf);
                 }
                 break;
             case ALTERAR:
-                limpaTela();
                 if(pegaDado(cpf, CPF)) {
                     alterarCliente(arq, raizCliente, cpf);
                 }

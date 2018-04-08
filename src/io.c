@@ -54,6 +54,10 @@ void pegaCPF(char *str, size_t n) {
         }
         str[i] = getche();
         if(str[i] == '\n') {
+            // windows
+            #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  
+            printf("\n"); 
+            #endif
             break;
         }
         ++i;
@@ -71,7 +75,11 @@ void pegaString(char *str, size_t n) {
     
     while(i < n) {
         str[i] = getche();
-        if(str[i] == '\n') {
+        if(str[i] == '\n' || str[i] == 13) {
+            // windows
+            #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  
+            printf("\n"); 
+            #endif
             break;
         }
         ++i;

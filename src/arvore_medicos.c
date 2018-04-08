@@ -71,6 +71,8 @@ void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov) {
         copiaNoMedico(remov, maior); // copia maior no lugar do removido
         if(!ehFolhaMedico(maior)) {
             moveNoMedico(maior, maior->esq); // move filho
+        } else {
+            removeFolhaMedico(raizMedico, maior);
         }
     }
 }
@@ -103,7 +105,7 @@ NoMedico *maiorIndiceMedico(NoMedico *raiz) {
         return NULL;
     }
 
-    while(!ehFolhaMedico(raiz)) {
+    while(raiz->dir != NULL) {
         raiz = raiz->dir;
     }
     return raiz;
