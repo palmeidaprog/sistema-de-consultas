@@ -142,7 +142,7 @@ void buscaNomeMedico(FILE *arq, char *nome) {
 void listaEspecialidade(FILE *arq, Especialidade e) {
     int const TAM = 100;
     int n, pos = 0;
-    char especNome[20];
+    char especNome[30];
     Medico medicos[100];
 
     pegaEspecialidade(e, especNome);
@@ -243,7 +243,7 @@ void limpaArquivoMedico(FILE *arq) {
 //--io------------------------------------------------------------------------
 
 void imprimeMedico(Medico *med, int pos) {
-    char especNome[20];
+    char especNome[30];
 
     if(pos) { // so imprime se pos != 0
         printf("Medico No. %d\n", pos);
@@ -387,7 +387,7 @@ int menuEspecialidades() {
         printf("|  %d - PSIQUIATRIA                |\n", PSIQUIATRIA);
         printf("|  %d - UROLOGIA                   |\n", UROLOGIA);
         printf("|  %d - GINECOLOGIA                |\n", GINECOLOGIA);
-        printf("|  %d - OTORRONOLARINGOLOGIA       |\n", OTORRONOLARINGOLOGIA);
+        printf("|  %d - OTORRONOLARINGOLOGIA      |\n", OTORRONOLARINGOLOGIA);
         printf("|                                 |\n");
         printf("|=================================|\n\n");
         printf("Sua escolha: ");
