@@ -117,11 +117,12 @@ FILE *abreArquivo(char *nomeDoArquivo) {
 
     f = fopen(nomeDoArquivo, "r+b");
     if(f == NULL) {
-        f = fopen(nomeDoArquivo, "wb");
+        f = fopen(nomeDoArquivo, "w+b");
         if(f == NULL) {
             printf("Nao foi possivel criar o arquivo %s\n", nomeDoArquivo);
         }
     }
+    fseek(f, 0, SEEK_SET);
     return f;
 }
 

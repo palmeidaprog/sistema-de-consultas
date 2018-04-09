@@ -360,19 +360,19 @@ void trim(char *str) {
     int i = 0, j = 0, espacoAntes = 0;
     char novaString[NOME_TAM];
 
-    while(str[i] != '\0' && str[i] == ' ') {
+    while(str[i] != '\0' && isspace(str[i])) {
         ++i;
     }
 
     while(str[i] != '\0') {
-        if(isalpha(str[i])) {
+        if(!isspace(str[i])) {
             novaString[j++] = str[i];
             espacoAntes = 0;
-        } else if(str[i] == ' ') {
+        } else {
             if(!espacoAntes) {
                 novaString[j++] = str[i];
-                espacoAntes = 1;
-            } 
+            }
+            espacoAntes = 1; 
         }
         ++i;
     }

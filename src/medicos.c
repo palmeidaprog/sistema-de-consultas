@@ -217,7 +217,7 @@ void limpaArquivoMedico(FILE *arq) {
     int nLidos = 0, nEscrever = 0;
     Medico lidos[25], escrever[25];
 
-    aux = abreArquivo("aux.dat");
+    aux = abreArquivo("medico.old");
     fseek(arq, 0, SEEK_SET);
     do {
         nLidos = fread(lidos, sizeof(Medico), TAM, arq);
@@ -235,9 +235,9 @@ void limpaArquivoMedico(FILE *arq) {
 
     fflush(aux);
     fechaArquivo(arq, MEDICOS_ARQ);
-    fechaArquivo(aux, "aux.dat");
+    fechaArquivo(aux, "medico.old");
     remove(MEDICOS_ARQ);
-    rename("aux.dat", MEDICOS_ARQ);
+    rename("medico.old", MEDICOS_ARQ);
 }
 
 //--io------------------------------------------------------------------------

@@ -180,7 +180,7 @@ NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos) {
 }
 
 // retorna 0 se nao conseguir ler
-int leCliente(FILE *arq, long long pos, Cliente *cliente) {
+int leCliente(FILE *arq, long int pos, Cliente *cliente) {
 
     fseek(arq, pos, SEEK_SET);
     if(fread(cliente, sizeof(Cliente), 1, arq) != 1) {
@@ -195,7 +195,7 @@ void limpaArquivoCliente(FILE *arq) {
     int nLidos = 0, nEscrever = 0;
     Cliente lidos[25], escrever[25];
 
-    aux = abreArquivo("aux.dat");
+    aux = abreArquivo("cliente.old");
     fseek(arq, 0, SEEK_SET);
     do {
         nLidos = fread(lidos, sizeof(Cliente), TAM, arq);
@@ -213,9 +213,9 @@ void limpaArquivoCliente(FILE *arq) {
 
     fflush(aux);
     fechaArquivo(arq, CLIENTE_ARQ);
-    fechaArquivo(aux, "aux.dat");
+    fechaArquivo(aux, "cliente.old");
     remove(CLIENTE_ARQ);
-    rename("aux.dat", CLIENTE_ARQ);
+    rename("cliente.old", CLIENTE_ARQ);
 }
 
 //--io------------------------------------------------------------------------

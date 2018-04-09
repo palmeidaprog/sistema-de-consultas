@@ -45,7 +45,7 @@ void buscaCPF(FILE *arq, NoCliente *raiz, char *cpf);
 
 // se pos -1 escreve no final
 NoCliente *escreveCliente(FILE *arq, Cliente *c, int pos);
-int leCliente(FILE *arq, long long pos, Cliente *cliente);
+int leCliente(FILE *arq, long int pos, Cliente *cliente);
 void limpaArquivoCliente(FILE *arq);
 int buscaPorNome(FILE *arq, char *nome);
 
