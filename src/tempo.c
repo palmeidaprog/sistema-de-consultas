@@ -9,15 +9,38 @@
 
 #include "tempo.h"
 
-void inicializarMatriz(Hora a[5][2]) {
-    for(int i = 0; i < 5; i++) {
-        for(int j = 0; j < 2; j++) {
-            a[i][j].hora = -1;
-            a[i][j].min = 0;
-            a[i][j].seg = 0;
+Data pegaData() { 
+    Data data;
+
+    size_t i = 0;
+    n -= 2;
+    
+    while(i < n) {
+        if(i == 2 || i == 4) {
+            printf("/");
         }
+        char = itoa(getche());
+        if(str[i] == '\n') {
+            // windows
+            #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  
+            printf("\n"); 
+            #endif
+            break;
+        }
+        ++i;
+    }
+    str[i] = '\0';
+    if(i == n) {
+        printf("\n");
     }
 }
+
+int validaHora()
+
+int validaData(Data data) {
+    if()
+}
+
 
 /*void imprimeTabelaHorario(Hora a[5][2]) {
     printf("|===========================================================|\n");

@@ -68,7 +68,6 @@ void pegaCPF(char *str, size_t n) {
     }
 }
 
-
 void pegaString(char *str, size_t n) {
     size_t i = 0;
     n -= 2;

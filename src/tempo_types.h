@@ -15,12 +15,13 @@
 #endif
 
 typedef struct Hora {
-    int hora, min, seg;
+    int hora, min;
 } Hora;
 
 typedef struct Data {
     int dia, mes, ano;
-    Hora hora;
 } Data;
+
+
 
 #endif // TEMPO_TYPES_H

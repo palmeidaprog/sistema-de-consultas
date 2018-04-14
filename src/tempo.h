@@ -18,6 +18,18 @@
 #include "validacao.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctypes.h>
+
+typedef struct Hora {
+    int hora, min;
+} Hora;
+
+typedef struct Data {
+    int dia, mes, ano;
+} Data;
+
+
+
 
 //void inicializarMatriz(Hora a[5][2]);
 //void printHora(Hora hora);
