@@ -30,8 +30,8 @@ Tempo pegaTempo() {
 
 Data pegaData() { 
     Data data;
-    char str[DATA_TAM];
-    int valido = 0;
+    char str[DATA_TAM], turno;
+    int valido = 0, erro = 0;
 
     do {
         printf("Insira a data DD/MM/AAAA (Apenas os numeros): ");
@@ -46,12 +46,23 @@ Data pegaData() {
     } while(!valido);
     data.diaDaSemana = pegaDiaDaSemana(data);
 
+    do { // pega turno
+        if(erro) {
+            printf("Turno invalido. ");
+        }
+        printf("Escolha um turno (M para Manha e T para Tarde: ");
+        turno = getche();
+        turno = tolower(turno);
+        erro = 1;
+    } while(turno != 't' && turno != 'm');
+
+    data.turno = (turno == 't') ? TARDE : MANHA;
     return data;
 }
 
 // transforma a string em Hora (por referencia)
 // retorna 0 caso haja caraacteres invalidos
-int parsTempo(char *str, Tempo *tempo) {
+int parseTempo(char *str, Tempo *tempo) {
     int i = 0;
 
     if(strlen(str) != TEMPO_TAM - 1) {
@@ -188,16 +199,16 @@ int validaData(Data data) {
     }
 }
 
-// retorna < 0 se data for antes de hoje, 0 se for hoje e > 0 se for posterior
-int comparaDatas(Data atual, Data data) {
-    if(atual.ano == data.ano) {
-        if(atual.mes == data.mes) {
-            if(atual.dia == data.dia) {
-                return 0;
+// retorna < 0 se a primeira data ocorrer antes, 0 se forem igual
+int comparaDatas(Data primeiro, Data segunda) {
+    if(primeiro.ano == segunda.ano) {
+        if(primeiro.mes == segunda.mes) {
+            if(primeiro.dia == segunda.dia) {
+                return primeiro.turno - segunda.turno;
             }
-            return data.dia - atual.dia;
+            return segunda.dia - primeiro.dia;
         }
-        return data.mes - atual.mes;
+        return segunda.mes - primeiro.mes;
     }
-    return data.ano - atual.ano;
+    return segunda.ano - primeiro.ano;
 }

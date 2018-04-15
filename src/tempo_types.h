@@ -36,6 +36,7 @@ typedef struct Tempo {
 typedef struct Data {
     int dia, mes, ano;
     Semana diaDaSemana;
+    Turno turno;
     char toString[11]; // formatado em DD/MM/AAAA
 } Data;
 

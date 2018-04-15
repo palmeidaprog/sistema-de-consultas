@@ -16,10 +16,9 @@ typedef struct Consulta {
 
 // tipo de arvore_consultas.h (No da arvore)
 typedef struct NoConsulta {
-    int indice;
+    Data data;    
     int codigoConsulta;
-    Turno turno;
-    Data data;
+    int indice;
     struct NoConsulta *dir, *esq;
 } NoConsulta;
 

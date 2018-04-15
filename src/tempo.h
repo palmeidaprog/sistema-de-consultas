@@ -33,6 +33,6 @@ int ultimoDiaMes(int mes);
 int ehBissesto(int ano);
 int validaData(Data data);
 int validaTempo(Tempo tempo);
-int comparaDatas(Data atual, Data data);
+int comparaDatas(Data primeiro, Data segunda);
 
 #endif // TEMPO_H
