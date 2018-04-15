@@ -23,8 +23,8 @@ typedef enum Semana {
     DOMINGO,
     SEGUNDA,
     TERCA,
-    QUARTA,
     QUINTA,
+    QUARTA,
     SEXTA,
     SABADO
 } Semana;
@@ -36,6 +36,7 @@ typedef struct Tempo {
 typedef struct Data {
     int dia, mes, ano;
     Semana diaDaSemana;
+    char toString[11]; // formatado em DD/MM/AAAA
 } Data;
 
 

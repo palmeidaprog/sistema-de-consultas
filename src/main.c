@@ -21,8 +21,6 @@
 
 void sobre();
 int menuPrincipal();
-// mover para os modulos posteriormente
-void loopConsultas();
 
 //--main()--------------------------------------------------------------------
 
@@ -52,7 +50,8 @@ int main() {
                 break;
             case 3: 
                 limpaTela();
-                loopConsultas();
+                loopConsultas(arqCliente, arqMedico, &raizCliente, 
+                    &raizMedico);
                 break;
             case 4:
                 limpaArquivoCliente(arqCliente);
@@ -97,5 +96,3 @@ int menuPrincipal() {
 
     return resp;
 }
-
-void loopConsultas() { }

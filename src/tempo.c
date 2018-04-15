@@ -51,7 +51,7 @@ Data pegaData() {
 
 // transforma a string em Hora (por referencia)
 // retorna 0 caso haja caraacteres invalidos
-int parseData(char *str, Tempo *tempo) {
+int parsTempo(char *str, Tempo *tempo) {
     int i = 0;
 
     if(strlen(str) != TEMPO_TAM - 1) {
@@ -61,10 +61,11 @@ int parseData(char *str, Tempo *tempo) {
     while(str[i] != '\0') {
         if(!ehNumero(str[i])) {
             return 0;
+
         }
     }
-    tempo.hora = (str[0] - 48) * 10 + (str[1] - 48);
-    tempo.min = (str[2] - 48) * 10 + (str[3] - 48);
+    tempo->hora = (str[0] - 48) * 10 + (str[1] - 48);
+    tempo->min = (str[2] - 48) * 10 + (str[3] - 48);
 
     return 1;
 }
@@ -72,7 +73,7 @@ int parseData(char *str, Tempo *tempo) {
 // transforma a string em Data (por referencia)
 // retorna 0 caso haja caraacteres invalidos
 int parseData(char *str, Data *data) {
-    int i = 0;
+    int i = 0, j = 0;
 
     if(strlen(str) != DATA_TAM - 1) {
         return 0;
@@ -84,27 +85,17 @@ int parseData(char *str, Data *data) {
         }
     }
 
-    data.dia = (str[0] - 48) * 10 + (str[1] - 48);
-    data.mes = (str[2] - 48) * 10 + (str[3] - 48);
-    data.ano = (str[4] - 48) * 1000 + (str[5] - 48) * 100 + (str[6] - 48) * 10
+    data->dia = (str[0] - 48) * 10 + (str[1] - 48);
+    data->mes = (str[2] - 48) * 10 + (str[3] - 48);
+    data->ano = (str[4] - 48) * 1000 + (str[5] - 48) * 100 + (str[6] - 48) * 10
              + (str[7] - 48);
 
-    return 1;
-}
-
-// transforma a string em Data (por referencia)
-// retorna 0 caso haja caraacteres invalidos
-int parseData(char *str, Data *data) {
-    int i = 0;
-
-    if(strlen(str) != 9) {
-        return 0;
-    } 
-
+    i = 0;
     while(str[i] != '\0') {
-        if(!ehNumero(str[i])) {
-            return 0;
+        if(i == 2 || i == 4) {
+            data->toString[j++] = '/';
         }
+        data->toString[j++] = str[i++];
     }
 
     return 1;
@@ -125,7 +116,7 @@ void pegaDataTempo(char *str, size_t n) {
     
     while(i < n) {
         formataStdin(n, i);
-        char = getche();
+        str[i] = getche();
         if(str[i] == '\n') {
             // windows
             #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  
