@@ -10,12 +10,21 @@
 #ifndef CONSULTAS_H
 #define CONSULTAS_H
 
+#include "medicos.h"
+#include "clientes.h"
+#include "validacao.h"
+#include "tempo.h"
+
 #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
 #pragma warning(disable: 4996)
 #endif
 
 typedef struct Consulta {
+    char clienteCpf[CPF_TAM];
+    char medicoCrm[CRM];
+    Data data;
+    Turno turno;
     int n;
-} Consultas;
+} Consulta;
 
-#endif
+#endif // CONSULTAS_H

@@ -37,6 +37,8 @@ void removerMedico(FILE *arq, NoMedico **raiz, char *crm);
 Medico *criaMedico(char *crm);
 void alterarMedico(FILE *arq, NoMedico **raiz, char *crm);
 void buscaNomeMedico(FILE *arq, char *nome);
+void buscaCRM(FILE *arq, NoMedico *raiz, char *crm);
+int buscaMedico(FILE *arq, NoMedico *raiz, char *crm, Medico *medico);
 
 //--Arquivo-------------------------------------------------------------------
 
@@ -48,6 +50,7 @@ void limpaArquivoMedico(FILE *arq);
 
 //--io------------------------------------------------------------------------
 
+int validaProcuraMedico(int retorno);
 void imprimeMedico(Medico *med, int pos);
 void preencherHorario(int a[][2]);
 void printHora(int x);

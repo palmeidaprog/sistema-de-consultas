@@ -91,7 +91,7 @@ int pegaDado(char *dado, Tipo tipo) {
         pegaMensagem(tipo, str);
         printf("%s", str);
         if(tipo == CPF) {
-        (dado, pegaTamanho(tipo));
+            pegaCPF(dado, pegaTamanho(tipo));
         } else {
             pegaString(dado, pegaTamanho(tipo));
         }

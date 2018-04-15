@@ -14,14 +14,29 @@
 #pragma warning(disable: 4996)
 #endif
 
-typedef struct Hora {
+typedef enum Turno {
+    MANHA = 0,
+    TARDE = 1
+} Turno;
+
+typedef enum Semana {
+    DOMINGO,
+    SEGUNDA,
+    TERCA,
+    QUARTA,
+    QUINTA,
+    SEXTA,
+    SABADO
+} Semana;
+
+typedef struct Tempo {
     int hora, min;
-} Hora;
+} Tempo;
 
 typedef struct Data {
     int dia, mes, ano;
+    Semana diaDaSemana;
 } Data;
-
 
 
 #endif // TEMPO_TYPES_H

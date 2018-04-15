@@ -40,6 +40,7 @@ Cliente *criaCliente(char *cpf);
 void alterarCliente(FILE *arq, NoCliente **raiz, char *cpf);
 void buscaNome(FILE *arq, char *nome);
 void buscaCPF(FILE *arq, NoCliente *raiz, char *cpf);
+int buscarCliente(FILE *arq, NoCliente *raiz, char *cpf, Cliente *cliente);
 
 //--Arquivo-------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ int buscaPorNome(FILE *arq, char *nome);
 //--io------------------------------------------------------------------------
 
 void imprimeCliente(Cliente *c, int pos);
+int validaProcuraCliente(int retorno);
 
 //--Menu----------------------------------------------------------------------
 

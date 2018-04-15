@@ -137,6 +137,29 @@ void buscaNomeMedico(FILE *arq, char *nome) {
     }
 }
 
+void buscaCRM(FILE *arq, NoMedico *raiz, char *crm) {
+    Medico medico;
+
+    if(validaProcuraMedico(buscaMedico(arq, raiz, crm, &medico))) {
+        imprimeMedico(&medico, 0);
+    }
+}
+
+// retorna 0 se nao conseguir achar (para consultas)
+int buscaMedico(FILE *arq, NoMedico *raiz, char *crm, Medico *medico) {
+    NoMedico *pos;
+
+    pos = buscarMedico(raiz, crm);
+    if(pos == NULL) {
+        return -1;
+    } else {
+        if(!leMedico(arq, pos->indice * sizeof(Medico), medico)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 //--Arquivo-------------------------------------------------------------------
 
 void listaEspecialidade(FILE *arq, Especialidade e) {
@@ -242,6 +265,19 @@ void limpaArquivoMedico(FILE *arq) {
 
 //--io------------------------------------------------------------------------
 
+// imprime mensagens de acordo com o resultado dasa funcoes buscar
+// para tornar as funcoes o mais genericaas possiveis entre os modulos
+int validaProcuraMedico(int retorno) {
+    if(retorno == -1) {
+        printf("Medico com esse CRM nao existe\n\n");
+        return 0;
+    } else if(retorno == 0) {
+        printf("Erro ao ler cliente do arquivo\n\n");
+        return 0;
+    } 
+    return 1;
+}
+
 void imprimeMedico(Medico *med, int pos) {
     char especNome[30];
 
@@ -337,7 +373,6 @@ void pegaEspecialidade(Especialidade e, char *especNome) {
             break;
             
     }
-
 }
 
 //--Menu----------------------------------------------------------------------
@@ -364,8 +399,6 @@ int menuMedicos() {
 
     return resp;
 }
-
-
 
 int menuEspecialidades() {
     int resp, erro = 0;
@@ -423,9 +456,8 @@ void loopMedicos(FILE *arqMed, NoMedico **raizMedico) {
                 }
                 break;
             case PROCURA_CRM:
-                limpaTela();
                 if(pegaDado(crm, CRM)) {
-                    //buscaCRM(arqMed, *raizMedico, crm);
+                    buscaCRM(arqMed, *raizMedico, crm);
                 }
                 break;
             case PROCURA_NOME_M:

@@ -71,7 +71,6 @@ Cliente *criaCliente(char *cpf) {
     Cliente *cl = (Cliente *) malloc(sizeof(Cliente));
 
     strcpy(cl->cpf, cpf);
-    // TODO: Resolver problema de ENTER no nome
     pegaDado(cl->nome, NOME);
     pegaDado(cl->telefone, TELEFONE);
     pegaDado(cl->email, EMAIL);
@@ -126,19 +125,26 @@ void buscaNome(FILE *arq, char *nome) {
 }
 
 void buscaCPF(FILE *arq, NoCliente *raiz, char *cpf) {
-    NoCliente *pos;
     Cliente cliente;
+
+    if(validaProcuraCliente(buscarCliente(arq, raiz, cpf, &cliente))) {
+        imprimeCliente(&cliente, 0);
+    }
+}
+
+// retorna 0 se nao conseguir achar (para consultas)
+int buscarCliente(FILE *arq, NoCliente *raiz, char *cpf, Cliente *cliente) {
+    NoCliente *pos;
 
     pos = buscar(raiz, cpf);
     if(pos == NULL) {
-        printf("Cliente com cpf %s nao existe\n\n", cpf);
+        return -1;
     } else {
-        if(!leCliente(arq, pos->indice * sizeof(Cliente), &cliente)) {
-            printf("Erro ao ler cliente do arquivo\n\n");
-        } else {
-            imprimeCliente(&cliente, 0);
+        if(!leCliente(arq, pos->indice * sizeof(Cliente), cliente)) {
+            return 0;
         }
     }
+    return 1;
 }
 
 //--Arquivo-------------------------------------------------------------------
@@ -228,6 +234,19 @@ void imprimeCliente(Cliente *c, int pos) {
     printf("CPF: %s\n", c->cpf);
     printf("Telefone: %s\n", c->telefone);
     printf("E-mail: %s\n\n", c->email);
+}
+
+// imprime mensagens de acordo com o resultado dasa funcoes buscar
+// para tornar as funcoes o mais genericaas possiveis entre os modulos
+int validaProcuraCliente(int retorno) {
+    if(retorno == -1) {
+        printf("Cliente com este cpf nao existe\n\n");
+        return 0;
+    } else if(retorno == 0) {
+        printf("Erro ao ler cliente do arquivo\n\n");
+        return 0;
+    } 
+    return 1;
 }
 
 //--Menu----------------------------------------------------------------------
