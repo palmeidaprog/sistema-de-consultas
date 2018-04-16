@@ -23,6 +23,7 @@ Data pegaHoje() {
     } else {
         hoje.turno = MANHA;
     }
+    return hoje;
 }
 
 Tempo pegaTempo() {
@@ -33,7 +34,7 @@ Tempo pegaTempo() {
     do {
         printf("Insira a hora HH:MM (Apenas os numeros): ");
         pegaDataTempo(str, TEMPO_TAM);
-        if(!parseData(str, &tempo)) {
+        if(!parseTempo(str, &tempo)) {
             printf("A hora contem apenas numeros! ");
         } else if(!validaTempo(tempo)) {
             printf("Essa hora nao eh valida. ");
@@ -53,7 +54,7 @@ Data pegaData() {
         printf("Insira a data DD/MM/AAAA (Apenas os numeros): ");
         pegaDataTempo(str, DATA_TAM);
         if(!parseData(str, &data)) {
-            printf("Data contem apenas numeros! ");
+            printf("Data só pode conter numeros! ");
         } else if(!validaData(data)) {
             printf("Essa data nao eh valida. ");
         } else {

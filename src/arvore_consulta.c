@@ -13,7 +13,7 @@ void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo) {
     Consulta c;
     Data hoje;
     NoConsulta *no;
-    long long pos = 0, n;
+    long long pos = 0;
 
     //n = fread(v, sizeof(Consulta), TAM, arq);
     fseek(arq, 0, SEEK_SET);
@@ -142,7 +142,7 @@ int ehFolhaConsulta(NoConsulta *no) {
     return 0;
 }
 
-NoConsulta *buscarConsulta(NoConsulta *raiz, char *crm) {
+/*NoConsulta *buscarConsulta(NoConsulta *raiz, char *crm) {
     int cmp;
 
     if(raiz == NULL) {
@@ -159,7 +159,7 @@ NoConsulta *buscarConsulta(NoConsulta *raiz, char *crm) {
         }
     }
     return NULL;   
-}
+}*/
 
 
 // retorna 1 se o medico tem 10 ou mais consultas naquela data/turno
