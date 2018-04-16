@@ -25,6 +25,7 @@
 #define TEMPO_TAM 5
 #define DATA_TAM 9
 
+Data pegaHoje();
 Data pegaData();
 int parseData(char *str, Data *data);
 Semana pegaDiaDaSemana(Data data);

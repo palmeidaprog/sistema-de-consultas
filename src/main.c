@@ -38,7 +38,6 @@ int main() {
     criaArvoreCliente(arqCliente, &raizCliente);
     criaArvoreMedico(arqMedico, &raizMedico);
     criaArvoreConsulta(arqConsulta, &raizConsulta, &codigo);
-    limpaTela();
     sobre();
 
     do {
@@ -54,8 +53,8 @@ int main() {
                 break;
             case 3: 
                 limpaTela();
-                loopConsultas(arqCliente, arqMedico, &raizCliente, 
-                    &raizMedico, &codigo);
+                loopConsultas(arqConsulta, arqCliente, arqMedico, 
+                        &raizConsulta, &raizCliente, &raizMedico, &codigo);
                 break;
             case 4:
                 limpaArquivoCliente(arqCliente);

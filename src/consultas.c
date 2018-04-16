@@ -9,7 +9,8 @@
 
 #include "consultas.h"
 
-void marcarConsulta(Cliente *paciente, Medico *medico) { // TODO: parametros
+void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico 
+        *medico, int *codigo) { 
     Consulta consulta;
 
     printf("Marcar Consulta:\n");
@@ -18,37 +19,45 @@ void marcarConsulta(Cliente *paciente, Medico *medico) { // TODO: parametros
 
     do {
         imprimeMedico(medico, 0);
-        consulta.codigo = novoCodConsulta();
-        if(consulta.codigo == -1) {
-            printf("Impossivel criar consulta (erro nos codigos)\n\n");
-            return;
-        }
         consulta.data = pegaData();
         // consulta a maatriuz de atendimento do medico e ve se ele trabalha
         // naquele dia da semana/turno.
         if((medico->atendimento[consulta.turno][consulta.data.diaDaSemana 
                 - 1])) {
-            if(medicoCheio()) { // TODO: Verificar se o medico esta cheio
+            if(medicoCheio(*raiz, consulta.data, consulta.medicoCrm)) { 
                 printf("\nO medico %s (CRM: %s) encontra-se com o turno da data ",
                         medico->nome, medico->crm);
                 printf("%s cheio.\n ", consulta.data.toString);
                 if(confirmacao("Entrar na fila de espera? (N para escolher nova data) "
                             )) {
-                    // TODO: terminar logica do enfileiramento
-                    printf("Consulta na fila de espera.\n\n");
-                    return ;
-                } else {
-                    printf("Consulta marcaado com sucesso.\n\n");
-                    return ;
+                    insereConsulta(arq, raiz, &consulta, codigo, 
+                    "Consulta na fila de espera.\n\n");
+                    return;
                 }
-            } else {
-                printf("Medico nao atende nesse dia.");
+            } else { // caso tenha 10 pacientes para o medico
+                insereConsulta(arq, raiz, &consulta, codigo, 
+                    "Consulta marcada com sucesso.\n\n");
+                return ;
             }
-        } 
+        } else { // medico nao tem atendimento nesse dia
+            printf("Medico nao atende nesse dia.");
+        }
     } while(confirmacao("Deseja tentar a consulta em outra Data/Turno?"));
-
     printf("Nenhuma consulta foi agendada.\n\n");
+}
+
+// suporte para marcaConsulta()
+void insereConsulta(FILE *arq, NoConsulta **raiz, Consulta *consulta, int 
+            *codigo, char *msg) {
+    NoConsulta *no;
     
+    no = escreveConsulta(arq, consulta, -1, codigo);
+    if(no == NULL) {
+        printf("Erro na escrita do arquivo de Consultas %s\n",
+                CONSULTAS_ARQ);
+    }
+    inserirIndiceConsulta(raiz, no);
+    printf("%s", msg);
 }
 
 // suporte para marcaConsulta()'no loopConsultas()
@@ -115,6 +124,35 @@ int novoCodConsulta() {
     return cod;
  }
 
+ // retorna 1 se conseguiu incluir no arquivo
+NoConsulta *escreveConsulta(FILE *arq, Consulta *c, int pos, int *codigo) {
+    NoConsulta *retorno = NULL;
+
+    if(pos == -1) {
+        fseek(arq, 0, SEEK_END);
+    }
+    else {
+        fseek(arq, pos, SEEK_SET);
+    }
+    if(fwrite(c, sizeof(Consulta), 1, arq) && ftell(arq) == 1){
+        retorno = criaNoConsulta(c, (ftell(arq) - sizeof(Consulta)) /
+             sizeof(Consulta), codigo);
+        fflush(arq); // força os dados a serem escritos
+    }
+    return retorno;
+}
+
+// retorna 0 se nao conseguir ler
+int leConsulta(FILE *arq, long int pos, Consulta *cliente) {
+
+    fseek(arq, pos, SEEK_SET);
+    if(fread(cliente, sizeof(Consulta), 1, arq) != 1) {
+        return 0;
+    }
+    return 1;
+}
+
+
 //--Menu----------------------------------------------------------------------
 
 int menuMedicos() {
@@ -137,9 +175,10 @@ int menuMedicos() {
     return resp;
 }
 
-void loopConsultas(FILE *arqCliente, FILE *arqMed, NoCliente **raizCliente, 
-            NoMedico **raizMedico, int *codigo) {
-    int m, n;
+void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed, 
+            NoConsulta **raizConsulta, NoCliente **raizCliente, NoMedico 
+            **raizMedico, int *codigo) {
+    int m;
     Cliente paciente;
     Medico medico;
     char crm[CRM_TAM], cpf[CPF_TAM];
@@ -151,23 +190,18 @@ void loopConsultas(FILE *arqCliente, FILE *arqMed, NoCliente **raizCliente,
                 limpaTela();
                 if(pegaPaciente(arqCliente, *raizCliente, &paciente) && 
                     pegaMedico(arqMed, *raizMedico, &medico)) {
-                    marcarConsulta(&paciente, &medico);
+                    marcarConsulta(arqConsulta, raizConsulta, &paciente, 
+                            &medico, codigo);
                 }
                 break;
             case REMOVER_M:
-                if(pegaDado(crm, CRM)) {
-                    removerMedico(arqMed, raizMedico, crm);
-                }
+                
                 break;
             case ALTERAR_M:
-                if(pegaDado(crm, CRM)) {
-                    alterarMedico(arqMed, raizMedico, crm);
-                }
+                
                 break;
             case PROCURA_CRM:
-                if(pegaDado(crm, CRM)) {
-                    buscaCRM(arqMed, *raizMedico, crm);
-                }
+                
                 break;
             case VOLTAR_M:
                 limpaTela();

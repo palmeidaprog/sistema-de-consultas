@@ -15,7 +15,7 @@ typedef enum Status {
 
 typedef struct Consulta {
     char clienteCpf[CPF_TAM];
-    char medicoCrm[CRM];
+    char medicoCrm[CRM_TAM];
     Data data;
     Turno turno;
     Status status;
@@ -25,8 +25,9 @@ typedef struct Consulta {
 // tipo de arvore_consultas.h (No da arvore)
 typedef struct NoConsulta {
     Data data;    
-    int codigoConsulta;
+    int codigo;
     int indice;
+    char medicoCrm[CRM_TAM];
     struct NoConsulta *dir, *esq;
 } NoConsulta;
 

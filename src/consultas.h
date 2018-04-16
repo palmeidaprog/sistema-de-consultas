@@ -11,6 +11,7 @@
 #define CONSULTAS_H
 
 #include "consultas_types.h"
+#include "arvore_consulta.h"
 #include "medicos.h"
 #include "clientes.h"
 #include "validacao.h"
@@ -26,13 +27,23 @@
 #pragma warning(disable: 4996)
 #endif
 
+void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico 
+            *medico, int *codigo);
+void insereConsulta(FILE *arq, NoConsulta **raiz, Consulta *consulta, int 
+            *codigo, char *msg);
 int pegaPaciente(FILE *arqCliente, NoCliente *raizCliente, Cliente *cliente);
 int pegaMedico(FILE *arqMedico, NoMedico *raizMedico, Medico *medico);
+
+//--Arquivo-------------------------------------------------------------------
+
+NoConsulta *escreveConsulta(FILE *arq, Consulta *c, int pos, int *codigo);
+int leConsulta(FILE *arq, long int pos, Consulta *cliente);
 
 //--Menu----------------------------------------------------------------------
 
 int menuMedicos();
-void loopConsultas(FILE *arqCliente, FILE *arqMed, NoCliente **raizCliente, 
-            NoMedico **raizMedico, int *codigo);
+void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed, 
+            NoConsulta **raizConsulta, NoCliente **raizCliente, NoMedico 
+            **raizMedico, int *codigo);
 
 #endif // CONSULTAS_H

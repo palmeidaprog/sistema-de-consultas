@@ -9,48 +9,41 @@
 
 #include "arvore_consulta.h"
 
-/* void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo) {
-    int const TAM = 100;
-    Consulta v[100];
-    NoConsulta *no;
-    long long pos = 0, n;
-
-    n = fread(v, sizeof(Consulta), TAM, arq);
-    while(n > 0) {
-        if(!feof(arq) && n != TAM) {
-            printf("Erro de leitura no arquivo %s\n", CONSULTAS_ARQ);
-            return ;
-        }
-        for(int i = 0; i < n; i++) {
-            if(v[i].status == ATIVO) {
-                no = criaNoConsulta(&v[i], pos, codigo);
-                inserirIndiceConsulta(&(*raizConsulta), no);
-            }
-            ++pos;
-        }
-        n = fread(v, sizeof(Consulta), TAM, arq);
-    }
-}*/
-
 void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo) {
     Consulta c;
+    Data hoje;
     NoConsulta *no;
     long long pos = 0, n;
 
     //n = fread(v, sizeof(Consulta), TAM, arq);
     fseek(arq, 0, SEEK_SET);
+    hoje = pegaHoje();
     while(1) {
-        if(fread(&c, sizeof(Consulta), 1, arq) !=) {
+        if(fread(&c, sizeof(Consulta), 1, arq) != 1) {
             printf("Erro ao ler arquivo %s.\n\n", CONSULTAS_ARQ);
+            break;
         }
-        if(v[i].status == ATIVO) {
-                if(comparaDatas())
-                no = criaNoConsulta(&v[i], pos, codigo);
+        if(c.status == ATIVO) {
+            if(comparaDatas(hoje, c.data) > 0) {
+                c.status = ATENDIDO;
+            } else {
+                no = criaNoConsulta(&c, pos, codigo);
                 inserirIndiceConsulta(&(*raizConsulta), no);
             }
-            ++pos;
+            
+            // regrava com info atualizada
+            fseek(arq, -1 * (int) sizeof(Consulta), SEEK_CUR);
+            if(fwrite(&c, sizeof(Consulta), 1, arq) != 1) {
+                printf("Erro ao escrever o cliente no arquivo %s\n\n",
+                    CONSULTAS_ARQ);
+                    return;
+            }   
         }
-        n = fread(v, sizeof(Consulta), TAM, arq);
+        ++pos;
+    }
+
+    if(!feof(arq)) {
+        printf("Erro na leitura do arquivo %s.\n\n", CONSULTAS_ARQ);
     }
 }
 
@@ -61,28 +54,31 @@ void inserirIndiceConsulta(NoConsulta **raizConsulta, NoConsulta *no) {
     }
 
     if(comparaDatas((*raizConsulta)->data, no->data) > 0 || 
-        (comparaDatas((*raizConsulta)->data, no->data) == 0) && 
+        (comparaDatas((*raizConsulta)->data, no->data) == 0 && 
         (*raizConsulta)->codigo > no->codigo)) {
         inserirIndiceConsulta(&((*raizConsulta)->esq), no);
     } else {
         inserirIndiceConsulta(&((*raizConsulta)->dir), no);
     }
-
     return ;
 }
 
-NoConsulta *criaNoConsulta(Consulta *m, long long int pos) {
+// cria No e atualiza consulta com codigo novo
+NoConsulta *criaNoConsulta(Consulta *c, long long int pos, int *codigo) {
     NoConsulta *no = NULL;
     
     if(pos < 0) {
         return NULL;
     }
+    ++*codigo;
     no = (NoConsulta *) malloc(sizeof(NoConsulta));
     no->dir = NULL;
     no->esq = NULL;
-    no->data = m->data;
+    no->data = c->data;
     no->indice = pos;
-    no->codigo = m->codigo;
+    no->codigo = *codigo;
+    c->codigo = *codigo;
+    strcpy(no->medicoCrm, c->medicoCrm);
     return no;
 }
 
@@ -106,7 +102,9 @@ void removeFolhaConsulta(NoConsulta **raiz, NoConsulta *remov) {
     if(*raiz == remov) {
         free(*raiz);
         *raiz = NULL;
-    } else if(strcmp(remov->crm, (*raiz)->crm) > 0) {
+    } else if(comparaDatas(remov->data, (*raiz)->data) > 0 || 
+            (comparaDatas(remov->data, (*raiz)->data) > 0 && remov->codigo > 
+            (*raiz)->codigo)) {
         removeFolhaConsulta(&((*raiz)->dir), remov);
     } else {
         removeFolhaConsulta(&((*raiz)->esq), remov);
@@ -114,7 +112,8 @@ void removeFolhaConsulta(NoConsulta **raiz, NoConsulta *remov) {
 }
 
 void copiaNoConsulta(NoConsulta *destino, NoConsulta *origem) {
-    strcpy(destino->crm, origem->crm);
+    destino->codigo = origem->codigo;
+    destino->data = origem->data;
     destino->indice = origem->indice;
 }
 
@@ -160,6 +159,24 @@ NoConsulta *buscarConsulta(NoConsulta *raiz, char *crm) {
         }
     }
     return NULL;   
+}
+
+
+// retorna 1 se o medico tem 10 ou mais consultas naquela data/turno
+int medicoCheio(NoConsulta *raiz, Data data, char *crm) {
+    int cont = 0, comp;
+    while(raiz != NULL && cont < 10) {
+        comp = comparaDatas(data, raiz->data);
+        if(comp < 0) {
+            raiz = raiz->esq;
+        } else {
+            if(comp == 0 && strcmp(crm, raiz->medicoCrm)) {
+                ++cont;
+            }
+            raiz = raiz->dir;
+        }
+    }
+    return (cont >= 10);
 }
 
 void desalocaConsultas(NoConsulta **raiz) {

@@ -15,22 +15,24 @@
 #endif
 
 #include "validacao.h"
+#include "tempo.h"
 #include "consultas.h"
 #include <stdio.h>
 #include <string.h>
 
 //--Protótipos----------------------------------------------------------------
 
-void criaArvoreMedico(FILE *arqMed, NoMedico **raizMedico);
-void inserirIndiceMedico(NoMedico **raizMedico, NoMedico *no);
-void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov);
-void removeFolhaMedico(NoMedico **raiz, NoMedico *remov);
-void copiaNoMedico(NoMedico *destino, NoMedico *origem);
-void moveNoMedico(NoMedico *destino, NoMedico *origem);
-NoMedico *maiorIndiceMedico(NoMedico *raiz);
-NoMedico *criaNoMedico(Medico *m, long long int pos);
-int ehFolhaMedico(NoMedico *no);
-NoMedico *buscarMedico(NoMedico *raiz, char *cpf);
-void desalocaMedicos(NoMedico **raiz);
+void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo);
+void inserirIndiceConsulta(NoConsulta **raizConsulta, NoConsulta *no);
+void removerIndiceConsulta(NoConsulta **raizConsulta, NoConsulta *remov);
+void removeFolhaConsulta(NoConsulta **raiz, NoConsulta *remov);
+void copiaNoConsulta(NoConsulta *destino, NoConsulta *origem);
+void moveNoConsulta(NoConsulta *destino, NoConsulta *origem);
+NoConsulta *maiorIndiceConsulta(NoConsulta *raiz);
+NoConsulta *criaNoConsulta(Consulta *m, long long int pos, int *codigo);
+int ehFolhaConsulta(NoConsulta *no);
+NoConsulta *buscarConsulta(NoConsulta *raiz, char *cpf);
+int medicoCheio(NoConsulta *raiz, Data data, char *crm);
+void desalocaConsultas(NoConsulta **raiz);
 
 #endif // ARVORE_CONSULTA_H
