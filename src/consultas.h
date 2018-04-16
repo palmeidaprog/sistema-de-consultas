@@ -35,6 +35,9 @@ void insereConsulta(FILE *arq, NoConsulta **raiz, Consulta *consulta, int
 int pegaPaciente(FILE *arqCliente, NoCliente *raizCliente, Cliente *cliente);
 int pegaMedico(FILE *arqMedico, NoMedico *raizMedico, Medico *medico);
 int buscaConsultaCRM(FILE *arq, NoConsulta *raiz, Data data, char *crm);
+void desmarcaConsulta(FILE *arq, NoConsulta **raiz, char *cpf, char *crm);
+int saiDaEspera(FILE *arq, NoConsulta *raiz, Data data, char *crm, char *cpf);
+unsigned long indiceConsulta(NoConsulta *c);
 
 //--Arquivo-------------------------------------------------------------------
 

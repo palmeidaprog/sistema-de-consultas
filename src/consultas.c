@@ -9,6 +9,8 @@
 
 #include "consultas.h"
 
+// funcao validaData (dentro do modulo tempo)
+
 void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico 
         *medico, int *codigo) { 
     Consulta consulta;
@@ -109,6 +111,7 @@ int pegaMedico(FILE *arqMedico, NoMedico *raizMedico, Medico *medico) {
     return 0;
 }
 
+// Consultar consultas (Questao 3)
 int buscaConsultaCRM(FILE *arq, NoConsulta *raiz, Data data, char *crm) {
     int cont = 0;
     Consulta c;
@@ -140,6 +143,154 @@ int buscaConsultaCRM(FILE *arq, NoConsulta *raiz, Data data, char *crm) {
         }
     }
     return cont;
+}
+
+void desmarcaConsulta(FILE *arq, NoConsulta **raiz, char *cpf, char *crm) {
+    Consulta c;
+    char formatado[CPF_FORMAT], novoCpf[CPF_TAM];
+    int dummy = -2, cont = 0;
+    NoConsulta *lido = NULL;
+
+    if(*raiz == NULL) {
+        return;
+    } 
+    
+    if((*raiz)->esq != NULL && comparaDatas((*raiz)->esq->data, 
+                pegaHoje()) >= 0) {
+        desmarcaConsulta(arq, &((*raiz)->esq), cpf, crm);
+    } 
+
+    // bloco
+    lido = *raiz;
+    if(strcmp(lido->medicoCrm, crm) == 0) {
+        if(!leConsulta(arq, indiceConsulta(lido), &c)) {
+            printf("Erro ao ler arquivo consulta.\n\n");
+            return;
+        } 
+        
+        if(strcmp(c.clienteCpf, cpf) == 0 && (c.status == ATIVO || 
+                c.status == ESPERA)) {
+            printf("Consulta encontrada no turno da ");
+
+            if(c.data.turno == TARDE) {
+                printf("tarde ");
+            } else {
+                printf("manha ");
+            }
+            printf("em %s.\n", c.data.toString);
+
+            if(confirmacao("Deseja cancela-la? ")) {
+                ++cont;
+                c.status = CANCELADO;
+                escreveConsulta(arq, &c, indiceConsulta(lido), &dummy);
+                removerIndiceConsulta(raiz, lido);
+                if(saiDaEspera(arq, *raiz, c.data, crm, novoCpf)) {
+                    formataCPF(formatado, novoCpf);
+                    printf("Avisar ao cliente CPF %s que ele foi ", 
+                            formatado);
+                    printf("transferido para lista de espera no turno ");
+                    if(c.data.turno == TARDE) {
+                        printf("daa tarde ");
+                    } else {
+                        printf("da manha ");
+                    }
+                    printf("em %s.\n\n", c.data.toString);
+                }
+            }
+        }
+    }
+
+    if((*raiz)->dir != NULL) {
+        desmarcaConsulta(arq, &((*raiz)->dir), cpf, crm);
+    }
+
+    if(cont > 0) {
+        printf("Foram canceladas %d consultas.\n\n", cont);
+    }
+}
+
+// Consultar Pacientes (questao 2)
+void buscaConsultaPaciente(FILE *arq, NoConsulta **raiz, char *cpf) {
+    Consulta c;
+    char formatado[CPF_FORMAT], novoCpf[CPF_TAM];
+    int dummy = -2, cont = 0, mostraAntiga;
+    NoConsulta *lido = NULL;
+
+    mostraAntiga = confirmacao("Deseja ver tambem as passados/cancelados?");
+
+    if(*raiz == NULL) {
+        return;
+    } 
+    
+    if(mostraAntiga && (*raiz)->esq != NULL) {
+        buscaConsultaPaciente(arq, &((*raiz)->esq), cpf);
+    } else if(!mostraAntiga && (*raiz)->esq != NULL && 
+            comparaDatas((*raiz)->esq->data, pegaHoje()) >= 0) {
+        buscaConsultaPaciente(arq, &((*raiz)->esq), cpf);
+    } 
+
+
+    lido = *raiz;
+
+    if(!leConsulta(arq, indiceConsulta(lido), &c)) {
+        printf("Erro ao ler arquivo consulta.\n\n");
+        return ;
+    }
+    
+    if(strcmp(c.clienteCpf, cpf) == 0) {
+        printf("Consulta encontrada no turno da ");
+
+        if(c.data.turno == TARDE) {
+            printf("tarde ");
+        } else {
+            printf("manha ");
+        }
+        printf("em %s.\n", c.data.toString);
+        imprimeConsulta(c, ++cont);
+    }
+
+    if((*raiz)->dir != NULL) {
+        buscaConsultaPaciente(arq, &((*raiz)->dir), cpf);
+    }
+
+    
+    if(cont > 0) {
+        printf("Total de %d consultas.\n\n", cont);
+    }
+}
+
+
+
+int saiDaEspera(FILE *arq, NoConsulta *raiz, Data data, char *crm, char 
+                    *cpf) {
+    int cont = 0;
+    Consulta c;
+    NoConsulta *no;
+
+    while(raiz != NULL) {
+        if(comparaDatas(data, raiz->data) == 0 && strcmp(crm, raiz->medicoCrm)
+                 == 0) {
+            ++cont;
+            if(cont == 10) {
+                if(!leConsulta(arq, indiceConsulta(raiz), &c)) {
+                    printf("Erro ao ler arquivo consultas.\n\n");
+                    strcpy(cpf, c.clienteCpf);
+                    c.status = ATIVO;
+                    c.codigo -= 1; // incrementado dentro do escreveConsulta()
+                    no = escreveConsulta(arq, &c, indiceConsulta(raiz), 
+                            &c.codigo);
+                    free(no);
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+// suporte 
+unsigned long indiceConsulta(NoConsulta *c) {
+    return c->indice * sizeof(Consulta);
 }
 
 //--Arquivo-------------------------------------------------------------------
@@ -257,7 +408,6 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
     int m;
     Cliente paciente;
     Medico medico;
-    //char crm[CRM_TAM], cpf[CPF_TAM];
     // TODO: ajeitar menus e chamadas
     do {
         m = menuConsultas();
@@ -276,11 +426,15 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
                     consultaMedico(arqConsulta, *raizConsulta, &medico);
                 }
                 break;
-            case ALTERAR_M:
-                 
-                break;
-            case PROCURA_CRM:
+            case PACIENTES_C:
                 
+                break;
+            case DESMARCAR_C:
+                if(pegaPaciente(arqCliente, *raizCliente, &paciente) && 
+                    pegaMedico(arqMed, *raizMedico, &medico)) {
+                    desmarcaConsulta(arqConsulta, raizConsulta, paciente.cpf, 
+                            medico.crm);
+                }
                 break;
             case VOLTAR_C:
                 limpaTela();
