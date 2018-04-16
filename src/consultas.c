@@ -62,10 +62,6 @@ void consultaMedico(FILE *arq, NoConsulta *raiz, Medico *medico) {
     }
 }
 
-void consultaPaciente(FILE *arq, NoConsulta *raiz, Medico *medico, Data 
-            data) {
-    
-}
 
 // suporte para marcaConsulta()
 void insereConsulta(FILE *arq, NoConsulta **raiz, Consulta *consulta, int 
@@ -200,20 +196,16 @@ void desmarcaConsulta(FILE *arq, NoConsulta **raiz, char *cpf, char *crm) {
         }
     }
 
-    if((*raiz)->dir != NULL) {
+    if((*raiz) != NULL && (*raiz)->dir != NULL) {
         desmarcaConsulta(arq, &((*raiz)->dir), cpf, crm);
     }
 
-    if(cont > 0) {
-        printf("Foram canceladas %d consultas.\n\n", cont);
-    }
 }
 
 // Consultar Pacientes (questao 2)
 void buscaConsultaPaciente(FILE *arq, NoConsulta **raiz, char *cpf) {
     Consulta c;
-    char formatado[CPF_FORMAT], novoCpf[CPF_TAM];
-    int dummy = -2, cont = 0, mostraAntiga;
+    int cont = 0, mostraAntiga;
     NoConsulta *lido = NULL;
 
     mostraAntiga = confirmacao("Deseja ver tambem as passados/cancelados?");
@@ -427,7 +419,10 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
                 }
                 break;
             case PACIENTES_C:
-                
+                if(pegaCliente(arqMed, *raizMedico, &paciente)) {
+                    buscaConsultaPaciente(arqConsulta, *raizConsulta, 
+                        paciente.cpf);
+                }
                 break;
             case DESMARCAR_C:
                 if(pegaPaciente(arqCliente, *raizCliente, &paciente) && 
