@@ -227,13 +227,32 @@ void limpaArquivoCliente(FILE *arq) {
 //--io------------------------------------------------------------------------
 
 void imprimeCliente(Cliente *c, int pos) {
+    char formatado[CPF_FORMAT];
+
     if(pos) { // so imprime se pos != 0
         printf("Cliente No. %d\n", pos);
     }
     printf("Nome: %s\n", c->nome);
-    printf("CPF: %s\n", c->cpf);
+    formataCPF(formatado, c->cpf);
+    printf("CPF: %s\n", formatado);
     printf("Telefone: %s\n", c->telefone);
     printf("E-mail: %s\n\n", c->email);
+}
+
+void formataCPF(char *formatado, char *cpf) {
+    int j = 0, i = 0;
+
+    while(cpf[i] != '\0') {
+        formatado[j++] = cpf[i];
+        if(i == 2 || i == 5) {
+            formatado[j++] = '.';
+        } else if(i == 8) {
+            formatado[j++] = '-';
+        }
+        ++i;
+    }
+    formatado[j] = '\0';
+    
 }
 
 // imprime mensagens de acordo com o resultado dasa funcoes buscar

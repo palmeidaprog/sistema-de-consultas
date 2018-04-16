@@ -56,11 +56,14 @@ int main() {
                 loopConsultas(arqConsulta, arqCliente, arqMedico, 
                         &raizConsulta, &raizCliente, &raizMedico, &codigo);
                 break;
-            case 4:
-                limpaArquivoCliente(arqCliente);
+            case 4: // saida
+                limpaArquivoCliente(arqCliente); 
                 desalocaClientes(&raizCliente);
+                limpaArquivoMedico(arqMedico);
                 desalocaMedicos(&raizMedico);
-                break;
+                fechaArquivo(arqConsulta, CONSULTAS_ARQ);
+                desalocaConsultas(&raizConsulta);
+                break;  
             default:
                 limpaTela();
                 printf("Opcao invalida!\n");

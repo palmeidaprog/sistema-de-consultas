@@ -23,6 +23,8 @@ Data pegaHoje() {
     } else {
         hoje.turno = MANHA;
     }
+    hoje.diaDaSemana = pegaDiaDaSemana(hoje);
+    
     return hoje;
 }
 
@@ -67,13 +69,21 @@ Data pegaData() {
         if(erro) {
             printf("Turno invalido. ");
         }
-        printf("Escolha um turno (M para Manha e T para Tarde: ");
+        printf("Escolha um turno (M para Manha e T para Tarde): ");
         turno = getche();
+        printf("\n");
         turno = tolower(turno);
         erro = 1;
     } while(turno != 't' && turno != 'm');
 
     data.turno = (turno == 't') ? TARDE : MANHA;
+    printf("\n");
+
+    // TODO: colocar para fora da funcao marcarConsutla
+    if(comparaDatas(data, pegaHoje()) < 0) { 
+        printf("Data já passou. ");
+        data = pegaData();
+    }
     return data;
 }
 
@@ -111,6 +121,7 @@ int parseData(char *str, Data *data) {
         if(!ehNumero(str[i])) {
             return 0;
         }
+        ++i;
     }
 
     data->dia = (str[0] - 48) * 10 + (str[1] - 48);
@@ -140,12 +151,12 @@ Semana pegaDiaDaSemana(Data data) {
 
 void pegaDataTempo(char *str, size_t n) {
     size_t i = 0;
-    n -= 2;
+    n -= 1;
     
     while(i < n) {
         formataStdin(n, i);
         str[i] = getche();
-        if(str[i] == '\n') {
+        if(str[i] == '\n' || str[i] == 13) {
             // windows
             #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  
             printf("\n"); 
@@ -162,11 +173,11 @@ void pegaDataTempo(char *str, size_t n) {
 
 // coloca no terminal as barras e dois pontos das hroas
 void formataStdin(size_t n, size_t i) {
-    if(n == DATA_TAM - 2) {
+    if(n == DATA_TAM - 1) {
         if(i == 2 || i == 4) {
             printf("/");
         }
-    } else if(n == TEMPO_TAM - 2) {
+    } else if(n == TEMPO_TAM - 1) {
         if(i == 2) {
             printf(":");
         }

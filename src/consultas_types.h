@@ -10,6 +10,7 @@
 typedef enum Status {
     ATIVO,
     CANCELADO,
+    ESPERA,
     ATENDIDO
 } Status;
 
@@ -17,7 +18,6 @@ typedef struct Consulta {
     char clienteCpf[CPF_TAM];
     char medicoCrm[CRM_TAM];
     Data data;
-    Turno turno;
     Status status;
     int codigo; // muda toda vez que a arvore é remontada
 } Consulta;

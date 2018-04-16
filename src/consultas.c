@@ -16,20 +16,23 @@ void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico
     printf("Marcar Consulta:\n");
     strcpy(consulta.clienteCpf, paciente->cpf);
     strcpy(consulta.medicoCrm, medico->crm);
+    consulta.status = ATIVO;
 
+    //TODO: validaacao para impedir mais de uma consulta por cliente
     do {
         imprimeMedico(medico, 0);
         consulta.data = pegaData();
         // consulta a maatriuz de atendimento do medico e ve se ele trabalha
         // naquele dia da semana/turno.
-        if((medico->atendimento[consulta.turno][consulta.data.diaDaSemana 
+        if((medico->atendimento[consulta.data.turno][consulta.data.diaDaSemana 
                 - 1])) {
             if(medicoCheio(*raiz, consulta.data, consulta.medicoCrm)) { 
                 printf("\nO medico %s (CRM: %s) encontra-se com o turno da data ",
                         medico->nome, medico->crm);
-                printf("%s cheio.\n ", consulta.data.toString);
+                printf("%s cheio.\n\n", consulta.data.toString);
                 if(confirmacao("Entrar na fila de espera? (N para escolher nova data) "
                             )) {
+                    consulta.status = ESPERA;
                     insereConsulta(arq, raiz, &consulta, codigo, 
                     "Consulta na fila de espera.\n\n");
                     return;
@@ -40,10 +43,26 @@ void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico
                 return ;
             }
         } else { // medico nao tem atendimento nesse dia
-            printf("Medico nao atende nesse dia.");
+            printf("Medico nao atende nesse dia.\n\n");
         }
     } while(confirmacao("Deseja tentar a consulta em outra Data/Turno?"));
     printf("Nenhuma consulta foi agendada.\n\n");
+}
+
+
+void consultaMedico(FILE *arq, NoConsulta *raiz, Medico *medico) {
+    Data data;
+
+    data = pegaData();
+    imprimeMedico(medico, 0);
+    if(!buscaConsultaCRM(arq, raiz, data, medico->crm)) {
+        printf("Nao ha pacientes para o turno.\n\n");
+    }
+}
+
+void consultaPaciente(FILE *arq, NoConsulta *raiz, Medico *medico, Data 
+            data) {
+    
 }
 
 // suporte para marcaConsulta()
@@ -88,6 +107,39 @@ int pegaMedico(FILE *arqMedico, NoMedico *raizMedico, Medico *medico) {
         }
     } while(confirmacao("Deseja tentar outro CRM?"));
     return 0;
+}
+
+int buscaConsultaCRM(FILE *arq, NoConsulta *raiz, Data data, char *crm) {
+    int cont = 0;
+    Consulta c;
+    
+    while(raiz != NULL) {
+        if(comparaDatas(raiz->data, data) == 0 && strcmp(raiz->medicoCrm, crm)
+                == 0) {
+            if(!cont) {
+               printf("Clientes Agendados para o turno:\n\n");
+            }
+            if(cont == 10){
+                if(confirmacao("Deseja imprimir lista de espera?")){
+                    printf("Em espera de Cancelamentos:\n\n");
+                } else {
+                    break;
+                }
+            }
+            ++cont;
+            if(!leConsulta(arq, raiz->indice * sizeof(Consulta), &c)) {
+                printf("Erro ao ler o arquivo de consulta!\n\n");
+                return 0;
+            }
+            imprimeConsulta(c, cont);
+        } 
+        if(comparaDatas(data, raiz->data) < 0) {
+            raiz = raiz->esq;
+        } else {
+            raiz = raiz->dir;
+        }
+    }
+    return cont;
 }
 
 //--Arquivo-------------------------------------------------------------------
@@ -143,14 +195,38 @@ NoConsulta *escreveConsulta(FILE *arq, Consulta *c, int pos, int *codigo) {
 }
 
 // retorna 0 se nao conseguir ler
-int leConsulta(FILE *arq, long int pos, Consulta *cliente) {
+int leConsulta(FILE *arq, long int pos, Consulta *consulta) {
 
     fseek(arq, pos, SEEK_SET);
-    if(fread(cliente, sizeof(Consulta), 1, arq) != 1) {
+    if(fread(consulta, sizeof(Consulta), 1, arq) != 1) {
         return 0;
     }
     return 1;
 }
+
+//--io------------------------------------------------------------------------
+
+void imprimeConsulta(Consulta c, int pos) {
+    char formatado[CPF_FORMAT];
+
+    if(pos != 0) {
+        printf("Consulta No. %d:\n", pos);
+    }
+    printf("Data: %s\n", c.data.toString);
+    formataCPF(formatado, c.clienteCpf);
+    printf("CPF do Cliente: %s\n", formatado);
+    printf("STATUS: ");
+    switch(c.status) {
+        case ATIVO: 
+            printf("ATIVO\n");
+            break;
+        default:  // espera
+            printf("EM ESPERA\n");
+    }
+    printf("\n");
+}
+
+
 
 
 //--Menu----------------------------------------------------------------------
@@ -162,8 +238,8 @@ int menuConsultas() {
     printf("|       Menu Medicos              |\n");
     printf("|                                 |\n");
     printf("|  %d - Marcar                     |\n", MARCAR_C);
-    printf("|  %d - Consultar Pacientes        |\n", PACIENTES_C);
     printf("|  %d - Consultar consultas        |\n", CONSULTAS_C);
+    printf("|  %d - Consultar Pacientes        |\n", PACIENTES_C);
     printf("|  %d - Desmarcar Consultas        |\n", DESMARCAR_C);
     printf("|  %d - Voltar                     |\n", VOLTAR_C);
     printf("|                                 |\n");
@@ -181,7 +257,7 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
     int m;
     Cliente paciente;
     Medico medico;
-    char crm[CRM_TAM], cpf[CPF_TAM];
+    //char crm[CRM_TAM], cpf[CPF_TAM];
     // TODO: ajeitar menus e chamadas
     do {
         m = menuConsultas();
@@ -194,16 +270,19 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
                             &medico, codigo);
                 }
                 break;
-            case REMOVER_M:
-                
+            case CONSULTAS_C:
+                limpaTela();
+                if(pegaMedico(arqMed, *raizMedico, &medico)) {
+                    consultaMedico(arqConsulta, *raizConsulta, &medico);
+                }
                 break;
             case ALTERAR_M:
-                
+                 
                 break;
             case PROCURA_CRM:
                 
                 break;
-            case VOLTAR_M:
+            case VOLTAR_C:
                 limpaTela();
                 break;  
             default: 
@@ -211,5 +290,5 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
                 printf("Opcao invalida!\n");
                 break;
         }
-    } while(m != VOLTAR_M);
+    } while(m != VOLTAR_C);
 }

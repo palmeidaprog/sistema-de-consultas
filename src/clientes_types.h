@@ -25,6 +25,7 @@
 #endif // STRUCT_TAM
 
 #define CPF_TAM 13 // + 1 para o /0
+#define CPF_FORMAT 16
 
 #define CLIENTE_ARQ "clientes.dat"
 

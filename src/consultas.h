@@ -18,8 +18,8 @@
 #include "tempo.h"
 
 #define MARCAR_C 1
-#define PACIENTES_C 2
-#define CONSULTAS_C 3
+#define CONSULTAS_C 2
+#define PACIENTES_C 3
 #define DESMARCAR_C 4
 #define VOLTAR_C 5
 
@@ -29,15 +29,21 @@
 
 void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico 
             *medico, int *codigo);
+void consultaMedico(FILE *arq, NoConsulta *raiz, Medico *medico);
 void insereConsulta(FILE *arq, NoConsulta **raiz, Consulta *consulta, int 
             *codigo, char *msg);
 int pegaPaciente(FILE *arqCliente, NoCliente *raizCliente, Cliente *cliente);
 int pegaMedico(FILE *arqMedico, NoMedico *raizMedico, Medico *medico);
+int buscaConsultaCRM(FILE *arq, NoConsulta *raiz, Data data, char *crm);
 
 //--Arquivo-------------------------------------------------------------------
 
 NoConsulta *escreveConsulta(FILE *arq, Consulta *c, int pos, int *codigo);
 int leConsulta(FILE *arq, long int pos, Consulta *cliente);
+
+//--io------------------------------------------------------------------------
+
+void imprimeConsulta(Consulta c, int pos);
 
 //--Menu----------------------------------------------------------------------
 

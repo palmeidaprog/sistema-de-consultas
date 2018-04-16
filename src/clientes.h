@@ -53,6 +53,7 @@ int buscaPorNome(FILE *arq, char *nome);
 //--io------------------------------------------------------------------------
 
 void imprimeCliente(Cliente *c, int pos);
+void formataCPF(char *formatado, char *cpf);
 int validaProcuraCliente(int retorno);
 
 //--Menu----------------------------------------------------------------------

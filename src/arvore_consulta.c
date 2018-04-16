@@ -23,7 +23,7 @@ void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo) {
             printf("Erro ao ler arquivo %s.\n\n", CONSULTAS_ARQ);
             break;
         }
-        if(c.status == ATIVO) {
+        if(c.status == ATIVO || c.status == ESPERA) {
             if(comparaDatas(hoje, c.data) > 0) {
                 c.status = ATENDIDO;
             } else {
@@ -160,7 +160,6 @@ int ehFolhaConsulta(NoConsulta *no) {
     }
     return NULL;   
 }*/
-
 
 // retorna 1 se o medico tem 10 ou mais consultas naquela data/turno
 int medicoCheio(NoConsulta *raiz, Data data, char *crm) {
