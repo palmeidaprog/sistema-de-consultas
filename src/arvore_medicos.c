@@ -66,6 +66,7 @@ void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov) {
 
     if(ehFolhaMedico(remov)) {
         removeFolhaMedico(raizMedico, remov);
+        return;
     } else if(remov->esq == NULL) {
         maior = remov->dir;
     } else {

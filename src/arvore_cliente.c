@@ -66,6 +66,7 @@ void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov) {
 
     if(ehFolha(remov)) {
         removeFolhaCliente(raizCliente, remov);
+        return;
     } else if(remov->esq == NULL) {
         maior = remov->dir;
     } else {
