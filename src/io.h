@@ -28,7 +28,10 @@
 #include <conio.h>
 #endif
 
-
+// getche implementada para linux e mac
+#if !defined(Win32) && !defined(_Win32) && !defined(_WIN32) && !defined(_WIN64)  
+int getche();
+#endif
 void limpaBuffer();
 void limpaTela();
 void pegaCPF(char *str, size_t n);

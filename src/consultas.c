@@ -155,7 +155,7 @@ int leConsulta(FILE *arq, long int pos, Consulta *cliente) {
 
 //--Menu----------------------------------------------------------------------
 
-int menuMedicos() {
+int menuConsultas() {
     int resp;
 
     printf("|=================================|\n");
@@ -184,7 +184,7 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
     char crm[CRM_TAM], cpf[CPF_TAM];
     // TODO: ajeitar menus e chamadas
     do {
-        m = menuMedicos();
+        m = menuConsultas();
         switch(m) {
             case MARCAR_C:
                 limpaTela();

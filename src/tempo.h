@@ -27,6 +27,7 @@
 
 Data pegaHoje();
 Data pegaData();
+int parseTempo(char *str, Tempo *tempo);
 int parseData(char *str, Data *data);
 Semana pegaDiaDaSemana(Data data);
 void pegaDataTempo(char *str, size_t n);

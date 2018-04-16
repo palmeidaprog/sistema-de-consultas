@@ -41,7 +41,7 @@ int leConsulta(FILE *arq, long int pos, Consulta *cliente);
 
 //--Menu----------------------------------------------------------------------
 
-int menuMedicos();
+int menuConsultas();
 void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed, 
             NoConsulta **raizConsulta, NoCliente **raizCliente, NoMedico 
             **raizMedico, int *codigo);
