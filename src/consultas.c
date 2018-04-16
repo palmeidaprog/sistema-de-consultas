@@ -138,7 +138,7 @@ int menuMedicos() {
 }
 
 void loopConsultas(FILE *arqCliente, FILE *arqMed, NoCliente **raizCliente, 
-            NoMedico **raizMedico) {
+            NoMedico **raizMedico, int *codigo) {
     int m, n;
     Cliente paciente;
     Medico medico;

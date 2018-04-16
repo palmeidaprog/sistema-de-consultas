@@ -9,6 +9,22 @@
 
 #include "tempo.h"
 
+Data pegaHoje() {
+    Data hoje;
+    time_t tempo;
+    struct tm *agora;
+    tempo = time(NULL);
+    agora = localtime(&tempo);
+    hoje.dia = agora->tm_mday;
+    hoje.mes = agora->tm_mon + 1;
+    hoje.ano = agora->tm_year + 1900;
+    if(agora->tm_hour > 12) {
+        hoje.turno = TARDE;
+    } else {
+        hoje.turno = MANHA;
+    }
+}
+
 Tempo pegaTempo() {
     Tempo tempo;
     char str[TEMPO_TAM];

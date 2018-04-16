@@ -7,100 +7,125 @@
  * E-mail: pauloalmeidaf@gmail.com
  */
 
-#include "arvore_medicos.h"
+#include "arvore_consulta.h"
 
-void criaArvoreMedico(FILE *arq, NoMedico **raizMedico) {
+/* void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo) {
     int const TAM = 100;
-    Medico v[100];
-    NoMedico *no;
+    Consulta v[100];
+    NoConsulta *no;
     long long pos = 0, n;
 
-    n = fread(v, sizeof(Medico), TAM, arq);
+    n = fread(v, sizeof(Consulta), TAM, arq);
     while(n > 0) {
         if(!feof(arq) && n != TAM) {
-            printf("Erro de leitura no arquivo %s\n", MEDICOS_ARQ);
+            printf("Erro de leitura no arquivo %s\n", CONSULTAS_ARQ);
             return ;
         }
         for(int i = 0; i < n; i++) {
-            if(v[i].status) {
-                no = criaNoMedico(&v[i], pos);
-                inserirIndiceMedico(&(*raizMedico), no);
+            if(v[i].status == ATIVO) {
+                no = criaNoConsulta(&v[i], pos, codigo);
+                inserirIndiceConsulta(&(*raizConsulta), no);
             }
             ++pos;
         }
-        n = fread(v, sizeof(Medico), TAM, arq);
+        n = fread(v, sizeof(Consulta), TAM, arq);
+    }
+}*/
+
+void criaArvoreConsulta(FILE *arq, NoConsulta **raizConsulta, int *codigo) {
+    Consulta c;
+    NoConsulta *no;
+    long long pos = 0, n;
+
+    //n = fread(v, sizeof(Consulta), TAM, arq);
+    fseek(arq, 0, SEEK_SET);
+    while(1) {
+        if(fread(&c, sizeof(Consulta), 1, arq) !=) {
+            printf("Erro ao ler arquivo %s.\n\n", CONSULTAS_ARQ);
+        }
+        if(v[i].status == ATIVO) {
+                if(comparaDatas())
+                no = criaNoConsulta(&v[i], pos, codigo);
+                inserirIndiceConsulta(&(*raizConsulta), no);
+            }
+            ++pos;
+        }
+        n = fread(v, sizeof(Consulta), TAM, arq);
     }
 }
 
-void inserirIndiceMedico(NoMedico **raizMedico, NoMedico *no) {
-    if(*raizMedico == NULL) { // arvore vazia
-        *raizMedico = no;
+void inserirIndiceConsulta(NoConsulta **raizConsulta, NoConsulta *no) {
+    if(*raizConsulta == NULL) { // arvore vazia
+        *raizConsulta = no;
         return;
     }
 
-    if(strcmp((*raizMedico)->crm, no->crm) > 0) {
-        inserirIndiceMedico(&((*raizMedico)->esq), no);
+    if(comparaDatas((*raizConsulta)->data, no->data) > 0 || 
+        (comparaDatas((*raizConsulta)->data, no->data) == 0) && 
+        (*raizConsulta)->codigo > no->codigo)) {
+        inserirIndiceConsulta(&((*raizConsulta)->esq), no);
     } else {
-        inserirIndiceMedico(&((*raizMedico)->dir), no);
+        inserirIndiceConsulta(&((*raizConsulta)->dir), no);
     }
 
     return ;
 }
 
-NoMedico *criaNoMedico(Medico *m, long long int pos) {
-    NoMedico *no = NULL;
+NoConsulta *criaNoConsulta(Consulta *m, long long int pos) {
+    NoConsulta *no = NULL;
     
     if(pos < 0) {
         return NULL;
     }
-    no = (NoMedico *) malloc(sizeof(NoMedico));
+    no = (NoConsulta *) malloc(sizeof(NoConsulta));
     no->dir = NULL;
     no->esq = NULL;
-    strcpy(no->crm, m->crm);
+    no->data = m->data;
     no->indice = pos;
+    no->codigo = m->codigo;
     return no;
 }
 
-void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov) {
-    NoMedico *maior;
+void removerIndiceConsulta(NoConsulta **raizConsulta, NoConsulta *remov) {
+    NoConsulta *maior;
 
-    if(ehFolhaMedico(remov)) {
-        removeFolhaMedico(raizMedico, remov);
+    if(ehFolhaConsulta(remov)) {
+        removeFolhaConsulta(raizConsulta, remov);
     } else { // nao é folha
-        maior = maiorIndiceMedico(*raizMedico);
-        copiaNoMedico(remov, maior); // copia maior no lugar do removido
-        if(!ehFolhaMedico(maior)) {
-            moveNoMedico(maior, maior->esq); // move filho
+        maior = maiorIndiceConsulta(*raizConsulta);
+        copiaNoConsulta(remov, maior); // copia maior no lugar do removido
+        if(!ehFolhaConsulta(maior)) {
+            moveNoConsulta(maior, maior->esq); // move filho
         } else {
-            removeFolhaMedico(raizMedico, maior);
+            removeFolhaConsulta(raizConsulta, maior);
         }
     }
 }
 
-void removeFolhaMedico(NoMedico **raiz, NoMedico *remov) {
+void removeFolhaConsulta(NoConsulta **raiz, NoConsulta *remov) {
     if(*raiz == remov) {
         free(*raiz);
         *raiz = NULL;
     } else if(strcmp(remov->crm, (*raiz)->crm) > 0) {
-        removeFolhaMedico(&((*raiz)->dir), remov);
+        removeFolhaConsulta(&((*raiz)->dir), remov);
     } else {
-        removeFolhaMedico(&((*raiz)->esq), remov);
+        removeFolhaConsulta(&((*raiz)->esq), remov);
     }
 }
 
-void copiaNoMedico(NoMedico *destino, NoMedico *origem) {
+void copiaNoConsulta(NoConsulta *destino, NoConsulta *origem) {
     strcpy(destino->crm, origem->crm);
     destino->indice = origem->indice;
 }
 
-void moveNoMedico(NoMedico *destino, NoMedico *origem) {
-    copiaNoMedico(destino, origem);
+void moveNoConsulta(NoConsulta *destino, NoConsulta *origem) {
+    copiaNoConsulta(destino, origem);
     destino->esq = origem->esq;
     destino->dir = origem->dir;
     free(origem);
 }
 
-NoMedico *maiorIndiceMedico(NoMedico *raiz) {
+NoConsulta *maiorIndiceConsulta(NoConsulta *raiz) {
     if(raiz == NULL) {
         return NULL;
     }
@@ -111,14 +136,14 @@ NoMedico *maiorIndiceMedico(NoMedico *raiz) {
     return raiz;
 }
 
-int ehFolhaMedico(NoMedico *no) {
+int ehFolhaConsulta(NoConsulta *no) {
     if(no->dir == NULL && no->esq == NULL) {
         return 1;
     }
     return 0;
 }
 
-NoMedico *buscarMedico(NoMedico *raiz, char *crm) {
+NoConsulta *buscarConsulta(NoConsulta *raiz, char *crm) {
     int cmp;
 
     if(raiz == NULL) {
@@ -137,10 +162,10 @@ NoMedico *buscarMedico(NoMedico *raiz, char *crm) {
     return NULL;   
 }
 
-void desalocaMedicos(NoMedico **raiz) {
+void desalocaConsultas(NoConsulta **raiz) {
     if(*raiz != NULL) {
-        desalocaMedicos(&((*raiz)->esq));
-        desalocaMedicos(&((*raiz)->dir));
+        desalocaConsultas(&((*raiz)->esq));
+        desalocaConsultas(&((*raiz)->dir));
         free(*raiz);
         *raiz = NULL;
     }

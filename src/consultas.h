@@ -10,6 +10,7 @@
 #ifndef CONSULTAS_H
 #define CONSULTAS_H
 
+#include "consultas_types.h"
 #include "medicos.h"
 #include "clientes.h"
 #include "validacao.h"
@@ -32,6 +33,6 @@ int pegaMedico(FILE *arqMedico, NoMedico *raizMedico, Medico *medico);
 
 int menuMedicos();
 void loopConsultas(FILE *arqCliente, FILE *arqMed, NoCliente **raizCliente, 
-            NoMedico **raizMedico);
+            NoMedico **raizMedico, int *codigo);
 
 #endif // CONSULTAS_H

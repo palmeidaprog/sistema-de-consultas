@@ -7,15 +7,15 @@
  * E-mail: pauloalmeidaf@gmail.com
  */
 
-#ifndef ARVORE_MEDICOS_H
-#define ARVORE_MEDICOS_H
+#ifndef ARVORE_CONSULTA_H
+#define ARVORE_CONSULTA_H
 
 #if defined(Win32) || defined(_Win32) || defined(_WIN32) || defined(_WIN64)  // windows
 #pragma warning(disable: 4996)
 #endif
 
-#include "medicos.h"
 #include "validacao.h"
+#include "consultas.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -33,4 +33,4 @@ int ehFolhaMedico(NoMedico *no);
 NoMedico *buscarMedico(NoMedico *raiz, char *cpf);
 void desalocaMedicos(NoMedico **raiz);
 
-#endif // ARVORE_MEDICOS_H
+#endif // ARVORE_CONSULTA_H

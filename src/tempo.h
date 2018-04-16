@@ -18,6 +18,7 @@
 #include "validacao.h"
 #include "io.h"
 #include <string.h>
+#include <time.h>
 #include <stdio.h>
 #include <ctype.h>
 

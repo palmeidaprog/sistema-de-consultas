@@ -15,6 +15,7 @@
 #include "validacao.h"
 #include "clientes.h"
 #include "medicos.h"
+#include "consultas.h"
 #include <stdio.h>
 
 //--Protótipos----------------------------------------------------------------
@@ -27,13 +28,16 @@ int menuPrincipal();
 int main() {
     NoCliente *raizCliente = NULL;
     NoMedico *raizMedico = NULL;
-    FILE *arqCliente, *arqMedico;
-    int m;
+    NoConsulta *raizConsulta = NULL;
+    FILE *arqCliente, *arqMedico, *arqConsulta;
+    int m, codigo = 0;
 
     arqCliente = abreArquivo(CLIENTE_ARQ);
     arqMedico = abreArquivo(MEDICOS_ARQ);
+    arqConsulta = abreArquivo(CONSULTAS_ARQ);
     criaArvoreCliente(arqCliente, &raizCliente);
     criaArvoreMedico(arqMedico, &raizMedico);
+    criaArvoreConsulta(arqConsulta, &raizConsulta, &codigo);
     limpaTela();
     sobre();
 
@@ -51,7 +55,7 @@ int main() {
             case 3: 
                 limpaTela();
                 loopConsultas(arqCliente, arqMedico, &raizCliente, 
-                    &raizMedico);
+                    &raizMedico, &codigo);
                 break;
             case 4:
                 limpaArquivoCliente(arqCliente);
