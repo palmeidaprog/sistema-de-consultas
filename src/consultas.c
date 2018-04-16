@@ -14,6 +14,7 @@
 void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico 
         *medico, int *codigo) { 
     Consulta consulta;
+    int erro = 0;
 
     printf("Marcar Consulta:\n");
     strcpy(consulta.clienteCpf, paciente->cpf);
@@ -23,11 +24,18 @@ void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico
     //TODO: validaacao para impedir mais de uma consulta por cliente
     do {
         imprimeMedico(medico, 0);
-        consulta.data = pegaData();
+        do {
+            if(erro) {
+                printf("Data passada. ");
+            }
+            consulta.data = pegaData();
+            erro = 1;
+        } while(comparaDatas(consulta.data, pegaHoje()) < 0);
+            
         // consulta a maatriuz de atendimento do medico e ve se ele trabalha
         // naquele dia da semana/turno.
-        if((medico->atendimento[consulta.data.turno][consulta.data.diaDaSemana 
-                - 1])) {
+        if((medico->atendimento[consulta.data.diaDaSemana - 1][consulta.data
+                    .turno])) {
             if(medicoCheio(*raiz, consulta.data, consulta.medicoCrm)) { 
                 printf("\nO medico %s (CRM: %s) encontra-se com o turno da data ",
                         medico->nome, medico->crm);
@@ -39,7 +47,7 @@ void marcarConsulta(FILE *arq, NoConsulta **raiz, Cliente *paciente, Medico
                     "Consulta na fila de espera.\n\n");
                     return;
                 }
-            } else { // caso tenha 10 pacientes para o medico
+            } else { // caso nao tenha 10 pacientes para o medico
                 insereConsulta(arq, raiz, &consulta, codigo, 
                     "Consulta marcada com sucesso.\n\n");
                 return ;
@@ -141,23 +149,22 @@ int buscaConsultaCRM(FILE *arq, NoConsulta *raiz, Data data, char *crm) {
     return cont;
 }
 
-void desmarcaConsulta(FILE *arq, NoConsulta **raiz, char *cpf, char *crm) {
+void desmarcaConsulta(FILE *arq, NoConsulta **raiz, NoConsulta *lido, char 
+            *cpf, char *crm) {
     Consulta c;
     char formatado[CPF_FORMAT], novoCpf[CPF_TAM];
     int dummy = -2, cont = 0;
-    NoConsulta *lido = NULL;
-
-    if(*raiz == NULL) {
+    NoConsulta *no;
+   
+    if(lido == NULL) {
         return;
     } 
     
-    if((*raiz)->esq != NULL && comparaDatas((*raiz)->esq->data, 
+    if(lido->esq != NULL && comparaDatas(lido->esq->data, 
                 pegaHoje()) >= 0) {
-        desmarcaConsulta(arq, &((*raiz)->esq), cpf, crm);
+        desmarcaConsulta(arq, raiz, lido->esq, cpf, crm);
     } 
 
-    // bloco
-    lido = *raiz;
     if(strcmp(lido->medicoCrm, crm) == 0) {
         if(!leConsulta(arq, indiceConsulta(lido), &c)) {
             printf("Erro ao ler arquivo consulta.\n\n");
@@ -176,17 +183,18 @@ void desmarcaConsulta(FILE *arq, NoConsulta **raiz, char *cpf, char *crm) {
             printf("em %s.\n", c.data.toString);
 
             if(confirmacao("Deseja cancela-la? ")) {
-                ++cont;
                 c.status = CANCELADO;
-                escreveConsulta(arq, &c, indiceConsulta(lido), &dummy);
+                no = escreveConsulta(arq, &c, indiceConsulta(lido), &dummy);
+                free(no);
                 removerIndiceConsulta(raiz, lido);
-                if(saiDaEspera(arq, *raiz, c.data, crm, novoCpf)) {
+                saiDaEspera(arq, *raiz, c.data, crm, novoCpf, &cont);
+                if(cont >= 10) {
                     formataCPF(formatado, novoCpf);
                     printf("Avisar ao cliente CPF %s que ele foi ", 
                             formatado);
                     printf("transferido para lista de espera no turno ");
                     if(c.data.turno == TARDE) {
-                        printf("daa tarde ");
+                        printf("da tarde ");
                     } else {
                         printf("da manha ");
                     }
@@ -196,33 +204,27 @@ void desmarcaConsulta(FILE *arq, NoConsulta **raiz, char *cpf, char *crm) {
         }
     }
 
-    if((*raiz) != NULL && (*raiz)->dir != NULL) {
-        desmarcaConsulta(arq, &((*raiz)->dir), cpf, crm);
+    if(lido != NULL && lido->dir != NULL) {
+        desmarcaConsulta(arq, raiz, lido->dir, cpf, crm);
     }
-
 }
 
 // Consultar Pacientes (questao 2)
-void buscaConsultaPaciente(FILE *arq, NoConsulta **raiz, char *cpf) {
+void buscaConsultaPaciente(FILE *arq, NoConsulta *raiz, char *cpf) {
     Consulta c;
-    int cont = 0, mostraAntiga;
     NoConsulta *lido = NULL;
 
-    mostraAntiga = confirmacao("Deseja ver tambem as passados/cancelados?");
-
-    if(*raiz == NULL) {
+    if(raiz == NULL) {
         return;
     } 
     
-    if(mostraAntiga && (*raiz)->esq != NULL) {
-        buscaConsultaPaciente(arq, &((*raiz)->esq), cpf);
-    } else if(!mostraAntiga && (*raiz)->esq != NULL && 
-            comparaDatas((*raiz)->esq->data, pegaHoje()) >= 0) {
-        buscaConsultaPaciente(arq, &((*raiz)->esq), cpf);
+    if(raiz->esq != NULL && 
+            comparaDatas(raiz->esq->data, pegaHoje()) >= 0) {
+        buscaConsultaPaciente(arq, raiz->esq, cpf);
     } 
 
 
-    lido = *raiz;
+    lido = raiz;
 
     if(!leConsulta(arq, indiceConsulta(lido), &c)) {
         printf("Erro ao ler arquivo consulta.\n\n");
@@ -238,46 +240,48 @@ void buscaConsultaPaciente(FILE *arq, NoConsulta **raiz, char *cpf) {
             printf("manha ");
         }
         printf("em %s.\n", c.data.toString);
-        imprimeConsulta(c, ++cont);
+        imprimeConsulta(c, 0);
     }
 
-    if((*raiz)->dir != NULL) {
-        buscaConsultaPaciente(arq, &((*raiz)->dir), cpf);
-    }
-
-    
-    if(cont > 0) {
-        printf("Total de %d consultas.\n\n", cont);
+    if(raiz->dir != NULL) {
+        buscaConsultaPaciente(arq, raiz->dir, cpf);
     }
 }
 
-
-
-int saiDaEspera(FILE *arq, NoConsulta *raiz, Data data, char *crm, char 
-                    *cpf) {
-    int cont = 0;
+void saiDaEspera(FILE *arq, NoConsulta *raiz, Data data, char *crm, char 
+                    *cpf, int *cont) {
     Consulta c;
     NoConsulta *no;
 
-    while(raiz != NULL) {
-        if(comparaDatas(data, raiz->data) == 0 && strcmp(crm, raiz->medicoCrm)
-                 == 0) {
-            ++cont;
-            if(cont == 10) {
-                if(!leConsulta(arq, indiceConsulta(raiz), &c)) {
-                    printf("Erro ao ler arquivo consultas.\n\n");
-                    strcpy(cpf, c.clienteCpf);
-                    c.status = ATIVO;
-                    c.codigo -= 1; // incrementado dentro do escreveConsulta()
-                    no = escreveConsulta(arq, &c, indiceConsulta(raiz), 
-                            &c.codigo);
-                    free(no);
-                }
-                return 1;
+    if(raiz == NULL) {
+        return;
+    }
+
+    printf("Aguarde... \n");
+    if(raiz->esq != NULL && comparaDatas(raiz->esq->data, pegaHoje()) >= 0) {
+        saiDaEspera(arq, raiz->esq, data, crm, cpf, cont);
+    } 
+
+
+    if(comparaDatas(data, raiz->data) == 0 && strcmp(crm, raiz->medicoCrm)
+                == 0) {
+        ++*cont;
+        if(*cont == 10) {
+            if(!leConsulta(arq, indiceConsulta(raiz), &c)) {
+                printf("Erro ao ler arquivo consultas.\n\n");
+                strcpy(cpf, c.clienteCpf);
+                c.status = ATIVO;
+                c.codigo -= 1; // incrementado dentro do escreveConsulta()
+                no = escreveConsulta(arq, &c, indiceConsulta(raiz), 
+                        &c.codigo);
+                free(no);
             }
         }
     }
-    return 0;
+
+    if(*cont < 10 && raiz->dir != NULL) {
+        saiDaEspera(arq, raiz->dir, data, crm, cpf, cont);
+    } 
 }
 
 // suporte 
@@ -329,7 +333,7 @@ NoConsulta *escreveConsulta(FILE *arq, Consulta *c, int pos, int *codigo) {
     else {
         fseek(arq, pos, SEEK_SET);
     }
-    if(fwrite(c, sizeof(Consulta), 1, arq) && ftell(arq) == 1){
+    if(fwrite(c, sizeof(Consulta), 1, arq) == 1) {
         retorno = criaNoConsulta(c, (ftell(arq) - sizeof(Consulta)) /
              sizeof(Consulta), codigo);
         fflush(arq); // força os dados a serem escritos
@@ -399,6 +403,7 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
             **raizMedico, int *codigo) {
     int m;
     Cliente paciente;
+    NoConsulta *aux;
     Medico medico;
     // TODO: ajeitar menus e chamadas
     do {
@@ -419,7 +424,7 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
                 }
                 break;
             case PACIENTES_C:
-                if(pegaCliente(arqMed, *raizMedico, &paciente)) {
+                if(pegaPaciente(arqCliente, *raizCliente, &paciente)) {
                     buscaConsultaPaciente(arqConsulta, *raizConsulta, 
                         paciente.cpf);
                 }
@@ -427,8 +432,9 @@ void loopConsultas(FILE *arqConsulta, FILE *arqCliente, FILE *arqMed,
             case DESMARCAR_C:
                 if(pegaPaciente(arqCliente, *raizCliente, &paciente) && 
                     pegaMedico(arqMed, *raizMedico, &medico)) {
-                    desmarcaConsulta(arqConsulta, raizConsulta, paciente.cpf, 
-                            medico.crm);
+                    aux = *raizConsulta;
+                    desmarcaConsulta(arqConsulta, raizConsulta, aux, 
+                        paciente.cpf, medico.crm);
                 }
                 break;
             case VOLTAR_C:

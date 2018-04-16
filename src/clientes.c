@@ -12,6 +12,7 @@
 void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
     NoCliente *no;
     Cliente *cl;
+    char formatado[CPF_FORMAT];
     
     if(buscar(*raizCliente, cpf) != NULL) {
         printf("Cliente ja cadastrado\n\n");
@@ -26,7 +27,8 @@ void cadastrarCliente(FILE *arq, NoCliente **raizCliente, char *cpf) {
         return ;
     }
     inserirIndiceCliente(raizCliente, no);
-    printf("Cliente %s foi cadastrado com sucesso\n\n", cpf);
+    formataCPF(formatado, cpf);
+    printf("Cliente %s foi cadastrado com sucesso\n\n", formatado);
 }
 
 void exibirTodos(FILE *arq, NoCliente *raiz, int *pos) {

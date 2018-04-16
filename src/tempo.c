@@ -79,11 +79,6 @@ Data pegaData() {
     data.turno = (turno == 't') ? TARDE : MANHA;
     printf("\n");
 
-    // TODO: colocar para fora da funcao marcarConsutla
-    if(comparaDatas(data, pegaHoje()) < 0) { 
-        printf("Data já passou. ");
-        data = pegaData();
-    }
     return data;
 }
 
@@ -142,10 +137,13 @@ int parseData(char *str, Data *data) {
 
 // 0 = Domingo, 6 = sabado
 Semana pegaDiaDaSemana(Data data) {
-    int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
-    data.ano -= data.mes < 3;
-    return ( data.ano + data.ano/4 - data.ano/100 + data.ano/400 + 
-        t[data.mes-1] + data.dia) % 7;
+    //int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
+    //data.ano -= data.mes < 3;
+    /*return ( data.ano + data.ano/4 - data.ano/100 + data.ano/400 + 
+        t[data.mes-1] + data.dia) % 7;*/
+    return (data.dia += data.mes < 3 ? data.ano-- : data.ano - 2, 
+            23*data.mes/9 + data.dia + 4 + data.ano/4- data.ano/100 + 
+            data.ano/400) % 7;
 }
 
 
@@ -234,9 +232,9 @@ int comparaDatas(Data primeiro, Data segunda) {
             if(primeiro.dia == segunda.dia) {
                 return primeiro.turno - segunda.turno;
             }
-            return segunda.dia - primeiro.dia;
+            return primeiro.dia - segunda.dia;
         }
-        return segunda.mes - primeiro.mes;
+        return primeiro.mes - segunda.mes;
     }
-    return segunda.ano - primeiro.ano;
+    return primeiro.ano - segunda.ano;
 }

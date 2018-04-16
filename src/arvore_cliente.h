@@ -16,6 +16,7 @@
 
 #include "clientes.h"
 #include "validacao.h"
+#include <stdlib.h>
 
 
 //--Protótipos----------------------------------------------------------------

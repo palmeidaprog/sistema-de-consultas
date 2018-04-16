@@ -66,14 +66,16 @@ void removerIndiceCliente(NoCliente **raizCliente, NoCliente *remov) {
 
     if(ehFolha(remov)) {
         removeFolhaCliente(raizCliente, remov);
-    } else { // nao é folha
-        maior = maiorIndiceCliente(*raizCliente);
-        copiaNoCliente(remov, maior); // copia maior no lugar do removido
-        if(!ehFolha(maior)) {
-            moveNoCliente(maior, maior->esq); // move filho
-        } else {
-            removeFolhaCliente(raizCliente, maior);
-        }
+    } else if(remov->esq == NULL) {
+        maior = remov->dir;
+    } else {
+        maior = maiorIndiceCliente(remov->esq);
+    }
+    copiaNoCliente(remov, maior); // copia maior no lugar do removido
+    if(!ehFolha(maior)) {
+        moveNoCliente(maior, maior->esq); // move filho
+    } else {
+        removeFolhaCliente(&remov, maior);
     }
 }
 
@@ -81,7 +83,7 @@ void removeFolhaCliente(NoCliente **raiz, NoCliente *remov) {
     if(*raiz == remov) {
         free(*raiz);
         *raiz = NULL;
-    } else if(strcmp(remov->cpf, (*raiz)->cpf) > 0) {
+    } else if(strcmp(remov->cpf, (*raiz)->cpf) >= 0) {
         removeFolhaCliente(&((*raiz)->dir), remov);
     } else {
         removeFolhaCliente(&((*raiz)->esq), remov);

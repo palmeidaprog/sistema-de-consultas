@@ -17,6 +17,7 @@
 #include "medicos.h"
 #include "validacao.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 //--Protótipos----------------------------------------------------------------

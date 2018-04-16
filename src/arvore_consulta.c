@@ -87,14 +87,17 @@ void removerIndiceConsulta(NoConsulta **raizConsulta, NoConsulta *remov) {
 
     if(ehFolhaConsulta(remov)) {
         removeFolhaConsulta(raizConsulta, remov);
-    } else { // nao é folha
-        maior = maiorIndiceConsulta(*raizConsulta);
-        copiaNoConsulta(remov, maior); // copia maior no lugar do removido
-        if(!ehFolhaConsulta(maior)) {
-            moveNoConsulta(maior, maior->esq); // move filho
-        } else {
-            removeFolhaConsulta(raizConsulta, maior);
-        }
+        return;
+    } else if(remov->esq == NULL) {
+        maior = remov->dir;
+    } else {
+        maior = maiorIndiceConsulta(remov->esq);    
+    }
+    copiaNoConsulta(remov, maior); // copia maior no lugar do removido
+    if(!ehFolhaConsulta(maior)) {
+        moveNoConsulta(maior, maior->esq); // move filho
+    } else {
+        removeFolhaConsulta(&remov, maior);
     }
 }
 
@@ -103,7 +106,7 @@ void removeFolhaConsulta(NoConsulta **raiz, NoConsulta *remov) {
         free(*raiz);
         *raiz = NULL;
     } else if(comparaDatas(remov->data, (*raiz)->data) > 0 || 
-            (comparaDatas(remov->data, (*raiz)->data) > 0 && remov->codigo > 
+            (comparaDatas(remov->data, (*raiz)->data) == 0 && remov->codigo >= 
             (*raiz)->codigo)) {
         removeFolhaConsulta(&((*raiz)->dir), remov);
     } else {
