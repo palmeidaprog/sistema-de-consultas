@@ -64,7 +64,7 @@ NoMedico *criaNoMedico(Medico *m, long long int pos) {
 void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov) {
     NoMedico *maior;
 
-    if(ehFolha(remov)) {
+    if(ehFolhaMedico(remov)) {
         removeFolhaMedico(raizMedico, remov);
     } else if(remov->esq == NULL) {
         maior = remov->dir;
@@ -72,7 +72,7 @@ void removerIndiceMedico(NoMedico **raizMedico, NoMedico *remov) {
         maior = maiorIndiceMedico(remov->esq);
     }
     copiaNoMedico(remov, maior); // copia maior no lugar do removido
-    if(!ehFolha(maior)) {
+    if(!ehFolhaMedico(maior)) {
         moveNoMedico(maior, maior->esq); // move filho
     } else {
         removeFolhaMedico(&remov, maior);
